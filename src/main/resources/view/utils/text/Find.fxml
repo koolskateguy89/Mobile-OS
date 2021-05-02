@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXRadioButton?>
+<?import javafx.scene.Scene?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.stage.Stage?>
+<?import org.controlsfx.control.textfield.CustomTextField?>
+
+<fx:root resizable="false" title="Find" type="Stage" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <scene>
+        <Scene stylesheets="@Find.css">
+            <AnchorPane prefHeight="256.0" prefWidth="282.0">
+            <children>
+               <CustomTextField fx:id="tf" layoutX="17.0" layoutY="33.0" />
+               <VBox layoutX="41.0" layoutY="140.0" prefHeight="42.0" prefWidth="100.0" spacing="10.0">
+                  <children>
+                     <JFXCheckBox fx:id="matchCase" selected="true" text="Match case" />
+                     <JFXCheckBox fx:id="wrap" selected="true" text="Wrap around" />
+                  </children>
+               </VBox>
+               <VBox layoutX="157.0" layoutY="141.0" prefHeight="32.0" prefWidth="100.0" spacing="10.0">
+                  <children>
+                     <JFXRadioButton fx:id="up" selected="true" text="_Up">
+                        <toggleGroup>
+                           <ToggleGroup fx:id="direction" />
+                        </toggleGroup>
+                     </JFXRadioButton>
+                     <JFXRadioButton fx:id="down" selected="true" text="_Down" toggleGroup="$direction" />
+                  </children>
+               </VBox>
+               <VBox layoutX="184.0" layoutY="33.0" prefHeight="62.0" prefWidth="83.0" spacing="10.0">
+                  <children>
+                     <JFXButton defaultButton="true" maxWidth="1.7976931348623157E308" onAction="#findNext" style="-fx-background-color: #CDCDCD;" text="Find Next" />
+                     <JFXButton cancelButton="true" maxWidth="1.7976931348623157E308" onAction="#close" style="-fx-background-color: #CDCDCD;" text="Cancel" />
+                                                               <!-- my genius ^ is frightening -->
+                  </children>
+               </VBox>
+            </children></AnchorPane>
+        </Scene>
+    </scene>
+</fx:root>

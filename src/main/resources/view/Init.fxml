@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.koolskateguy89.mobileos.view.InitController">
+   <children>
+      <Button fx:id="chooseBtn" layoutX="159.0" layoutY="149.0" mnemonicParsing="false" onAction="#chooseRootDir" prefHeight="70.0" prefWidth="132.0" text="Choose a root directory" textAlignment="CENTER" wrapText="true" />
+      <Button fx:id="doneBtn" layoutX="162.0" layoutY="479.0" mnemonicParsing="false" onAction="#done" prefHeight="70.0" prefWidth="125.0" text="Done" />
+   </children>
+</Pane>

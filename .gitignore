@@ -1,0 +1,11 @@
+# IntelliJ
+.idea/
+
+# Maven
+**/target/
+
+# Me (temp)
+data/
+
+# Apps
+apps
