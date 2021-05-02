@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import lombok.Getter;
 
@@ -113,6 +114,9 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		Main.stage = primaryStage;
 		Main.instance = this;
+
+		// I like UTILITY but I want to be able to minimize :/
+		stage.initStyle(StageStyle.UTILITY);
 
 		stage.setTitle(DEFAULT_TITLE);
 		stage.setResizable(false);

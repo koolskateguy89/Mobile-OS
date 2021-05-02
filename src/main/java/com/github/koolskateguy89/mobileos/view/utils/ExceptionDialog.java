@@ -15,7 +15,7 @@ import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.google.common.base.Throwables;
 import org.controlsfx.dialog.ProgressDialog;
 
-// this is basically a copy of
+// this is basically a tailored copy of org.controlsfx.dialog.ExceptionDialog
 public class ExceptionDialog extends Dialog<ButtonType> {
 
 	private final ButtonType COPY = new ButtonType("Copy", ButtonBar.ButtonData.OK_DONE);
