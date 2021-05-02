@@ -15,74 +15,74 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.DialogPane;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 
-import lombok.Getter;
-
 import com.github.koolskateguy89.mobileos.Main;
-import com.github.koolskateguy89.mobileos.utils.Utils;
+import com.github.koolskateguy89.mobileos.prefs.Prefs;
 import com.github.koolskateguy89.mobileos.view.utils.ExceptionDialog;
 import com.github.koolskateguy89.mobileos.view.utils.FindText;
 import com.github.koolskateguy89.mobileos.view.utils.FontSelector;
-import com.google.common.base.Throwables;
 
 // TODO: decide what [close] will do and do newFile
 public class NotepadController {
 
 	// TODO: status bar (caret position, maybe encoding, LF/CRLF)
-	// TODO: [edit] find (Ctrl+F), replace (Ctrl+H), go to (Ctrl+G)
-	// TODO: [format] font (settings - maybe save as Preferences)
+	// TODO: [edit] replace (Ctrl+H), go to [line] (Ctrl+G)
 	// TODO: [file] open recent
 
 	private static final FileChooser fc = new FileChooser();
 
+	private static final String FAMILY_KEY  = "Notepad/family",
+								BOLD_KEY    = "Notepad/bold",
+								ITALICS_KEY = "Notepad/italics",
+								SIZE_KEY    = "Notepad/size";
+
 	private static void handleException(Exception e, String alertText) {
 		ExceptionDialog ed = new ExceptionDialog(e, alertText);
 		ed.showAndWaitCopy();
-		if (true)
-			return;
-
-		Alert a = new Alert(AlertType.ERROR, alertText);
-
-		ButtonType showException = new ButtonType("Show details");
-		a.getButtonTypes().add(showException);
-
-
-		if (a.showAndWait().orElse(null) == showException) {
-			String stackTrace = Throwables.getStackTraceAsString(e);
-			TextArea textArea = new TextArea(stackTrace);
-
-
-			a = new Alert(AlertType.INFORMATION);
-			//a.setHeaderText(null);
-			//a.setGraphic(textArea);
-
-			ButtonType copy = new ButtonType("Copy");
-			a.getButtonTypes().add(copy);
-
-			DialogPane dp = a.getDialogPane();
-			dp.setContent(textArea);
-
-			if (a.showAndWait().orElse(null) == copy)
-				Utils.copyToClipboard(stackTrace);
-		}
 	}
 
 	private final FontSelector fs = new FontSelector(Main.getStage());
 
-	@Getter
 	private final ObjectProperty<File> fileProperty = new SimpleObjectProperty<>();
+	public ObjectProperty<File> fileProperty() {
+		return fileProperty;
+	}
 
 	private boolean changed = false;
 	private String previousText;
 
+	// this is basically the opposite of quit()
+	public void init() {
+		if (finder == null)
+			finder = new FindText(textArea);
+
+		Font defaultFont = Font.getDefault();
+
+		String family = Prefs.get(FAMILY_KEY, defaultFont.getFamily());
+		boolean bold = Prefs.getBoolean(BOLD_KEY, false);
+		boolean italics = Prefs.getBoolean(ITALICS_KEY, false);
+		double size = Prefs.getDouble(SIZE_KEY, defaultFont.getSize());
+
+		FontWeight weight = bold ? FontWeight.BOLD : FontWeight.NORMAL;
+		FontPosture posture = italics ? FontPosture.ITALIC : FontPosture.REGULAR;
+
+		Font font = Font.font(family, weight, posture, size);
+		fs.setFont(font);
+	}
+
+	@FXML
+	private TextArea textArea;
 
 	@FXML
 	private void initialize() {
+		// TODO: changed
 		/*textArea.textProperty().addListener(obs -> {
 			StringProperty sp = (StringProperty) obs;
 			String text = sp.get();
@@ -92,6 +92,7 @@ public class NotepadController {
 			System.out.println("Changed: " + changed);
 		});
 		 */
+		init();
 
 		// file
 		//save.disableProperty().bind(fileProp.isNull());
@@ -106,20 +107,16 @@ public class NotepadController {
 		copy.disableProperty().bind(selected.isEmpty());
 		//
 		find.disableProperty().bind(textArea.textProperty().isEmpty());
-		finder = new FindText(textArea);
 		replace.disableProperty().bind(textArea.textProperty().isEmpty());
+		goTo.disableProperty().bind(textArea.textProperty().isEmpty());
 
 		// format
 		textArea.wrapTextProperty().bind(wrapText.selectedProperty());
 
 
-
 		// TODO
 		recent.getItems().add(new MenuItem("Yo my slime"));
 	}
-
-	@FXML
-	private TextArea textArea;
 
 	// file
 
@@ -212,7 +209,24 @@ public class NotepadController {
 	public void quit() {
 		// TODO
 		// idrk what I'm gonna do here, maybe close and go home?
-		finder.close();
+		if (finder != null) {
+			finder.close();
+			finder = null;
+		}
+
+
+		Font font = textArea.getFont();
+
+		String family = font.getFamily();
+		String style = font.getStyle();
+		boolean bold = style.contains("Bold");
+		boolean italics = style.contains("Italics");
+		double size = font.getSize();
+
+		Prefs.put(FAMILY_KEY, family);
+		Prefs.putBoolean(BOLD_KEY, bold);
+		Prefs.putBoolean(ITALICS_KEY, italics);
+		Prefs.putDouble(SIZE_KEY, size);
 	}
 
 	@FXML
@@ -271,6 +285,14 @@ public class NotepadController {
 		System.out.println(textArea.getAnchor());
 		System.out.println(textArea.getCaretPosition());
 		System.out.println();
+	}
+
+	@FXML
+	private MenuItem goTo;
+
+	@FXML
+	public void goTo() {
+		// TODO
 	}
 
 	@FXML

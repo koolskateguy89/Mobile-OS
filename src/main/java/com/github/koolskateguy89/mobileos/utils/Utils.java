@@ -52,7 +52,7 @@ public class Utils {
 	}
 
 	// This is VERY iffy because of inheritance, the `getClass` will return the impl. class not the
-	// super class which is usually what you want
+	// super class, this behaviour is usually not what you want
 	public static <T> T instantiate(Class<T> clazz, Object... parameters) throws NoSuchMethodException,
 			InvocationTargetException, InstantiationException, IllegalAccessException {
 
@@ -89,6 +89,7 @@ public class Utils {
 	}
 
 	// just straight up copied from org.controlsfx.control.textfield.TextFields.createClearableTextField
+	// why don't they just make it public man
 	private static final Duration FADE_DURATION = Duration.millis(350);
 	private static void setupClearButtonField(TextField inputField, ObjectProperty<Node> rightProperty) {
 		inputField.getStyleClass().add("clearable-field"); //$NON-NLS-1$

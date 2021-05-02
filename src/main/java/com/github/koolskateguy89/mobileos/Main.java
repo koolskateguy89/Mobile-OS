@@ -15,9 +15,11 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
-import lombok.Getter;
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 
 import com.github.koolskateguy89.mobileos.app.App;
 import com.github.koolskateguy89.mobileos.app.Apps;
@@ -26,25 +28,12 @@ import com.github.koolskateguy89.mobileos.utils.Constants;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.github.koolskateguy89.mobileos.view.MainController;
 import com.github.koolskateguy89.mobileos.view.home.HomeController;
-import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
+
+import lombok.Getter;
 
 public class Main extends Application {
 
-	// TODO: init where apps are stored and stuff (also on first run ask where stuff is to be stored
-
-	// TODO: splash screen (reading data in from applications (name, image, etc.))
-
-	/* Applications are to be stored as JAR files (packaged with dependencies? (excl. JavaFX & stuff I guess))
-	 * which are loaded in at runtime (is this a good idea???) (https://stackoverflow.com/q/60764).
-	 * If this is done, the name of the JAR==name of application, so passing the directory of the application would
-	 * be easy right???
-	 *
-	 * No. This won't work because of persistent storage (without databases). Applications have to be folders.
-	 * OR maybe it will
-	 */
+	// TODO: splash screen (reading data in from applications (name, image, etc.)) - maybe
 
 	private static List<App> loadAppsFrom(Path appsDir) throws Exception {
 		List<App> apps = new ArrayList<>();
@@ -59,6 +48,7 @@ public class Main extends Application {
 
 	// Get all classes from package: https://stackoverflow.com/a/520339
 	// Get all classes from current runtime: https://stackoverflow.com/a/7865124
+	// The only Apps that'll be in the `JavaClassPath` will be the system apps
 	private static Set<Class<? extends App>> findSystemApps() {
 		Reflections reflections = new Reflections(
 				new ConfigurationBuilder()
@@ -68,7 +58,7 @@ public class Main extends Application {
 		return reflections.getSubTypesOf(App.class);
 	}
 
-	public void loadSystemApps() throws Exception {
+	private void loadSystemApps() throws Exception {
 		Set<Class<? extends App>> clazzes = findSystemApps();
 
 		List<App> sysApps = new ArrayList<>(clazzes.size());
@@ -81,7 +71,7 @@ public class Main extends Application {
 		hc.initSystemApps(sysApps);
 	}
 
-	public void loadApps() throws Exception {
+	private void loadApps() throws Exception {
 		Path appsDir = Path.of(Prefs.ROOT_DIR).resolve(Constants.APPS_DIR);
 		List<App> apps = loadAppsFrom(appsDir);
 
@@ -116,7 +106,15 @@ public class Main extends Application {
 		Main.instance = this;
 
 		// I like UTILITY but I want to be able to minimize :/
-		stage.initStyle(StageStyle.UTILITY);
+		//stage.initStyle(StageStyle.UTILITY);
+
+		stage.setOnCloseRequest(event -> {
+			if (currentApp != null) {
+				currentApp.onExit();
+				currentApp.onClose();
+				// TODO: call all Recents apps onClose
+			}
+		});
 
 		stage.setTitle(DEFAULT_TITLE);
 		stage.setResizable(false);
@@ -172,7 +170,7 @@ public class Main extends Application {
 		currentApp = app;
 
 		mc.setScreen(app.getPane());
-		app.open();
+		app.onOpen();
 
 		stage.titleProperty().bind(
 				Bindings.concat(app.getName(), app.getDetailProperty())

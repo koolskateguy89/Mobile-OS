@@ -79,6 +79,7 @@
 
     </dependencies>
 
+    <!-- TODO: proguard plugin -->
     <build>
         <finalName> ${project.name} </finalName>
 

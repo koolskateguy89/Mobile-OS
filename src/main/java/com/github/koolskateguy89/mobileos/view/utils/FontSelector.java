@@ -13,18 +13,22 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
-import lombok.Getter;
+import org.controlsfx.control.SearchableComboBox;
 
 import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSlider;
 
+import lombok.Getter;
+
 public class FontSelector extends Stage {
 
 	public FontSelector(Window owner) {
+		initStyle(StageStyle.UTILITY);
 		initOwner(owner);
 
 		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("utils/fontSelector/FontSelector"));
@@ -42,7 +46,7 @@ public class FontSelector extends Stage {
 	private final ObjectProperty<Font> fontProperty = new SimpleObjectProperty<>();
 
 	@FXML
-	private JFXComboBox<String> families;
+	private SearchableComboBox<String> families;
 
 	@FXML
 	private JFXCheckBox bold;
@@ -118,10 +122,10 @@ public class FontSelector extends Stage {
 		String family = families.getValue();
 		double size = Double.parseDouble(sizes.getValue());
 
-		FontWeight fw = bold.isSelected() ? FontWeight.BOLD : FontWeight.NORMAL;
-		FontPosture fp = italics.isSelected() ? FontPosture.ITALIC : FontPosture.REGULAR;
+		FontWeight weight = bold.isSelected() ? FontWeight.BOLD : FontWeight.NORMAL;
+		FontPosture posture = italics.isSelected() ? FontPosture.ITALIC : FontPosture.REGULAR;
 
-		setFont(Font.font(family, fw, fp, size));
+		setFont(Font.font(family, weight, posture, size));
 	}
 
 	public Font getFont() {

@@ -6,19 +6,18 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.AnchorPane;
+
+import org.controlsfx.dialog.ProgressDialog;
 
 import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.google.common.base.Throwables;
-import org.controlsfx.dialog.ProgressDialog;
 
 // this is basically a tailored copy of org.controlsfx.dialog.ExceptionDialog
 public class ExceptionDialog extends Dialog<ButtonType> {
 
-	private final ButtonType COPY = new ButtonType("Copy", ButtonBar.ButtonData.OK_DONE);
+	public final ButtonType COPY = new ButtonType("Copy", ButtonBar.ButtonData.OK_DONE);
 
 	private static final String DEFAULT_TITLE = "Error";
 
@@ -33,35 +32,27 @@ public class ExceptionDialog extends Dialog<ButtonType> {
 
 		setTitle(title);
 
-		setTitle("Error");
-		dialogPane.setHeaderText(message);
-
-		//dialogPane.setHeaderText(getString("exception.dlg.header"));
 		dialogPane.getStyleClass().add("exception-dialog");
 		dialogPane.getStylesheets().add(ProgressDialog.class.getResource("dialogs.css").toExternalForm());
 		dialogPane.getButtonTypes().addAll(COPY, ButtonType.OK);
 
 		// --- content
-		//setContentText(message);
+		dialogPane.setHeaderText(message);
+		dialogPane.setContentText("The exception stacktrace was:");
 
 		// --- expandable content
 		exceptionText = Throwables.getStackTraceAsString(exception);
 
-		Label label = new Label("The exception stacktrace was:");
-
 		TextArea textArea = new TextArea(exceptionText);
 		textArea.setEditable(false);
-		textArea.setWrapText(true);
 
-		textArea.setMaxWidth(Double.MAX_VALUE);
-		textArea.setMaxHeight(Double.MAX_VALUE);
-		GridPane.setVgrow(textArea, Priority.ALWAYS);
-		GridPane.setHgrow(textArea, Priority.ALWAYS);
+		AnchorPane.setBottomAnchor(textArea, 0.0);
+		AnchorPane.setLeftAnchor(textArea, 0.0);
+		AnchorPane.setRightAnchor(textArea, 0.0);
+		AnchorPane.setTopAnchor(textArea, 0.0);
 
-		GridPane root = new GridPane();
+		AnchorPane root = new AnchorPane(textArea);
 		root.setMaxWidth(Double.MAX_VALUE);
-		root.add(label, 0, 0);
-		root.add(textArea, 0, 1);
 
 		dialogPane.setExpandableContent(root);
 	}

@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXCheckBox?>
-<?import com.jfoenix.controls.JFXComboBox?>
-<?import com.jfoenix.controls.JFXSlider?>
-<?import javafx.scene.Scene?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.Scene?>
 <?import javafx.scene.text.Text?>
 <?import javafx.stage.Stage?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXSlider?>
+<?import org.controlsfx.control.SearchableComboBox?>
 
 <fx:root resizable="false" title="Font" type="Stage" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
 	<scene>
@@ -28,7 +30,10 @@
 							</VBox>
 							<VBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="226.0" spacing="7.0" HBox.hgrow="ALWAYS">
 								<children>
-									<JFXComboBox fx:id="families" maxWidth="1.7976931348623157E308" onAction="#updateFont" />
+                                    <SearchableComboBox fx:id="families" onAction="#updateFont" prefHeight="28.0">
+                              <VBox.margin>
+                                 <Insets />
+                              </VBox.margin></SearchableComboBox>
 									<JFXCheckBox fx:id="bold" onAction="#updateFont" />
 									<JFXCheckBox fx:id="italics" onAction="#updateFont" />
 									<HBox prefHeight="28.0" prefWidth="256.0">

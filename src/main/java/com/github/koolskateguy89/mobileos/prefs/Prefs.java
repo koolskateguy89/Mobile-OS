@@ -20,11 +20,12 @@ public class Prefs {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			try {
 				if (IS_FIRST_RUN)
-					writeBoolean("FIRST_RUN", false);
+					putBoolean("FIRST_RUN", false);
 
-				write("DATA_DIR", ROOT_DIR);
+				put("DATA_DIR", ROOT_DIR);
 
 				// saves preferences to a permanent store
+
 				prefs.flush();
 			} catch (BackingStoreException e) {
 				e.printStackTrace();
@@ -42,19 +43,19 @@ public class Prefs {
 		return prefs.keys();
 	}
 
-	public static void write(String key, String value) {
+	public static void put(String key, String value) {
 		prefs.put(key, value);
 	}
 
-	public static void writeInt(String key, int value) {
+	public static void putInt(String key, int value) {
 		prefs.putInt(key, value);
 	}
 
-	public static void writeDouble(String key, double value) {
+	public static void putDouble(String key, double value) {
 		prefs.putDouble(key, value);
 	}
 
-	public static void writeBoolean(String key, boolean value) {
+	public static void putBoolean(String key, boolean value) {
 		prefs.putBoolean(key, value);
 	}
 

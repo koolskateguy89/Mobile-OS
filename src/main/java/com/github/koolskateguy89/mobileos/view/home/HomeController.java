@@ -28,6 +28,7 @@ public class HomeController {
 	private VBox root;
 
 	// TODO: 'faves'
+	// TODO: make faves StackPanes so I can add fave app buttons to them
 	@FXML
 	private JFXButton fav0;
 
@@ -82,6 +83,7 @@ public class HomeController {
 		}
 	}
 
+	// Installed apps start from second tab
 	public void initApps(List<App> apps) {
 		final int len = apps.size();
 		int i = 0;

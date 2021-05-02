@@ -80,6 +80,11 @@
                   <KeyCodeCombination alt="UP" code="H" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                </accelerator>
             </MenuItem>
+            <MenuItem fx:id="goTo" onAction="#goTo" text="_Go To">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="G" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
              <SeparatorMenuItem mnemonicParsing="false" />
              <MenuItem onAction="#selectAll" text="_Select All">
                 <accelerator>

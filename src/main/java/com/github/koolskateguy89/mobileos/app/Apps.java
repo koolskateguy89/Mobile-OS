@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 

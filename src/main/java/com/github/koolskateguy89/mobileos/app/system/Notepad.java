@@ -13,11 +13,11 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
-import lombok.Getter;
-
 import com.github.koolskateguy89.mobileos.app.App;
 import com.github.koolskateguy89.mobileos.app.system.notepad.NotepadController;
 import com.github.koolskateguy89.mobileos.utils.Utils;
+
+import lombok.Getter;
 
 public class Notepad extends App {
 
@@ -40,7 +40,7 @@ public class Notepad extends App {
 			loader.load();
 			nc = loader.getController();
 
-			ObjectProperty<File> fileProp = nc.getFileProperty();
+			ObjectProperty<File> fileProp = nc.fileProperty();
 
 			StringBinding nameBinding = Bindings.createStringBinding(() -> {
 				File file = fileProp.get();
@@ -72,7 +72,8 @@ public class Notepad extends App {
 	}
 
 	@Override
-	public void open() {
+	public void onOpen() {
+		nc.init();
 	}
 
 	@Override
@@ -87,5 +88,6 @@ public class Notepad extends App {
 
 	@Override
 	public void onClose() {
+		nc.quit();  // for safety
 	}
 }

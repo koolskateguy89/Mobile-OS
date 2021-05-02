@@ -27,10 +27,10 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+import com.github.koolskateguy89.mobileos.Main;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-
-import com.github.koolskateguy89.mobileos.Main;
 
 @Getter @EqualsAndHashCode
 public abstract class App {
@@ -151,12 +151,16 @@ public abstract class App {
 	// returns 'home' pane? well the first pane you want to show to user
 	public abstract Pane getPane();
 
-	public abstract void open();
+	// Called when application is opened, this should basically be opposite/inverse to onClose()
+	// Called just after getPane()
+	public abstract void onOpen();
 
 	// Called when Back button is pressed
 	public abstract void goBack(ActionEvent event);
 
 	// Called when another application is opened
+	// Any extra windows or resources
+	// You need to close any extra windows or
 	public abstract void onExit();
 
 	// Called when closed through Recents
