@@ -2,12 +2,21 @@ package com.github.koolskateguy89.mobileos.view.utils;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
@@ -19,10 +28,11 @@ import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXRadioButton;
 
 // There is a problem in that though the text in the `tic` gets selected, it is 'in the background'
-// TODO: FindReplace
 public class FindText extends Stage {
 
 	private final TextInputControl tic;
+
+	private final BooleanProperty replace = new SimpleBooleanProperty();
 
 	private String lastQuery;
 
@@ -49,9 +59,46 @@ public class FindText extends Stage {
 		}
 	}
 
+	private void setup(boolean replace) {
+		String selected = tic.getSelectedText();
+		if (!selected.isEmpty())
+			tf.setText(selected);
+
+		this.replace.set(replace);
+	}
+
+	public void find() {
+		setup(false);
+		this.show();
+		this.requestFocus();
+	}
+
+	public void findAndReplace() {
+		setup(true);
+		this.show();
+		this.requestFocus();
+	}
+
+	public void setText(String text) {
+		tf.setText(text);
+	}
+
+	public String getText() {
+		return tf.getText();
+	}
+
+	@FXML
+	private GridPane findParent;
+
 	@FXML
 	private CustomTextField tf;
 
+	@FXML
+	private Label replaceLbl;
+	@FXML
+	private CustomTextField replaceTf;
+
+	// properties/options
 	@FXML
 	private JFXCheckBox matchCase;
 
@@ -59,14 +106,32 @@ public class FindText extends Stage {
 	private JFXCheckBox wrap;
 
 	@FXML
+	private JFXCheckBox regex;
+
+	// direction
+	@FXML
 	private JFXRadioButton up;
 	@FXML
 	private JFXRadioButton down;
 
 	@FXML
+	private VBox replaceBox;
+
+	@FXML
 	private void initialize() {
 		Utils.makeClearable(tf);
-		tf.setText(tic.getSelectedText());
+		Utils.makeClearable(replaceTf);
+
+		// can't do any operations if there's nothing (that makes no sense)
+		findParent.disableProperty().bind(tf.textProperty().isEmpty());
+
+		replaceTf.visibleProperty().bind(replace);
+		replaceLbl.visibleProperty().bind(replaceTf.visibleProperty());
+
+		replaceBox.visibleProperty().bind(replace);
+		replaceBox.disableProperty().bind(tf.textProperty().isEmpty());
+
+		regex.visibleProperty().bind(replace);
 	}
 
 	@FXML
@@ -116,5 +181,48 @@ public class FindText extends Stage {
 			lastIndex = index;
 			tic.selectRange(index, index + len);
 		}
+	}
+
+	@FXML
+	void replaceFirst() {
+		String text = tic.getText();
+
+		String target = tf.getText();
+		String replace = replaceTf.getText();
+
+
+		if (regex.isSelected())
+			text = handleRegex(text, s -> s.replaceFirst(target, replace));
+		else    // String replaceFirst without regex: https://stackoverflow.com/a/43436659
+			text = text.replaceFirst(Pattern.quote(target), Matcher.quoteReplacement(replace));
+
+		tic.setText(text);
+	}
+
+	@FXML
+	void replaceAll() {
+		String text = tic.getText();
+
+		String target = tf.getText();
+		String replace = replaceTf.getText();
+
+		if (regex.isSelected())
+			text = handleRegex(text, s -> s.replaceAll(target, replace));
+		else
+			text = text.replace(target, replace);
+
+		tic.setText(text);
+	}
+
+	private String handleRegex(String text, Function<String, String> regexFunc) {
+		try {
+			return regexFunc.apply(text);
+		} catch (PatternSyntaxException pse) {
+			Alert alert = new Alert(AlertType.ERROR, "Bad regex pattern");
+			alert.initOwner(this);
+			alert.initStyle(this.getStyle());
+			alert.showAndWait();
+		}
+		return text;
 	}
 }

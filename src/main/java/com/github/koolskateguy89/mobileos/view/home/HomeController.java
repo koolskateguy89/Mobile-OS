@@ -3,13 +3,18 @@ package com.github.koolskateguy89.mobileos.view.home;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Stack;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import com.github.koolskateguy89.mobileos.app.App;
@@ -27,19 +32,21 @@ public class HomeController {
 	@FXML
 	private VBox root;
 
+	@FXML
+	private HBox faveBox;
+
 	// TODO: 'faves'
-	// TODO: make faves StackPanes so I can add fave app buttons to them
 	@FXML
-	private JFXButton fav0;
+	private StackPane fav0;
 
 	@FXML
-	private JFXButton fav1;
+	private StackPane fav1;
 
 	@FXML
-	private JFXButton fav2;
+	private StackPane fav2;
 
 	@FXML
-	private JFXButton fav3;
+	private StackPane fav3;
 
 	@FXML
 	public void initialize() {
@@ -47,7 +54,7 @@ public class HomeController {
 
 		root.backgroundProperty().bind(Settings.BACKGROUND_PROPERTY);
 
-		// TODO: choosing background image
+		// TODO: choosing background image (in/from Settings)
 		Settings.setBackground(Constants.DEFAULT_BACKGROUND);
 	}
 
@@ -55,9 +62,9 @@ public class HomeController {
 	private static GridPane newGrid() {
 		try {
 			return FXMLLoader.load(grid);
-		} catch (IOException e) {
+		} catch (IOException io) {
 			// should not happen
-			e.printStackTrace();
+			io.printStackTrace();
 			return new GridPane();
 		}
 	}
@@ -114,7 +121,13 @@ public class HomeController {
 	}
 
 	public void initFaves(List<App> faves) {
+		for (int i = 0; i < faves.size(); i++) {
+			App app = faves.get(i);
+			Button button = app.getButton();
 
+			StackPane pane = (StackPane) faveBox.getChildren().get(i);
+			pane.getChildren().setAll(button);
+		}
 	}
 
 }

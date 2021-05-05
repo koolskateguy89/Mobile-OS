@@ -11,65 +11,63 @@
 <?import javafx.scene.layout.VBox?>
 
 <fx:root prefHeight="512.0" prefWidth="450.0" type="VBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.koolskateguy89.mobileos.app.system.notepad.NotepadController">
-	<children>
-       <MenuBar style="-fx-background-color: #888888;">
-          <Menu text="_File">
-             <MenuItem onAction="#newFile" text="_New">
-                <accelerator>
-                   <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                </accelerator>
-             </MenuItem>
-             <MenuItem onAction="#open" text="_Open…">
-                <accelerator>
-                   <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                </accelerator>
-             </MenuItem>
-             <Menu fx:id="recent" onAction="#openRecent" text="Open _Recent" />
-             <SeparatorMenuItem mnemonicParsing="false" />
-             <MenuItem onAction="#save" text="_Save">
-                <accelerator>
-                   <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                </accelerator>
-             </MenuItem>
-             <MenuItem onAction="#saveAs" text="Save _As…">
-                <accelerator>
-                   <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
-                </accelerator>
-             </MenuItem>
-             <MenuItem mnemonicParsing="false" text="Revert" />
+   <children>
+      <MenuBar style="-fx-background-color: #888888;">
+         <Menu text="_File">
+            <MenuItem onAction="#newFile" text="_New">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
+            <MenuItem onAction="#open" text="_Open…">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
+            <Menu fx:id="recent" onAction="#openRecent" text="Open _Recent" />
             <SeparatorMenuItem mnemonicParsing="false" />
-             <MenuItem mnemonicParsing="false" text="Preferences…" />
-             <SeparatorMenuItem mnemonicParsing="false" />
-             <MenuItem mnemonicParsing="false" onAction="#quit" text="Quit" />
-          </Menu>
-          <Menu text="_Edit">
-             <MenuItem fx:id="undo" mnemonicParsing="false" onAction="#undo" text="_Undo">
-                <accelerator>
-                   <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                </accelerator>
-             </MenuItem>
-             <MenuItem fx:id="redo" onAction="#redo" text="_Redo">
-                <accelerator>
-                   <KeyCodeCombination alt="UP" code="Y" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                </accelerator>
-             </MenuItem>
-             <SeparatorMenuItem mnemonicParsing="false" />
-             <MenuItem fx:id="cut" onAction="#cut" text="Cu_t">
-                <accelerator>
-                   <KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                </accelerator>
-             </MenuItem>
-             <MenuItem fx:id="copy" onAction="#copy" text="_Copy">
-                <accelerator>
-                   <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                </accelerator>
-             </MenuItem>
-             <MenuItem onAction="#paste" text="_Paste">
-                <accelerator>
-                   <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                </accelerator>
-             </MenuItem>
-             <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem onAction="#save" text="_Save">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
+            <MenuItem onAction="#saveAs" text="Save _As…">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
+            <MenuItem fx:id="revertToSaved" onAction="#revertToSaved" text="_Revert to saved" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem onAction="#quit" text="_Quit" />
+         </Menu>
+         <Menu text="_Edit">
+            <MenuItem fx:id="undo" mnemonicParsing="false" onAction="#undo" text="_Undo">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
+            <MenuItem fx:id="redo" onAction="#redo" text="_Redo">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="Y" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem fx:id="cut" onAction="#cut" text="Cu_t">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
+            <MenuItem fx:id="copy" onAction="#copy" text="_Copy">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
+            <MenuItem onAction="#paste" text="_Paste">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
+            <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem fx:id="find" onAction="#find" text="_Find">
                <accelerator>
                   <KeyCodeCombination alt="UP" code="F" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -85,27 +83,29 @@
                   <KeyCodeCombination alt="UP" code="G" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                </accelerator>
             </MenuItem>
-             <SeparatorMenuItem mnemonicParsing="false" />
-             <MenuItem onAction="#selectAll" text="_Select All">
-                <accelerator>
-                   <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                </accelerator>
-             </MenuItem>
-             <MenuItem onAction="#unselectAll" text="_Unselect All">
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem onAction="#selectAll" text="_Select All">
+               <!--
+					<accelerator>
+						<KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+					</accelerator>
+					-->
+            </MenuItem>
+            <MenuItem onAction="#unselectAll" text="_Unselect All">
                <accelerator>
                   <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                </accelerator></MenuItem>
-          </Menu>
-          <Menu text="F_ormat">
-             <CheckMenuItem fx:id="wrapText" text="_Wrap Text" />
+         </Menu>
+         <Menu text="F_ormat">
+            <CheckMenuItem fx:id="wrapText" text="_Wrap Text" />
             <MenuItem onAction="#font" text="_Font" />
-          </Menu>
-          <Menu text="_Help">
-             <MenuItem mnemonicParsing="false" text="About [App name shusuh]" />
-          </Menu>
-       </MenuBar>
-       <AnchorPane VBox.vgrow="ALWAYS">
-          <TextArea fx:id="textArea" layoutX="111.0" layoutY="269.0" promptText="Open a file!" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-       </AnchorPane>
-	</children>
+         </Menu>
+         <Menu text="_Help">
+            <MenuItem mnemonicParsing="false" text="About [App name shusuh]" />
+         </Menu>
+      </MenuBar>
+      <AnchorPane VBox.vgrow="ALWAYS">
+         <TextArea fx:id="textArea" layoutX="111.0" layoutY="269.0" promptText="Open a file!" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      </AnchorPane>
+   </children>
 </fx:root>

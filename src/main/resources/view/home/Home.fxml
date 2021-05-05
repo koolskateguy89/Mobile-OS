@@ -5,33 +5,16 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import com.jfoenix.controls.JFXButton?>
 
 <VBox fx:id="root" prefHeight="512.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.koolskateguy89.mobileos.view.home.HomeController">
    <children>
       <TabPane fx:id="tabPane" prefHeight="450.0" prefWidth="450.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE" />
-      <HBox prefHeight="62.0" prefWidth="450.0" spacing="10.0">
+      <HBox fx:id="faveBox" prefHeight="62.0" prefWidth="450.0" spacing="10.0">
          <children>
-            <StackPane prefHeight="150.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
-               <children>
-                  <JFXButton fx:id="fav0" buttonType="RAISED" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="fav0" />
-               </children>
-            </StackPane>
-            <StackPane prefHeight="150.0" prefWidth="200.0">
-               <children>
-                  <JFXButton fx:id="fav1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="fav1" />
-               </children>
-            </StackPane>
-            <StackPane prefHeight="150.0" prefWidth="200.0">
-               <children>
-                  <JFXButton fx:id="fav2" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="fav2" />
-               </children>
-            </StackPane>
-            <StackPane prefHeight="150.0" prefWidth="200.0">
-               <children>
-                  <JFXButton fx:id="fav3" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="fav3" />
-               </children>
-            </StackPane>
+            <StackPane fx:id="fav0" prefHeight="150.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <StackPane fx:id="fav1" prefHeight="150.0" prefWidth="200.0" />
+            <StackPane fx:id="fav2" prefHeight="150.0" prefWidth="200.0" />
+            <StackPane fx:id="fav3" prefHeight="150.0" prefWidth="200.0" />
          </children>
          <padding>
             <Insets bottom="10.0" top="10.0" />

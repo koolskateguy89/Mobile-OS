@@ -1,8 +1,9 @@
-package com.github.koolskateguy89.mobileos.app.system;
+package com.github.koolskateguy89.mobileos.app.system.notepad;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.prefs.Preferences;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -14,7 +15,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import com.github.koolskateguy89.mobileos.app.App;
-import com.github.koolskateguy89.mobileos.app.system.notepad.NotepadController;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 
 import lombok.Getter;
@@ -25,11 +25,12 @@ public class Notepad extends App {
 		put("name", "Notepad");
 		put("version", "1.0");
 		put("appType", "SYSTEM");
-		put("backgroundColor", "red");
+		put("backgroundColor", "lightblue");
 	}};
 
-	public Notepad() {
+	public Notepad(Preferences prefs) {
 		super(null, props);
+		NotepadController.setPrefs(prefs);
 	}
 
 	@Getter(lazy = true)
@@ -38,30 +39,31 @@ public class Notepad extends App {
 		loader.setRoot(this);
 		try {
 			loader.load();
-			nc = loader.getController();
-
-			ObjectProperty<File> fileProp = nc.fileProperty();
-
-			StringBinding nameBinding = Bindings.createStringBinding(() -> {
-				File file = fileProp.get();
-
-				// If no file is open,
-				if (file == null)
-					return " - Untitled";
-
-				String name = file.getName();
-
-				// if file extension is .txt, only show 'actual' file name
-				if (name.endsWith(".txt"))
-					name = name.substring(0, name.lastIndexOf(".txt"));
-
-				return " - " + name;
-			}, fileProp);
-
-			Notepad.super.detailProperty.bind(nameBinding);
-
-		} catch (IOException ignored) {
+		} catch (IOException io) {
+			io.printStackTrace();
 		}
+
+		nc = loader.getController();
+
+		ObjectProperty<File> fileProp = nc.fileProperty();
+
+		StringBinding nameBinding = Bindings.createStringBinding(() -> {
+			File file = fileProp.get();
+
+			// If no file is open,
+			if (file == null)
+				return " - Untitled";
+
+			String name = file.getName();
+
+			// if file extension is .txt, only show 'actual' file name
+			if (name.endsWith(".txt"))
+				name = name.substring(0, name.lastIndexOf(".txt"));
+
+			return " - " + name;
+		}, fileProp);
+
+		Notepad.super.detailProperty.bind(nameBinding);
 	}};
 
 	private NotepadController nc;
@@ -88,6 +90,6 @@ public class Notepad extends App {
 
 	@Override
 	public void onClose() {
-		nc.quit();  // for safety
+		nc.quit();  // for safety ig
 	}
 }

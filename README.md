@@ -24,10 +24,11 @@ Pre-requisites to develop:
 </dependency>
 ```
 
-The main class needs to extend [`App`](mobileos/src/src/main/java/com/github/koolskateguy89/mobileos/app/App.java), and needs a
-constructor with parameters `Path, Properties`.
+The main class needs to extend [`App`](src/main/java/com/github/koolskateguy89/mobileos/app/App.java), and needs a
+`public` constructor with parameters `Path, Properties` or `Path, Properties, Preferences`. If both are defined, the one with the
+later parameters (incl. `java.util.Preferences`) is used.
 
-### Folder structure (very important)
+### Folder structure
 
 | Name | Description |
 | ---- | ----------- |
@@ -36,12 +37,13 @@ constructor with parameters `Path, Properties`.
 | ./info.properties | Properties file containing application details (see [info.properties](#info.properties) below) |
 
 
-#### info.properties
+#### info.properties (very important)
 
 | Key | Description | Example |
 | --- | ----------- | ------- |
 | name | The app's name | ExampleApp |
 | pathToMainClass | The canonical name of the class that extends `App` | com.github.koolskateguy89.example.MyApp |
+| jarPath | The relative path to the application jar (relative from the application directory) | app.jar |
 | iconPath | The path to the application's icon | ./Image.png |
 | version | The app's version | 1.0 |
 | appType | The app's `AppType` | UTILITY |

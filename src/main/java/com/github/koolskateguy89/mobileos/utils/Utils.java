@@ -2,8 +2,6 @@ package com.github.koolskateguy89.mobileos.utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -24,6 +22,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
+import org.controlsfx.control.textfield.CustomPasswordField;
 import org.controlsfx.control.textfield.CustomTextField;
 
 public class Utils {
@@ -48,7 +47,7 @@ public class Utils {
 		if (!Files.exists(apps))
 			Files.createDirectory(apps);
 
-		// TODO: init other dirs
+		// TODO: init other dirs [if any - so far none]
 	}
 
 	// This is VERY iffy because of inheritance, the `getClass` will return the impl. class not the
@@ -63,29 +62,18 @@ public class Utils {
 		return constructor.newInstance(parameters);
 	}
 
-	public static <T> T instantiate(Class<T> clazz, Class<?>[] parameterTypes, Object... parameters) throws NoSuchMethodException,
-			InvocationTargetException, InstantiationException, IllegalAccessException {
-
-		Constructor<T> constructor = clazz.getDeclaredConstructor(parameterTypes);
-
-		return constructor.newInstance(parameters);
-	}
-
 	public static void copyToClipboard(String text) {
 		ClipboardContent content = new ClipboardContent();
 		content.putString(text);
 		Clipboard.getSystemClipboard().setContent(content);
 	}
 
-	// Convert stack trace to string: https://stackoverflow.com/a/1149721
-	public static String getAsString(Exception e) {
-		StringWriter sw = new StringWriter();
-		e.printStackTrace(new PrintWriter(sw));
-		return sw.toString();
-	}
-
 	public static void makeClearable(CustomTextField tf) {
 		setupClearButtonField(tf, tf.rightProperty());
+	}
+
+	public static void makeClearable(CustomPasswordField pf) {
+		setupClearButtonField(pf, pf.rightProperty());
 	}
 
 	// just straight up copied from org.controlsfx.control.textfield.TextFields.createClearableTextField

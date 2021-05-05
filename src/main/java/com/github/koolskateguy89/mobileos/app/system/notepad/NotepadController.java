@@ -6,8 +6,11 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Stack;
+import java.util.prefs.Preferences;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,26 +27,36 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 
 import com.github.koolskateguy89.mobileos.Main;
-import com.github.koolskateguy89.mobileos.prefs.Prefs;
 import com.github.koolskateguy89.mobileos.view.utils.ExceptionDialog;
 import com.github.koolskateguy89.mobileos.view.utils.FindText;
 import com.github.koolskateguy89.mobileos.view.utils.FontSelector;
 
-// TODO: decide what [close] will do and do newFile
+import lombok.Setter;
+
 public class NotepadController {
 
-	// TODO: status bar (caret position, maybe encoding, LF/CRLF)
-	// TODO: [edit] replace (Ctrl+H), go to [line] (Ctrl+G)
+	// TODO: {maybe} status bar (caret position, maybe encoding, LF/CRLF)
+	// TODO: [edit] go to [line] (Ctrl+G)
 	// TODO: [file] open recent
+
+	// FIXME: Ctrl+H isn't working as the accelerator for replace, instead is seems to be doing 'Delete' instead
+
+	@Setter
+	static Preferences prefs;
+	// maybe have a separate node for font? (it's not necessary but i dont like current impl.)
+
+	private static final String FAMILY_KEY  = "font_family",
+								BOLD_KEY    = "font_bold",
+								ITALICS_KEY = "font_italics",
+								SIZE_KEY    = "font_size";
 
 	private static final FileChooser fc = new FileChooser();
 
-	private static final String FAMILY_KEY  = "Notepad/family",
-								BOLD_KEY    = "Notepad/bold",
-								ITALICS_KEY = "Notepad/italics",
-								SIZE_KEY    = "Notepad/size";
+	private static void handleException(Throwable e) {
+		handleException(e, null);
+	}
 
-	private static void handleException(Exception e, String alertText) {
+	private static void handleException(Throwable e, String alertText) {
 		ExceptionDialog ed = new ExceptionDialog(e, alertText);
 		ed.showAndWaitCopy();
 	}
@@ -51,30 +64,34 @@ public class NotepadController {
 	private final FontSelector fs = new FontSelector(Main.getStage());
 
 	private final ObjectProperty<File> fileProperty = new SimpleObjectProperty<>();
-	public ObjectProperty<File> fileProperty() {
+	ObjectProperty<File> fileProperty() {
 		return fileProperty;
 	}
 
-	private boolean changed = false;
+	// TODO: text changed (maybe just simply if text is typed, set to true)
+	private final BooleanProperty changed = new SimpleBooleanProperty();
 	private String previousText;
 
 	// this is basically the opposite of quit()
-	public void init() {
+	void init() {
 		if (finder == null)
 			finder = new FindText(textArea);
 
 		Font defaultFont = Font.getDefault();
 
-		String family = Prefs.get(FAMILY_KEY, defaultFont.getFamily());
-		boolean bold = Prefs.getBoolean(BOLD_KEY, false);
-		boolean italics = Prefs.getBoolean(ITALICS_KEY, false);
-		double size = Prefs.getDouble(SIZE_KEY, defaultFont.getSize());
+		String family = prefs.get(FAMILY_KEY, defaultFont.getFamily());
+		boolean bold = prefs.getBoolean(BOLD_KEY, false);
+		boolean italics = prefs.getBoolean(ITALICS_KEY, false);
+		double size = prefs.getDouble(SIZE_KEY, defaultFont.getSize());
 
 		FontWeight weight = bold ? FontWeight.BOLD : FontWeight.NORMAL;
 		FontPosture posture = italics ? FontPosture.ITALIC : FontPosture.REGULAR;
 
 		Font font = Font.font(family, weight, posture, size);
-		fs.setFont(font);
+		textArea.setFont(font);
+
+		boolean wrap = prefs.getBoolean("wrap_text", false);
+		wrapText.setSelected(wrap);
 	}
 
 	@FXML
@@ -92,11 +109,11 @@ public class NotepadController {
 			System.out.println("Changed: " + changed);
 		});
 		 */
-		init();
 
 		// file
 		//save.disableProperty().bind(fileProp.isNull());
 		//saveAs.disableProperty().bind(textArea.textProperty().isEmpty());
+		revertToSaved.disableProperty().bind(fileProperty().isNull().and(changed));
 
 		// edit
 		undo.disableProperty().bind(textArea.undoableProperty().not());
@@ -114,16 +131,16 @@ public class NotepadController {
 		textArea.wrapTextProperty().bind(wrapText.selectedProperty());
 
 
-		// TODO
+		// TODO: recents
 		recent.getItems().add(new MenuItem("Yo my slime"));
 	}
 
 	// file
 
-	// TODO
 	@FXML
-	public void newFile() {
-		if (changed) {
+	void newFile() {
+		if (changed.get()) {
+			// TODO: ask to save because changed alert
 			Alert a = new Alert(AlertType.CONFIRMATION, "Are you sure? [TODO]");
 
 			// maybe do a ButtonType save
@@ -134,15 +151,17 @@ public class NotepadController {
 				save();
 			}
 		}
-		// TODO: check changed (ask to save if changed)
 
 		fileProperty.set(null);
 		textArea.clear();
 	}
 
 	@FXML
-	public void open() {
-		// TODO: check if current file isn't saved
+	void open() {
+		if (changed.get()) {
+			// TODO: alert about current file/text isn't saved
+		}
+
 		fc.setTitle("Open");
 		File file = fc.showOpenDialog(Main.getStage());
 
@@ -171,7 +190,7 @@ public class NotepadController {
 	private Menu recent;
 
 	@FXML
-	public void openRecent(ActionEvent event) {
+	void openRecent(ActionEvent event) {
 		// TODO
 		System.out.println("aaa");
 		System.out.println(event.getSource());
@@ -180,7 +199,7 @@ public class NotepadController {
 	}
 
 	@FXML
-	public void save() {
+	void save() {
 		File file = fileProperty.get();
 		if (file == null) {
 			saveAs();
@@ -194,7 +213,7 @@ public class NotepadController {
 	}
 
 	@FXML
-	public void saveAs() {
+	void saveAs() {
 		fc.setTitle("Save as");
 		File file = fc.showSaveDialog(Main.getStage());
 		if (file != null) {
@@ -203,37 +222,46 @@ public class NotepadController {
 		}
 	}
 
+	@FXML
+	private MenuItem revertToSaved;
+
+	@FXML
+	void revertToSaved() throws IOException {
+		String saved = Files.readString(fileProperty.get().toPath());
+		textArea.setText(saved);
+		changed.set(false);
+	}
+
 	// edit
 
 	@FXML
-	public void quit() {
-		// TODO
-		// idrk what I'm gonna do here, maybe close and go home?
+	void quit() {
 		if (finder != null) {
 			finder.close();
 			finder = null;
 		}
-
 
 		Font font = textArea.getFont();
 
 		String family = font.getFamily();
 		String style = font.getStyle();
 		boolean bold = style.contains("Bold");
-		boolean italics = style.contains("Italics");
+		boolean italics = style.contains("Italic");
 		double size = font.getSize();
 
-		Prefs.put(FAMILY_KEY, family);
-		Prefs.putBoolean(BOLD_KEY, bold);
-		Prefs.putBoolean(ITALICS_KEY, italics);
-		Prefs.putDouble(SIZE_KEY, size);
+		prefs.put(FAMILY_KEY, family);
+		prefs.putBoolean(BOLD_KEY, bold);
+		prefs.putBoolean(ITALICS_KEY, italics);
+		prefs.putDouble(SIZE_KEY, size);
+
+		prefs.putBoolean("wrap_text", wrapText.isSelected());
 	}
 
 	@FXML
 	private MenuItem undo;
 
 	@FXML
-	public void undo() {
+	void undo() {
 		textArea.undo();
 	}
 
@@ -241,7 +269,7 @@ public class NotepadController {
 	private MenuItem redo;
 
 	@FXML
-	public void redo() {
+	void redo() {
 		textArea.redo();
 	}
 
@@ -249,7 +277,7 @@ public class NotepadController {
 	private MenuItem cut;
 
 	@FXML
-	public void cut() {
+	void cut() {
 		textArea.cut();
 	}
 
@@ -257,51 +285,48 @@ public class NotepadController {
 	private MenuItem copy;
 
 	@FXML
-	public void copy() {
+	void copy() {
 		textArea.copy();
 	}
 
 	@FXML
-	public void paste() {
+	void paste() {
 		textArea.paste();
 	}
-
-	@FXML
-	private MenuItem find;
 
 	private FindText finder;
 
 	@FXML
-	public void find() {
-		finder.show();
-		finder.requestFocus();
+	private MenuItem find;
+
+	@FXML
+	void find() {
+		finder.find();
 	}
 
 	@FXML
 	private MenuItem replace;
 
 	@FXML
-	public void replace() {
-		System.out.println(textArea.getAnchor());
-		System.out.println(textArea.getCaretPosition());
-		System.out.println();
+	void replace() {
+		finder.findAndReplace();
 	}
 
 	@FXML
 	private MenuItem goTo;
 
 	@FXML
-	public void goTo() {
+	void goTo() {
 		// TODO
 	}
 
 	@FXML
-	public void selectAll() {
+	void selectAll() {
 		textArea.selectAll();
 	}
 
 	@FXML
-	public void unselectAll() {
+	void unselectAll() {
 		textArea.deselect();
 	}
 
@@ -311,7 +336,7 @@ public class NotepadController {
 	private CheckMenuItem wrapText;
 
 	@FXML
-	public void font() {
+	void font() {
 		fs.setFont(textArea.getFont());
 
 		// select a font

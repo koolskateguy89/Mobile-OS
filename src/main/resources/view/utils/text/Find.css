@@ -3,3 +3,13 @@
     -jfx-selected-color: #5A5A5A;
     -jfx-unselected-color: #5A5A5A;
 }
+
+.jfx-button {
+	-fx-pref-width: 83.2;
+	-fx-max-width: -fx-pref-width;
+	-fx-min-width: -fx-pref-width;
+}
+
+.vbox {
+	-fx-spacing: 10;
+}

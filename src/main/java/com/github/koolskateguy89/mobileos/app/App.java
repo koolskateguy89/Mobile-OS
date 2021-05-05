@@ -28,6 +28,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 import com.github.koolskateguy89.mobileos.Main;
+import com.github.koolskateguy89.mobileos.utils.Constants;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -42,8 +43,8 @@ public abstract class App {
 		// The name of the file with an application's properties
 		public static final String PROPERTIES = "info.properties";
 
-		// The name of the jar file containing compiled application code
-		public static final String JAR_NAME = "app.jar";
+		// The [relative] path to the application jar
+		public static final String JAR_PATH = "jarPath";
 
 		// the same as BackgroundSize.DEFAULT but `contain` is true
 		static final BackgroundSize SIZE = new BackgroundSize(
@@ -106,13 +107,14 @@ public abstract class App {
 
 		Label label = new Label(App.this.getName());
 		label.setTextFill(Color.WHITE);
-		label.setFont(Apps.BOLD);
+		label.setFont(Constants.BOLD);
 
 		getChildren().addAll(button, label);
 		setAlignment(Pos.CENTER);
 	}};
 
 
+	// including Preferences is optional
 	protected App(@Nullable Path directory, Properties props) {
 		this.directory = directory;
 

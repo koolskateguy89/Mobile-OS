@@ -1,11 +1,13 @@
 package com.github.koolskateguy89.mobileos;
 
+import java.lang.reflect.Constructor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.prefs.Preferences;
 
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
@@ -23,7 +25,6 @@ import org.reflections.util.ConfigurationBuilder;
 
 import com.github.koolskateguy89.mobileos.app.App;
 import com.github.koolskateguy89.mobileos.app.Apps;
-import com.github.koolskateguy89.mobileos.prefs.Prefs;
 import com.github.koolskateguy89.mobileos.utils.Constants;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.github.koolskateguy89.mobileos.view.MainController;
@@ -33,18 +34,9 @@ import lombok.Getter;
 
 public class Main extends Application {
 
-	// TODO: splash screen (reading data in from applications (name, image, etc.)) - maybe
+	private static final String DEFAULT_TITLE = "Mobile OS";
 
-	private static List<App> loadAppsFrom(Path appsDir) throws Exception {
-		List<App> apps = new ArrayList<>();
-
-		var ds = Files.newDirectoryStream(appsDir);
-		for (Path appDir : ds) {
-			apps.add(Apps.fromFile(appDir));
-		}
-
-		return apps;
-	}
+	// TODO: {maybe} splash screen (reading data in from applications (name, image, etc.))
 
 	// Get all classes from package: https://stackoverflow.com/a/520339
 	// Get all classes from current runtime: https://stackoverflow.com/a/7865124
@@ -62,8 +54,13 @@ public class Main extends Application {
 		Set<Class<? extends App>> clazzes = findSystemApps();
 
 		List<App> sysApps = new ArrayList<>(clazzes.size());
-		for (Class<? extends App> clazz : clazzes)
-			sysApps.add(Utils.instantiate(clazz));
+		for (Class<? extends App> clazz : clazzes) {
+			String name = clazz.getSimpleName();
+			Preferences appPrefs = Prefs.forSystemApp(name);
+
+			App app = initSysApp(clazz, appPrefs);
+			sysApps.add(app);
+		}
 
 		// sort apps in case-insensitive name order
 		sysApps.sort(Comparator.comparing(App::getName, String.CASE_INSENSITIVE_ORDER));
@@ -71,9 +68,30 @@ public class Main extends Application {
 		hc.initSystemApps(sysApps);
 	}
 
+	private static App initSysApp(Class<? extends App> clazz, Preferences appPrefs) throws Exception {
+		Constructor<? extends App> constructor;
+		Object[] initargs;
+		try {
+			// without prefs
+			constructor = clazz.getDeclaredConstructor();
+			initargs = new Object[0];
+		} catch (NoSuchMethodException nsme) {
+			// with prefs
+			constructor = clazz.getDeclaredConstructor(Preferences.class);
+			initargs = new Object[] {appPrefs};
+		}
+		return constructor.newInstance(initargs);
+	}
+
 	private void loadApps() throws Exception {
 		Path appsDir = Path.of(Prefs.ROOT_DIR).resolve(Constants.APPS_DIR);
-		List<App> apps = loadAppsFrom(appsDir);
+
+		List<App> apps = new ArrayList<>();
+
+		var ds = Files.newDirectoryStream(appsDir);
+		for (Path appDir : ds) {
+			apps.add(Apps.fromPath(appDir));
+		}
 
 		// sort apps in case-insensitive name order
 		apps.sort(Comparator.comparing(App::getName, String.CASE_INSENSITIVE_ORDER));
@@ -81,8 +99,6 @@ public class Main extends Application {
 		hc.initApps(apps);
 		// TODO: initFaves
 	}
-
-	private static final String DEFAULT_TITLE = "Mobile OS";
 
 	@Getter
 	private static Main instance;

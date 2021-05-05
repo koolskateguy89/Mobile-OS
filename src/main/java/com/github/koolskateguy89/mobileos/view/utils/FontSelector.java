@@ -83,7 +83,6 @@ public class FontSelector extends Stage {
 			bold.setSelected(isBold);
 			italics.setSelected(isItalics);
 
-			// TODO: check if size is int
 			if (size == Math.floor(size)) { // size is int
 				sizes.setValue(Integer.toString((int) size));
 			} else {
@@ -92,6 +91,7 @@ public class FontSelector extends Stage {
 		});
 		// initial value is system default font
 		fontProperty.set(Font.getDefault());
+		sizeSlider.setValue(Double.parseDouble(sizes.getValue()));
 
 
 		// update slider when size combo is updated
