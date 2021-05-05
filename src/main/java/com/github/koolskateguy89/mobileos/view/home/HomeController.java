@@ -3,12 +3,10 @@ package com.github.koolskateguy89.mobileos.view.home;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.Stack;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -21,7 +19,6 @@ import com.github.koolskateguy89.mobileos.app.App;
 import com.github.koolskateguy89.mobileos.prefs.Settings;
 import com.github.koolskateguy89.mobileos.utils.Constants;
 import com.github.koolskateguy89.mobileos.utils.Utils;
-import com.jfoenix.controls.JFXButton;
 
 public class HomeController {
 

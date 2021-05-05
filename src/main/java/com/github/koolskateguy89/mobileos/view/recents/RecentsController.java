@@ -3,9 +3,9 @@ package com.github.koolskateguy89.mobileos.view.recents;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
-
 import com.github.koolskateguy89.mobileos.app.App;
+
+import lombok.Getter;
 
 public class RecentsController {
 
