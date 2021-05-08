@@ -15,8 +15,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+import com.github.koolskateguy89.mobileos.Settings;
 import com.github.koolskateguy89.mobileos.app.App;
-import com.github.koolskateguy89.mobileos.prefs.Settings;
 import com.github.koolskateguy89.mobileos.utils.Constants;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 
@@ -114,7 +114,7 @@ public class HomeController {
 		} while (i < len);
 
 		// Show the second tab (first non-system tab)
-		tabPane.getSelectionModel().select(1);
+		//tabPane.getSelectionModel().select(1);
 	}
 
 	public void initFaves(List<App> faves) {

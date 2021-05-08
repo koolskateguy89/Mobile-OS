@@ -9,15 +9,16 @@ public class Prefs {
 	private Prefs() {}
 
 	private static final Preferences prefs = Preferences.userNodeForPackage(Prefs.class);
-	private static final Preferences appPrefs = prefs.node("apps");
-	public static final Preferences sysAppPrefs = prefs.node("sys_apps");   // TODO: give better name
+
+	private static final Preferences appPrefsParent = prefs.node("apps");
+	public static final Preferences sysAppPrefsParent = prefs.node("sys_apps");   // TODO: give better name
 
 	// TODO: make this non-public once Apps.fromPath(Path) is moved to Main
 	public static Preferences forApp(String name) {
-		return appPrefs.node(name);
+		return appPrefsParent.node(name);
 	}
 	static Preferences forSystemApp(String name) {
-		return sysAppPrefs.node(name);
+		return sysAppPrefsParent.node(name);
 	}
 
 	public static final boolean IS_FIRST_RUN = prefs.getBoolean("first_run", true);
@@ -29,10 +30,10 @@ public class Prefs {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			if (IS_FIRST_RUN)
 				prefs.putBoolean("first_run", false);
-
 			prefs.put("root_dir", ROOT_DIR);
+
+			// saves preferences & descendants to a permanent store
 			try {
-				// saves preferences & descendants to a permanent store
 				prefs.flush();
 			} catch (BackingStoreException e) {
 				e.printStackTrace();

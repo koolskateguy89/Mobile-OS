@@ -31,7 +31,7 @@ public class FontSelector extends Stage {
 		initStyle(StageStyle.UTILITY);
 		initOwner(owner);
 
-		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("utils/fontSelector/FontSelector"));
+		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("utils/FontSelector"));
 		loader.setRoot(this);
 		loader.setController(this);
 

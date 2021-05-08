@@ -78,7 +78,7 @@ public abstract class App {
 		//</editor-fold>
 		//<editor-fold desc="BackgroundImage[] images">
 		Image icon = App.this.getIcon();
-		if (icon.isError())
+		if (icon == null || icon.isError())
 			icon = AppConstants.FALLBACK_ICON;
 
 		BackgroundImage[] images = {

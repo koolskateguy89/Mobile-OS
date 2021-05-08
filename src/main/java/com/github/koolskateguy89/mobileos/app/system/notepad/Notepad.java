@@ -7,6 +7,7 @@ import java.util.prefs.Preferences;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
+import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.app.App;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 
@@ -23,7 +25,7 @@ public class Notepad extends App {
 
 	private static final Properties props = new Properties() {{
 		put("name", "Notepad");
-		put("version", "1.0");
+		put("version", Main.VERSION);
 		put("appType", "SYSTEM");
 		put("backgroundColor", "lightblue");
 	}};
@@ -45,12 +47,13 @@ public class Notepad extends App {
 
 		nc = loader.getController();
 
-		ObjectProperty<File> fileProp = nc.fileProperty();
+		ObjectProperty<File> fileProp = nc.fileProperty;
+		BooleanProperty changedProp = nc.changed;
 
 		StringBinding nameBinding = Bindings.createStringBinding(() -> {
 			File file = fileProp.get();
 
-			// If no file is open,
+			// If no file is open
 			if (file == null)
 				return " - Untitled";
 
@@ -63,11 +66,14 @@ public class Notepad extends App {
 			return " - " + name;
 		}, fileProp);
 
-		Notepad.super.detailProperty.bind(nameBinding);
+		StringBinding changedBinding = Bindings.createStringBinding(() -> changedProp.get() ? "*" : "", changedProp);
+
+		Notepad.super.detailProperty.bind(nameBinding.concat(changedBinding));
 	}};
 
 	private NotepadController nc;
 
+	// TODO: Notepad icon
 	@Override
 	public Image getIcon() {
 		return AppConstants.FALLBACK_ICON;

@@ -15,7 +15,7 @@
 
 <fx:root resizable="false" title="Font" type="Stage" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
 	<scene>
-		<Scene stylesheets="@FontSelector.css">
+		<Scene stylesheets="@css/FontSelector.css">
 			<AnchorPane prefHeight="306.0" prefWidth="436.0">
 				<children>
 					<HBox layoutX="47.0" layoutY="41.0" prefHeight="152.0" prefWidth="326.0" spacing="5.0">

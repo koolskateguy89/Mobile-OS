@@ -3,28 +3,34 @@ package com.github.koolskateguy89.mobileos.app.system.notepad;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Stack;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.prefs.Preferences;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.ActionEvent;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
+import javafx.stage.StageStyle;
 
 import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.view.utils.ExceptionDialog;
@@ -36,24 +42,30 @@ import lombok.Setter;
 public class NotepadController {
 
 	// TODO: {maybe} status bar (caret position, maybe encoding, LF/CRLF)
-	// TODO: [edit] go to [line] (Ctrl+G)
-	// TODO: [file] open recent
+	// TODO: [file] Open Recents: separator + "Clear Menu" (at bottom) & save in prefs
+
 
 	// FIXME: Ctrl+H isn't working as the accelerator for replace, instead is seems to be doing 'Delete' instead
 
+	// TODO: line numbers on left of text box
+
 	@Setter
 	static Preferences prefs;
-	// maybe have a separate node for font? (it's not necessary but i dont like current impl.)
 
 	private static final String FAMILY_KEY  = "font_family",
 								BOLD_KEY    = "font_bold",
 								ITALICS_KEY = "font_italics",
 								SIZE_KEY    = "font_size";
 
+	// maybe use a separate node for recents then a separate prop for each recent - like how Scenebuilder does it
+	// but it does that because it stores other info about it, which this isn't because I cba
+	private static final String RECENTS_KEY = "recents";
+
 	private static final FileChooser fc = new FileChooser();
 
-	private static void handleException(Throwable e) {
-		handleException(e, null);
+	static {
+		// TODO: better way to do this
+		fc.setInitialDirectory(new File(System.getProperty("user.home") + "/Desktop"));
 	}
 
 	private static void handleException(Throwable e, String alertText) {
@@ -63,14 +75,49 @@ public class NotepadController {
 
 	private final FontSelector fs = new FontSelector(Main.getStage());
 
-	private final ObjectProperty<File> fileProperty = new SimpleObjectProperty<>();
-	ObjectProperty<File> fileProperty() {
-		return fileProperty;
+	final ObjectProperty<File> fileProperty = new SimpleObjectProperty<>();
+
+	// max 8 recents
+	private final int maxRecentsSize = 8;
+	private final ObservableList<File> recents = FXCollections.observableList(new ArrayList<>(maxRecentsSize));
+	private boolean changing = false;
+	{
+		ListChangeListener<File> sizeListener = change -> {
+			//if (changing)
+			//	return;
+
+			changing = true;
+			int size = recents.size();
+			System.out.println(size);
+			if (size > maxRecentsSize) {
+				System.out.println("resizing recents");
+				// set recents as the most recent files
+				List<File> mostRecent = recents.subList(size - maxRecentsSize, size);
+
+				// if this calls this sizeListener multiple times, that's a BIG problem
+				//recents.setAll(mostRecent);   //unsupported
+				//recents.clear();
+	// FIXME: this doesn't work because it's changing the list before other listeners have been notified of the current change
+				change.getList().clear();
+				recents.setAll(mostRecent);
+			}
+			changing = false;
+		};
+		recents.addListener(sizeListener);
+		recents.clear();
+		recents.add(new File("."));
+		recents.add(new File("."));
+		recents.add(new File("."));
+		recents.add(new File("."));
+		recents.add(new File("."));
+		recents.add(new File("."));
+		recents.add(new File("."));
+		recents.add(new File("."));
+		recents.add(new File("."));
 	}
 
-	// TODO: text changed (maybe just simply if text is typed, set to true)
-	private final BooleanProperty changed = new SimpleBooleanProperty();
-	private String previousText;
+	// Simple: once textArea text changes, this is true
+	final BooleanProperty changed = new SimpleBooleanProperty();
 
 	// this is basically the opposite of quit()
 	void init() {
@@ -94,63 +141,129 @@ public class NotepadController {
 		wrapText.setSelected(wrap);
 	}
 
+	// returns if to cancel
+	private boolean cancelDueToUnsavedText() {
+		if (changed.get()) {
+			Alert save = new Alert(Alert.AlertType.WARNING, "Do you want to save current file?",
+					ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+
+			ButtonType result = save.showAndWait().orElse(ButtonType.CANCEL);
+
+			if (result == ButtonType.CANCEL)
+				return true;
+
+			if (result == ButtonType.YES)
+				save();
+		}
+		return false;
+	}
+
+	private void openFile(File file) {
+		recents.remove(file);
+		recents.add(file);
+
+		fileProperty.set(file);
+
+		try {
+			textArea.setText(Files.readString(file.toPath()));
+			changed.set(false);
+		} catch (IOException e) {
+			handleException(e, file.getName() + " could not be opened");
+		}
+	}
+
+	@FXML
+	private TextArea lineThingy;
+
 	@FXML
 	private TextArea textArea;
 
 	@FXML
 	private void initialize() {
-		// TODO: changed
-		/*textArea.textProperty().addListener(obs -> {
-			StringProperty sp = (StringProperty) obs;
-			String text = sp.get();
+		// lines
+		lineThingy.fontProperty().bind(textArea.fontProperty());
 
-			changed = !text.equals(previousText);
-			previousText = text;
-			System.out.println("Changed: " + changed);
+		// lineThingy.scrollTopProperty() can't be bound because it gets set after this
+		textArea.scrollTopProperty().addListener((obs, oldVal, newVal) -> {
+			lineThingy.setScrollTop(newVal.doubleValue());
 		});
-		 */
+
+		// changed & lines
+		textArea.textProperty().addListener(obs -> {
+			// Not bothered to implement a better way to detect change
+			changed.set(true);
+
+			// re-calculate the lines
+			int lines = (int) textArea.getText().lines().count();
+
+			if (lines == 0) {
+				lineThingy.setText("1");
+				return;
+			}
+
+			StringBuilder sb = new StringBuilder(lines * 2 - 1);
+			sb.append(1);
+			for (int i = 2; i <= lines; i++) {
+				sb.append('\n').append(i);
+			}
+			lineThingy.setText(sb.toString());
+		});
+
+		// I could be more efficient and not regenerate the entire recent menu every time but cba
+		ListChangeListener<File> recentsListener = change -> {
+			int len = recents.size();
+			List<MenuItem> result = new ArrayList<>(len);
+
+			if (len == 0) {
+				recent.getItems().clear();
+				return;
+			}
+
+			// iterate backwards through recents - so most recent file first
+			ListIterator<File> it = recents.listIterator(len);
+			while (it.hasPrevious()) {
+				File recent = it.previous();
+				// maybe to absolute path?
+				MenuItem menu = new MenuItem(recent.getName());
+				menu.setOnAction(event -> {
+					if (!cancelDueToUnsavedText())
+						openFile(recent);
+				});
+				result.add(menu);
+			}
+
+			recent.getItems().setAll(result);
+		};
+		recents.addListener(recentsListener);
 
 		// file
 		//save.disableProperty().bind(fileProp.isNull());
 		//saveAs.disableProperty().bind(textArea.textProperty().isEmpty());
-		revertToSaved.disableProperty().bind(fileProperty().isNull().and(changed));
+		revertToSaved.disableProperty().bind(fileProperty.isNull().and(changed));
 
 		// edit
 		undo.disableProperty().bind(textArea.undoableProperty().not());
 		redo.disableProperty().bind(textArea.redoableProperty().not());
 		//
-		var selected = textArea.selectedTextProperty();
-		cut.disableProperty().bind(selected.isEmpty());
-		copy.disableProperty().bind(selected.isEmpty());
+		BooleanBinding selectedIsEmpty = textArea.selectedTextProperty().isEmpty();
+		cut.disableProperty().bind(selectedIsEmpty);
+		copy.disableProperty().bind(selectedIsEmpty);
 		//
-		find.disableProperty().bind(textArea.textProperty().isEmpty());
-		replace.disableProperty().bind(textArea.textProperty().isEmpty());
-		goTo.disableProperty().bind(textArea.textProperty().isEmpty());
+		BooleanBinding isEmpty = textArea.textProperty().isEmpty();
+		find.disableProperty().bind(isEmpty);
+		replace.disableProperty().bind(isEmpty);
+		goTo.disableProperty().bind(isEmpty);
 
 		// format
 		textArea.wrapTextProperty().bind(wrapText.selectedProperty());
-
-
-		// TODO: recents
-		recent.getItems().add(new MenuItem("Yo my slime"));
 	}
 
 	// file
 
 	@FXML
 	void newFile() {
-		if (changed.get()) {
-			// TODO: ask to save because changed alert
-			Alert a = new Alert(AlertType.CONFIRMATION, "Are you sure? [TODO]");
-
-			// maybe do a ButtonType save
-
-			ButtonType result = a.showAndWait().orElse(null);
-			if (result == ButtonType.NO) {
-				// save includes saveAs if file is null
-				save();
-			}
-		}
+		if (cancelDueToUnsavedText())
+			return;
 
 		fileProperty.set(null);
 		textArea.clear();
@@ -158,9 +271,8 @@ public class NotepadController {
 
 	@FXML
 	void open() {
-		if (changed.get()) {
-			// TODO: alert about current file/text isn't saved
-		}
+		if (cancelDueToUnsavedText())
+			return;
 
 		fc.setTitle("Open");
 		File file = fc.showOpenDialog(Main.getStage());
@@ -169,34 +281,8 @@ public class NotepadController {
 			openFile(file);
 	}
 
-	private void openFile(File file) {
-		fileProperty.set(file);
-
-		try {
-			textArea.setText(Files.readString(file.toPath()));
-		} catch (IOException e) {
-			handleException(e, file.getName() + " could not be opened");
-		}
-	}
-
-	// I'm not sure which to use, hashset gives only unique which is good
-	// for each file in here, I'll need a MenuItem whose onAction will be to open that file
-	private Stack<File> recents;
-	private LinkedHashSet<File> recentSet;
-	//             'index'
-	private HashMap<Integer, File> recentMap;
-
 	@FXML
 	private Menu recent;
-
-	@FXML
-	void openRecent(ActionEvent event) {
-		// TODO
-		System.out.println("aaa");
-		System.out.println(event.getSource());
-		System.out.println(event.getTarget());
-		System.out.println();
-	}
 
 	@FXML
 	void save() {
@@ -206,6 +292,7 @@ public class NotepadController {
 		} else {
 			try {
 				Files.writeString(file.toPath(), textArea.getText());
+				changed.set(false);
 			} catch (IOException e) {
 				handleException(e, file.getName() + " could not be saved");
 			}
@@ -317,7 +404,43 @@ public class NotepadController {
 
 	@FXML
 	void goTo() {
-		// TODO
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.initStyle(StageStyle.UTILITY);
+		alert.initOwner(Main.getStage());
+		alert.setTitle("Go To");
+
+		// TODO: add int-only filter
+		TextField textField = new TextField("1");
+
+		DialogPane dp = alert.getDialogPane();
+		dp.setHeaderText("Line number:");
+		dp.setContent(textField);
+
+		textField.requestFocus();
+		alert.showAndWait();
+
+		int line;
+		try {
+			line = Integer.parseInt(textField.getText());
+		} catch (NumberFormatException e) {
+			// TODO: remove try/catch once int-only filter is on textField
+			return;
+		}
+
+		try {
+			// lines before the goTo line
+			var linesBefore = textArea.getText().lines().limit(line - 1);
+
+			int lenBefore = linesBefore.mapToInt(String::length).sum();
+
+			lenBefore += line - 1; // account for new lines (bit weird - TODO: better this comment)
+			textArea.selectPositionCaret(lenBefore);
+
+			// don't select any text
+			textArea.deselect();
+		} catch (IndexOutOfBoundsException e) {
+			new Alert(AlertType.ERROR, line + " is out of bounds").showAndWait();
+		}
 	}
 
 	@FXML

@@ -46,10 +46,7 @@ public class ExceptionDialog extends Dialog<ButtonType> {
 		TextArea textArea = new TextArea(exceptionText);
 		textArea.setEditable(false);
 
-		AnchorPane.setBottomAnchor(textArea, 0.0);
-		AnchorPane.setLeftAnchor(textArea, 0.0);
-		AnchorPane.setRightAnchor(textArea, 0.0);
-		AnchorPane.setTopAnchor(textArea, 0.0);
+		Utils.anchor(textArea, 0, 0, 0, 0);
 
 		AnchorPane root = new AnchorPane(textArea);
 		root.setMaxWidth(Double.MAX_VALUE);

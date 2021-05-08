@@ -8,9 +8,10 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root prefHeight="512.0" prefWidth="450.0" type="VBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.koolskateguy89.mobileos.app.system.notepad.NotepadController">
+<fx:root prefHeight="512.0" prefWidth="450.0" stylesheets="@Editor.css" type="VBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.koolskateguy89.mobileos.app.system.notepad.NotepadController">
    <children>
       <MenuBar style="-fx-background-color: #888888;">
          <Menu text="_File">
@@ -24,7 +25,7 @@
                   <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                </accelerator>
             </MenuItem>
-            <Menu fx:id="recent" onAction="#openRecent" text="Open _Recent" />
+            <Menu fx:id="recent" text="Open _Recent" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem onAction="#save" text="_Save">
                <accelerator>
@@ -105,7 +106,12 @@
          </Menu>
       </MenuBar>
       <AnchorPane VBox.vgrow="ALWAYS">
-         <TextArea fx:id="textArea" layoutX="111.0" layoutY="269.0" promptText="Open a file!" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+               <TextArea fx:id="lineThingy" editable="false" minWidth="-Infinity" prefHeight="486.0" prefWidth="25.0" styleClass="line-numbers" text="1" />
+               <TextArea fx:id="textArea" promptText="Open a file!" />
+            </children>
+         </HBox>
       </AnchorPane>
    </children>
 </fx:root>

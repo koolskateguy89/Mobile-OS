@@ -41,6 +41,7 @@ public class Apps {
 		Preferences appPrefs = Prefs.forApp(name);
 
 		String pathToMainClass = props.getProperty("pathToMainClass");
+
 		String jarPath = props.getProperty(App.AppConstants.JAR_PATH);
 		Path jar = dir.resolve(jarPath);
 

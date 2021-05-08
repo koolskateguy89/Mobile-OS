@@ -1,4 +1,4 @@
-package com.github.koolskateguy89.mobileos.prefs;
+package com.github.koolskateguy89.mobileos;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

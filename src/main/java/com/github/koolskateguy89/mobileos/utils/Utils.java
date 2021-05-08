@@ -18,6 +18,7 @@ import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
@@ -50,22 +51,17 @@ public class Utils {
 		// TODO: init other dirs [if any - so far none]
 	}
 
-	// This is VERY iffy because of inheritance, the `getClass` will return the impl. class not the
-	// super class, this behaviour is usually not what you want
-	public static <T> T instantiate(Class<T> clazz, Object... parameters) throws NoSuchMethodException,
-			InvocationTargetException, InstantiationException, IllegalAccessException {
-
-		Class<?>[] parameterTypes = Arrays.stream(parameters).map(Object::getClass).toArray(Class[]::new);
-
-		Constructor<T> constructor = clazz.getDeclaredConstructor(parameterTypes);
-
-		return constructor.newInstance(parameters);
-	}
-
 	public static void copyToClipboard(String text) {
 		ClipboardContent content = new ClipboardContent();
 		content.putString(text);
 		Clipboard.getSystemClipboard().setContent(content);
+	}
+
+	public static void anchor(Node node, double top, double bottom, double left, double right) {
+		AnchorPane.setTopAnchor(node, top);
+		AnchorPane.setBottomAnchor(node, bottom);
+		AnchorPane.setLeftAnchor(node, left);
+		AnchorPane.setRightAnchor(node, right);
 	}
 
 	public static void makeClearable(CustomTextField tf) {

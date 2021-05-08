@@ -16,7 +16,7 @@
 
 <fx:root resizable="false" title="Find" type="Stage" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <scene>
-        <Scene stylesheets="@Find.css">
+        <Scene stylesheets="@css/Find.css">
             <AnchorPane prefHeight="256.0" prefWidth="396.0">
             <GridPane fx:id="findParent" layoutX="14.0" layoutY="27.0">
               <columnConstraints>

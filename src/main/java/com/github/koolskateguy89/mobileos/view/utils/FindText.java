@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
@@ -15,6 +16,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -48,7 +50,7 @@ public class FindText extends Stage {
 		initStyle(StageStyle.UTILITY);
 		initOwner(owner);
 
-		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("utils/text/Find"));
+		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("utils/Find"));
 		loader.setRoot(this);
 		loader.setController(this);
 
@@ -122,14 +124,23 @@ public class FindText extends Stage {
 		Utils.makeClearable(tf);
 		Utils.makeClearable(replaceTf);
 
+		// for some reason when pressing enter when tf is focused, the find (default) action isn't triggered
+		tf.setOnKeyPressed(keyEvent -> {
+			if (keyEvent.getCode() == KeyCode.ENTER)
+				if (!tf.getText().isEmpty())
+					find();
+		});
+
+		BooleanBinding isEmpty = tic.textProperty().isEmpty();
+
 		// can't do any operations if there's nothing (that makes no sense)
-		findParent.disableProperty().bind(tf.textProperty().isEmpty());
+		findParent.disableProperty().bind(isEmpty);
 
 		replaceTf.visibleProperty().bind(replace);
 		replaceLbl.visibleProperty().bind(replaceTf.visibleProperty());
 
 		replaceBox.visibleProperty().bind(replace);
-		replaceBox.disableProperty().bind(tf.textProperty().isEmpty());
+		replaceBox.disableProperty().bind(isEmpty);
 
 		regex.visibleProperty().bind(replace);
 	}
