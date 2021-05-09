@@ -27,7 +27,7 @@ public class Apps {
 	};
 
 	// lmao I wanna change this to just throws `Exception` but who doesn't like seeing this clusterfuck
-	// TODO: in Main, handle exceptions; also maybe move this to Main
+	// TODO: in Main, handle exceptions
 	public static App fromPath(Path dir) throws IOException, ClassNotFoundException,
 			NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException
 	{

@@ -1,7 +1,6 @@
 package com.github.koolskateguy89.mobileos.app;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.util.Properties;
 
@@ -11,8 +10,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
@@ -22,7 +21,6 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -36,14 +34,14 @@ import lombok.Getter;
 @Getter @EqualsAndHashCode
 public abstract class App {
 
-	protected static class AppConstants {
+	public static class AppConstants {
 		// Image to fallback on if icon loading doesn't work
 		public static final Image FALLBACK_ICON = new Image("images/icons/fallback-application-icon.png");
 
 		// The name of the file with an application's properties
 		public static final String PROPERTIES = "info.properties";
 
-		// The [relative] path to the application jar
+		// The [relative] path to the application jar, defined in info.properties
 		public static final String JAR_PATH = "jarPath";
 
 		// the same as BackgroundSize.DEFAULT but `contain` is true
@@ -92,8 +90,6 @@ public abstract class App {
 		Background bg = new Background(fills, images);
 		setBackground(bg);
 
-		// Only show image
-		setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 		// Try and take up all space it can in its parent
 		setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 		// Open the app when button is pressed
@@ -101,7 +97,7 @@ public abstract class App {
 	}};
 
 	@Getter(lazy = true) @EqualsAndHashCode.Exclude
-	private final VBox node = new VBox(5) {{
+	private final Node node = new VBox(5) {{
 		Button button = App.this.getButton();
 		VBox.setVgrow(button, Priority.ALWAYS);
 
@@ -114,7 +110,11 @@ public abstract class App {
 	}};
 
 
-	// including Preferences is optional
+	// including Preferences in child constructor is optional
+	/**
+	 * @param directory yo my slime
+	 * @param props the properties object holding information about this app
+	 */
 	protected App(@Nullable Path directory, Properties props) {
 		this.directory = directory;
 
@@ -142,16 +142,32 @@ public abstract class App {
 		return directory.resolve(path).toFile();
 	}
 
-	// Useful for if app icon is in dir
-	protected Image getImageFromDirectory(String path) throws MalformedURLException {
-		return new Image(directory.resolve(path).toUri().toURL().toExternalForm());
+	/**
+	 * Use this to get an image from the app's directory.
+	 *
+	 * For example if app's icon is '{@code ./resources/Icon.png}' relative to the directory, you could use
+	 * <pre>{@code
+	 *   @lombok.Getter(lazy = true)
+	 *   private final Image icon = super.getImageFromDirectory("resources/Icon.png");
+	 * }</pre>
+	 *
+	 * @param path relative path of image
+	 *
+	 * @return the {@code Image}
+	 */
+	protected final Image getImageFromDirectory(String path) {
+		return new Image("file:" + directory.resolve(path));
 	}
 
-
+	/**
+	 * @return an {@code Image} representing this app's icon
+	 */
 	public abstract Image getIcon();
 
-	// returns 'home' pane? well the first pane you want to show to user
-	public abstract Pane getPane();
+	/**
+	 * @return a {@code Node} representing the pane showing this (? - nonsensical)
+	 */
+	public abstract Node getPane();
 
 	// Called when application is opened, this should basically be opposite/inverse to onClose()
 	// Called just after getPane()

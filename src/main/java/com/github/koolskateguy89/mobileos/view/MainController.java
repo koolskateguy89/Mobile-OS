@@ -2,7 +2,7 @@ package com.github.koolskateguy89.mobileos.view;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.layout.Pane;
+import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 
 import com.github.koolskateguy89.mobileos.Main;
@@ -12,9 +12,9 @@ public class MainController {
 	@FXML
 	private StackPane mainPane;
 
-	private Pane screen;
+	private Node screen;
 
-	public void setScreen(Pane pane) {
+	public void setScreen(Node pane) {
 		if (pane == screen)
 			return;
 

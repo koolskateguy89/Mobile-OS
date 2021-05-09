@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.layout.Pane?>
+
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="512.0" prefWidth="450.0" style="-fx-background-color: #080808;" type="Pane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <JFXButton fx:id="zipButton" layoutX="63.0" layoutY="199.0" onAction="#zip" style="-fx-background-color: yellow;" text="zip" />
+      <JFXButton fx:id="folderButton" layoutX="254.0" layoutY="193.0" onAction="#folder" style="-fx-background-color: yellow;" text="folder" />
+   </children>
+</fx:root>

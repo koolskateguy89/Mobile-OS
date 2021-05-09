@@ -117,6 +117,30 @@ public class HomeController {
 		//tabPane.getSelectionModel().select(1);
 	}
 
+	public void addApp(App app) {
+		int size = tabs.size();
+
+		Tab tab = tabs.get(size - 1);
+
+		GridPane grid = (GridPane) tab.getContent();
+
+		if (grid.getChildren().size() == 16) {
+			// full grid
+			grid = newGrid();
+			tab = new Tab(Integer.toString(size), grid);
+			tabs.add(tab);
+
+			grid.add(app.getNode(), 0, 0);
+		} else {
+			int apps = grid.getChildren().size();
+
+			int row = apps / 4;
+			int col = apps & 3; //apps % 4
+
+			grid.add(app.getNode(), col, row);
+		}
+	}
+
 	public void initFaves(List<App> faves) {
 		for (int i = 0; i < faves.size(); i++) {
 			App app = faves.get(i);

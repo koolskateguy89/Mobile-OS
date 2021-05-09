@@ -1,4 +1,4 @@
-package com.github.koolskateguy89.mobileos.view;
+package com.github.koolskateguy89.mobileos;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,7 +62,7 @@ public class InitController {
 
 	@FXML
 	void done() throws Exception {
-		Prefs.ROOT_DIR = this.folderProp.get().getAbsolutePath();
+		Prefs.rootDir = this.folderProp.get().getAbsolutePath();
 		Main.getInstance().begin();
 	}
 

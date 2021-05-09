@@ -60,16 +60,15 @@ public class NotepadController {
 	// but it does that because it stores other info about it, which this isn't because I cba
 	private static final String RECENTS_KEY = "recents";
 
-	private static final FileChooser fc = new FileChooser();
-
-	static {
-		// TODO: better way to do this
-		fc.setInitialDirectory(new File(System.getProperty("user.home") + "/Desktop"));
-	}
-
 	private static void handleException(Throwable e, String alertText) {
 		ExceptionDialog ed = new ExceptionDialog(e, alertText);
 		ed.showAndWaitCopy();
+	}
+
+	private final FileChooser fc = new FileChooser();
+	{
+		// TODO: better way to do this
+		fc.setInitialDirectory(new File(System.getProperty("user.home") + "/Desktop"));
 	}
 
 	private final FontSelector fs = new FontSelector(Main.getStage());
@@ -80,7 +79,7 @@ public class NotepadController {
 	private final int maxRecentsSize = 8;
 	private final ObservableLimitedList<File> recents = new ObservableLimitedList<>(maxRecentsSize, true);
 
-	// Simple: once textArea text changes, this is true
+	// very simple: once textArea text changes, this is true
 	final BooleanProperty changed = new SimpleBooleanProperty();
 
 	// this is basically the opposite of quit()
@@ -127,6 +126,9 @@ public class NotepadController {
 		recents.add(file);
 
 		fileProperty.set(file);
+
+		// Next time opening FileChooser, show same folder
+		fc.setInitialDirectory(file.getParentFile());
 
 		try {
 			textArea.setText(Files.readString(file.toPath()));

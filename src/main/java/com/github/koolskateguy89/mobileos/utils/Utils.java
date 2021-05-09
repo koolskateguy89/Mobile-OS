@@ -2,12 +2,13 @@ package com.github.koolskateguy89.mobileos.utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.nio.file.CopyOption;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.InvalidationListener;
@@ -41,15 +42,36 @@ public class Utils {
 		return getUrl("view/%s.fxml".formatted(name));
 	}
 
+
 	public static void initRootDir(File file) throws IOException {
 		Path root = file.toPath();
 
 		Path apps = root.resolve(Constants.APPS_DIR);
 		if (!Files.exists(apps))
-			Files.createDirectory(apps);
+			Files.createDirectories(apps);
 
 		// TODO: init other dirs [if any - so far none]
 	}
+
+
+	// recursive copy folder: https://stackoverflow.com/a/60621544
+	public static void copyFolder(Path source, Path target, CopyOption... options) throws IOException {
+		Files.walkFileTree(source, new SimpleFileVisitor<>() {
+
+			@Override
+			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+				Files.createDirectories(target.resolve(source.relativize(dir)));
+				return FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				Files.copy(file, target.resolve(source.relativize(file)), options);
+				return FileVisitResult.CONTINUE;
+			}
+		});
+	}
+
 
 	public static void copyToClipboard(String text) {
 		ClipboardContent content = new ClipboardContent();
@@ -57,12 +79,14 @@ public class Utils {
 		Clipboard.getSystemClipboard().setContent(content);
 	}
 
+
 	public static void anchor(Node node, double top, double bottom, double left, double right) {
 		AnchorPane.setTopAnchor(node, top);
 		AnchorPane.setBottomAnchor(node, bottom);
 		AnchorPane.setLeftAnchor(node, left);
 		AnchorPane.setRightAnchor(node, right);
 	}
+
 
 	public static void makeClearable(CustomTextField tf) {
 		setupClearButtonField(tf, tf.rightProperty());
