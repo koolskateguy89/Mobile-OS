@@ -1,5 +1,6 @@
 package com.github.koolskateguy89.mobileos;
 
+import java.nio.file.Path;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -26,7 +27,13 @@ public class Prefs {
 	public static final boolean IS_FIRST_RUN = prefs.getBoolean("first_run", true);
 
 	@Getter
-	static String rootDir = prefs.get("root_dir", "./mobileos_root");
+	private static String rootDir = prefs.get("root_dir", "./mobileos_root");
+	static void setRootDir(String s) {
+		rootDir = s;
+		rootDirPath = Path.of(rootDir);
+	}
+	@Getter
+	static Path rootDirPath = Path.of(rootDir);
 
 	static {
 		// Save preferences upon JVM shutdown

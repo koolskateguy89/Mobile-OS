@@ -71,7 +71,7 @@ class Controller {
 		Path folder = file.toPath();
 		Path name = folder.getFileName();
 
-		Path appDir = Path.of(Prefs.getRootDir()).resolve(Constants.APPS_DIR).resolve(name);
+		Path appDir = Prefs.getRootDirPath().resolve(Constants.APPS_DIR).resolve(name);
 		if (!Files.exists(appDir))
 			Files.createDirectory(appDir);
 

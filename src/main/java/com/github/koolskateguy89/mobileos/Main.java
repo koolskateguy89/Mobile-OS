@@ -90,7 +90,7 @@ public class Main extends Application {
 	// exceptions
 
 	private void loadApps() throws Exception {
-		Path appsDir = Path.of(Prefs.rootDir).resolve(Constants.APPS_DIR);
+		Path appsDir = Prefs.getRootDirPath().resolve(Constants.APPS_DIR);
 
 		List<App> apps = new ArrayList<>();
 
@@ -154,7 +154,7 @@ public class Main extends Application {
 		home = loader.load();
 		hc = loader.getController();
 
-		Path appDir = Path.of(Prefs.rootDir).resolve(Constants.APPS_DIR);
+		Path appDir = Prefs.getRootDirPath().resolve(Constants.APPS_DIR);
 		if (Prefs.IS_FIRST_RUN || !Files.isDirectory(appDir)) {
 			Pane init = FXMLLoader.load(Utils.getFxmlUrl("Init"));
 			scene = new Scene(init);

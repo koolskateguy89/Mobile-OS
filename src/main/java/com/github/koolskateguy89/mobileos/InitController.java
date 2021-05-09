@@ -62,7 +62,7 @@ public class InitController {
 
 	@FXML
 	void done() throws Exception {
-		Prefs.rootDir = this.folderProp.get().getAbsolutePath();
+		Prefs.setRootDir(this.folderProp.get().getAbsolutePath());
 		Main.getInstance().begin();
 	}
 
