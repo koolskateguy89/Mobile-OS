@@ -13,9 +13,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -33,6 +31,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.StageStyle;
 
 import com.github.koolskateguy89.mobileos.Main;
+import com.github.koolskateguy89.mobileos.utils.ObservableLimitedList;
 import com.github.koolskateguy89.mobileos.view.utils.ExceptionDialog;
 import com.github.koolskateguy89.mobileos.view.utils.FindText;
 import com.github.koolskateguy89.mobileos.view.utils.FontSelector;
@@ -79,42 +78,7 @@ public class NotepadController {
 
 	// max 8 recents
 	private final int maxRecentsSize = 8;
-	private final ObservableList<File> recents = FXCollections.observableList(new ArrayList<>(maxRecentsSize));
-	private boolean changing = false;
-	{
-		ListChangeListener<File> sizeListener = change -> {
-			//if (changing)
-			//	return;
-
-			changing = true;
-			int size = recents.size();
-			System.out.println(size);
-			if (size > maxRecentsSize) {
-				System.out.println("resizing recents");
-				// set recents as the most recent files
-				List<File> mostRecent = recents.subList(size - maxRecentsSize, size);
-
-				// if this calls this sizeListener multiple times, that's a BIG problem
-				//recents.setAll(mostRecent);   //unsupported
-				//recents.clear();
-	// FIXME: this doesn't work because it's changing the list before other listeners have been notified of the current change
-				change.getList().clear();
-				recents.setAll(mostRecent);
-			}
-			changing = false;
-		};
-		recents.addListener(sizeListener);
-		recents.clear();
-		recents.add(new File("."));
-		recents.add(new File("."));
-		recents.add(new File("."));
-		recents.add(new File("."));
-		recents.add(new File("."));
-		recents.add(new File("."));
-		recents.add(new File("."));
-		recents.add(new File("."));
-		recents.add(new File("."));
-	}
+	private final ObservableLimitedList<File> recents = new ObservableLimitedList<>(maxRecentsSize, true);
 
 	// Simple: once textArea text changes, this is true
 	final BooleanProperty changed = new SimpleBooleanProperty();
