@@ -123,6 +123,24 @@
                 </executions>
             </plugin>
 
+            <!-- Added this plugin so that we can run the program easily with mvn test -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>com.github.koolskateguy89.mobileos.Launcher</mainClass>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
