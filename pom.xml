@@ -123,11 +123,17 @@
                 </executions>
             </plugin>
 
-            <!-- Added this plugin so that we can run the program easily with mvn test -->
+            <!--
+            Added this plugin so that we can run the program easily with mvn test,
+            but this it breaks system apps :/
+
+            Latest version (3.0.0) requires making Launcher public which I don't want
+            to do.
+            -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>1.6.0</version>
                 <executions>
                     <execution>
                         <phase>test</phase>
