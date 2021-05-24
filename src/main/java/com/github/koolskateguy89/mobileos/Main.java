@@ -203,7 +203,4 @@ public class Main extends Application {
 		stage.titleProperty().bind(titleBinding);
 	}
 
-	static void launch0(String[] args) {
-		Main.launch(args);
-	}
 }
