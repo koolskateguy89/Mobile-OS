@@ -8,13 +8,16 @@
     <artifactId>mobileos</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
-    <name>Mobile-OS</name>
+
+    <name>mobileos</name>
+    <url>https://github.com/koolskateguy89/Mobile-OS/</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>15</maven.compiler.source>
         <maven.compiler.target>15</maven.compiler.target>
         <javafx.version>15.0.1</javafx.version>
+        <mainClass>com.github.koolskateguy89.mobileos.Launcher</mainClass>
     </properties>
 
     <dependencies>
@@ -101,7 +104,7 @@
 
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.github.koolskateguy89.mobileos.Launcher</mainClass>
+                                    <mainClass>${mainClass}</mainClass>
                                 </transformer>
                             </transformers>
 
