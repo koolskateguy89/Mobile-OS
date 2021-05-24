@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -15,6 +18,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 import com.github.koolskateguy89.mobileos.Main;
@@ -35,6 +39,8 @@ class Controller {
 	static final DirectoryChooser dc = new DirectoryChooser();
 
 	static {
+		fc.setSelectedExtensionFilter(new ExtensionFilter("Zip file", "zip"));
+
 		File here = new File(".");
 		fc.setInitialDirectory(here);
 		dc.setInitialDirectory(here);
@@ -51,6 +57,13 @@ class Controller {
 		folderButton.setDisable(disable);
 	}
 
+	private Path getAppDir(Path name) throws IOException {
+		Path appDir = Prefs.getRootDirPath().resolve(Constants.APPS_DIR).resolve(name);
+		if (!Files.exists(appDir))
+			Files.createDirectory(appDir);
+		return appDir;
+	}
+
 	@FXML
 	void zip() throws IOException {
 		File file = fc.showOpenDialog(Main.getStage());
@@ -58,7 +71,22 @@ class Controller {
 		if (file == null)
 			return;
 
-		Path zip = file.toPath();
+		// TODO: basically learn how to use zip
+		try (ZipFile zip = new ZipFile(file)) {
+			zip.getEntry("");
+
+			Enumeration<? extends ZipEntry> e = zip.entries();
+			// Really and truly, truly and really; shouldn't there only be 1 entry? (the folder)
+			while (e.hasMoreElements()) {
+				ZipEntry entry = e.nextElement();
+				// TODO: ...
+			}
+
+			// TODO: change name to use the folder inside zip file
+			Path path = file.toPath();
+			Path name = path.getFileName();
+			Path appDir = getAppDir(name);
+		}
 	}
 
 	@FXML
@@ -70,10 +98,7 @@ class Controller {
 
 		Path folder = file.toPath();
 		Path name = folder.getFileName();
-
-		Path appDir = Prefs.getRootDirPath().resolve(Constants.APPS_DIR).resolve(name);
-		if (!Files.exists(appDir))
-			Files.createDirectory(appDir);
+		Path appDir = getAppDir(name);
 
 		Stage progressStage = getProgressStage();
 		progressStage.show();
@@ -100,7 +125,7 @@ class Controller {
 				}
 			});
 		});
-		t.setName("Installing: " + name);
+		t.setName("Installing app: " + name);
 		t.setDaemon(true);
 		t.start();
 	}
@@ -113,7 +138,7 @@ class Controller {
 		JFXProgressBar progressBar = new JFXProgressBar();
 		StackPane root = new StackPane(progressBar);
 
-		this.setScene(new Scene(root, 100, 50));
+		setScene(new Scene(root, 100, 50));
 	}};
 
 }
