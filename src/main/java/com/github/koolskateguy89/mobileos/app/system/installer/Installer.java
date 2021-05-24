@@ -5,17 +5,16 @@ import java.util.Properties;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-
-import lombok.Getter;
 
 import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.app.App;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 
-public class Installer extends App {
+import lombok.Getter;
+
+public final class Installer extends App {
 
 	private static final Properties props = new Properties() {{
 		put("name", "AppInstaller");
@@ -42,7 +41,7 @@ public class Installer extends App {
 		}
 	}};
 
-	// TODO:
+	// TODO: AppInstaller icon
 	@Override
 	public Image getIcon() {
 		return null;

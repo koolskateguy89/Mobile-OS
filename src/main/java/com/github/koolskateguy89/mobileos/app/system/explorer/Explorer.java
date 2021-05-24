@@ -15,7 +15,7 @@ import com.github.koolskateguy89.mobileos.utils.Utils;
 
 import lombok.Getter;
 
-public class Explorer extends App {
+public final class Explorer extends App {
 
 	private static final Properties props = new Properties() {{
 		put("name", "Explorer");

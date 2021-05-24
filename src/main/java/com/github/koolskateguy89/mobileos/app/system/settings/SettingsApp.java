@@ -15,7 +15,7 @@ import com.github.koolskateguy89.mobileos.app.App;
 
 import lombok.Getter;
 
-public class SettingsApp extends App {
+public final class SettingsApp extends App {
 
 	private static final Properties props = new Properties() {{
 		put("name", "Settings");

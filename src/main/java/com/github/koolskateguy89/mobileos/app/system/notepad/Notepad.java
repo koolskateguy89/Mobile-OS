@@ -21,7 +21,7 @@ import com.github.koolskateguy89.mobileos.utils.Utils;
 
 import lombok.Getter;
 
-public class Notepad extends App {
+public final class Notepad extends App {
 
 	private static final Properties props = new Properties() {{
 		put("name", "Notepad");
