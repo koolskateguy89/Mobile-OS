@@ -40,7 +40,7 @@ public class Apps {
 		String name = props.getProperty("name");
 		Preferences appPrefs = Prefs.forApp(name);
 
-		String pathToMainClass = props.getProperty("pathToMainClass");
+		String pathToMainClass = props.getProperty("mainClassName");
 
 		String jarPath = props.getProperty(App.AppConstants.JAR_PATH);
 		Path jar = dir.resolve(jarPath);

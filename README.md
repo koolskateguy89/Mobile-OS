@@ -42,7 +42,7 @@ later parameters (incl. `java.util.Preferences`) is used.
 | Key | Description | Example |
 | --- | ----------- | ------- |
 | name | The app's name | ExampleApp |
-| pathToMainClass | The canonical name of the class that extends `App` | com.github.koolskateguy89.example.MyApp |
+| mainClassName | The canonical name of the class that extends `App` | com.github.koolskateguy89.example.MyApp |
 | jarPath | The relative path to the application jar (relative from the application directory) | app.jar |
 | iconPath | The path to the application's icon | ./Image.png |
 | version | The app's version | 1.0 |
