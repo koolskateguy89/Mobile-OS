@@ -1,4 +1,4 @@
-package com.github.koolskateguy89.mobileos.app;
+package com.github.koolskateguy89.mobileos;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.Properties;
 import java.util.prefs.Preferences;
 
-import com.github.koolskateguy89.mobileos.Prefs;
+import com.github.koolskateguy89.mobileos.app.App;
 
 public class Apps {
 
@@ -40,7 +40,7 @@ public class Apps {
 		String name = props.getProperty("name");
 		Preferences appPrefs = Prefs.forApp(name);
 
-		String pathToMainClass = props.getProperty("mainClassName");
+		String mainClassName = props.getProperty("mainClassName");
 
 		String jarPath = props.getProperty(App.AppConstants.JAR_PATH);
 		Path jar = dir.resolve(jarPath);
@@ -51,7 +51,7 @@ public class Apps {
 				new URL[] {jar.toUri().toURL()}, App.class.getClassLoader()
 		);
 
-		Class<App> appClass = (Class<App>) Class.forName(pathToMainClass, true, child);
+		Class<App> appClass = (Class<App>) Class.forName(mainClassName, true, child);
 
 		return instantiate(appClass, dir, props, appPrefs);
 	}

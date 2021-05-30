@@ -126,16 +126,16 @@ public abstract class App {
 	}
 
 
-	protected Path getPath(String path) {
-		return directory.resolve(path);
+	protected Path getPath(String str) {
+		return directory.resolve(str);
 	}
 
 	protected Path getPath(Path path) {
 		return directory.resolve(path);
 	}
 
-	protected File getFile(String path) {
-		return directory.resolve(path).toFile();
+	protected File getFile(String str) {
+		return directory.resolve(str).toFile();
 	}
 
 	protected File getFile(Path path) {
@@ -165,7 +165,7 @@ public abstract class App {
 	public abstract Image getIcon();
 
 	/**
-	 * @return a {@code Node} representing the pane showing this (? - nonsensical)
+	 * @return a {@code Node} representing the pane showing this (? - nonsensical?)
 	 */
 	public abstract Node getPane();
 
@@ -173,15 +173,10 @@ public abstract class App {
 	// Called just after getPane()
 	public abstract void onOpen();
 
+	// Called when another application is opened
+	public abstract void onClose();
+
 	// Called when Back button is pressed
 	public abstract void goBack(ActionEvent event);
-
-	// Called when another application is opened
-	// Any extra windows or resources
-	// You need to close any extra windows or
-	public abstract void onExit();
-
-	// Called when closed through Recents
-	public abstract void onClose();
 
 }

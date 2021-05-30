@@ -4,6 +4,8 @@ import java.nio.file.Path;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import com.github.koolskateguy89.mobileos.utils.Constants;
+
 import lombok.Getter;
 
 // basically a read-only static implementation of `java.util.prefs.Preferences`
@@ -16,8 +18,7 @@ public class Prefs {
 	private static final Preferences appPrefsParent = prefs.node("apps");
 	public static final Preferences sysAppPrefsParent = prefs.node("sys_apps");   // TODO: give better name
 
-	// TODO: make this non-public once Apps.fromPath(Path) is moved to Main
-	public static Preferences forApp(String name) {
+	static Preferences forApp(String name) {
 		return appPrefsParent.node(name);
 	}
 	static Preferences forSystemApp(String name) {
@@ -29,11 +30,16 @@ public class Prefs {
 	@Getter
 	private static String rootDir = prefs.get("root_dir", "./mobileos_root");
 	static void setRootDir(String s) {
+		// FIXME: this will almost definitely cause issues if I allow changing root_dir in Settings
 		rootDir = s;
 		rootDirPath = Path.of(rootDir);
 	}
 	@Getter
 	static Path rootDirPath = Path.of(rootDir);
+
+	public static Path getAppDirPath() {
+		return rootDirPath.resolve(Constants.APPS_DIR);
+	}
 
 	static {
 		// Save preferences upon JVM shutdown

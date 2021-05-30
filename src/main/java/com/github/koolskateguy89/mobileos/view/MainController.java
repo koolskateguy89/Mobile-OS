@@ -39,9 +39,4 @@ public class MainController {
 		Main.getInstance().goHome();
 	}
 
-	@FXML
-	void recent() {
-
-	}
-
 }

@@ -11,8 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.stage.DirectoryChooser;
 
-import com.github.koolskateguy89.mobileos.Main;
-import com.github.koolskateguy89.mobileos.Prefs;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 
 public class InitController {

@@ -23,9 +23,6 @@
             <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
                <JFXButton font="$navFont" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#home" text="Home" textFill="WHITE" />
             </StackPane>
-            <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
-               <JFXButton font="$navFont" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#recent" text="Recent" textFill="WHITE" />
-            </StackPane>
          </children>
       </HBox>
   </children>

@@ -58,11 +58,6 @@ public final class Installer extends App {
 	}
 
 	@Override
-	public void onExit() {
-		// no-op
-	}
-
-	@Override
 	public void onClose() {
 		// no-op
 	}

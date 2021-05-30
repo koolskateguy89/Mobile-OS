@@ -1,6 +1,8 @@
 package com.github.koolskateguy89.mobileos;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -25,8 +27,6 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 import com.github.koolskateguy89.mobileos.app.App;
-import com.github.koolskateguy89.mobileos.app.Apps;
-import com.github.koolskateguy89.mobileos.utils.Constants;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.github.koolskateguy89.mobileos.view.MainController;
 import com.github.koolskateguy89.mobileos.view.home.HomeController;
@@ -89,14 +89,45 @@ public class Main extends Application {
 	// TODO: method to initApp(Path appDir) that calls Apps.fromPath(Path) but with a try catch so it properly handles
 	// exceptions
 
-	private void loadApps() throws Exception {
-		Path appsDir = Prefs.getRootDirPath().resolve(Constants.APPS_DIR);
+	private List<Path> loadApps() throws Exception {
+		Path appsDir = Prefs.getAppDirPath();
 
 		List<App> apps = new ArrayList<>();
+		List<Path> failedApps = new ArrayList<>();
 
 		var ds = Files.newDirectoryStream(appsDir);
 		for (Path appDir : ds) {
-			apps.add(Apps.fromPath(appDir));
+			// TODO: handle different exceptions properly (maybe have a notification which when clicked on will show more detail)
+			// TODO: remove all printStackTrace calls
+			boolean failed = true;
+			try {
+				apps.add(Apps.fromPath(appDir));
+				failed = false;
+			} catch (NullPointerException npe) {
+				// TODO: usually caused by a property not being set
+				npe.printStackTrace();
+			} catch (IOException io) {
+				// TODO: properties file not present
+				io.printStackTrace();
+			} catch (ClassNotFoundException cnfe) {
+				// TODO:
+				cnfe.printStackTrace();
+			} catch (IllegalAccessException iae) {
+				// TODO: class/constructor not public
+				iae.printStackTrace();
+			} catch (NoSuchMethodException nsme) {
+				// TODO: no valid constructor
+				nsme.printStackTrace();
+			} catch (InstantiationException ie) {
+				// TODO: abstract class
+				ie.printStackTrace();
+			} catch (InvocationTargetException ite) {
+				// TODO: constructor threw exception
+				ite.printStackTrace();
+			}
+
+			if (failed)
+				failedApps.add(appDir.getFileName());
 		}
 
 		// sort apps in case-insensitive name order
@@ -104,6 +135,8 @@ public class Main extends Application {
 
 		hc.initApps(apps);
 		// TODO: initFaves
+
+		return failedApps;
 	}
 
 	public void addApp(App app) {
@@ -135,11 +168,8 @@ public class Main extends Application {
 		//stage.initStyle(StageStyle.UTILITY);
 
 		stage.setOnCloseRequest(event -> {
-			if (currentApp != null) {
-				currentApp.onExit();
+			if (currentApp != null)
 				currentApp.onClose();
-				// TODO: call all Recents apps onClose
-			}
 		});
 
 		stage.setTitle(DEFAULT_TITLE);
@@ -154,8 +184,8 @@ public class Main extends Application {
 		home = loader.load();
 		hc = loader.getController();
 
-		Path appDir = Prefs.getRootDirPath().resolve(Constants.APPS_DIR);
-		if (Prefs.IS_FIRST_RUN || !Files.isDirectory(appDir)) {
+		Path appsDir = Prefs.getAppDirPath();
+		if (Prefs.IS_FIRST_RUN || !Files.isDirectory(appsDir)) {
 			Pane init = FXMLLoader.load(Utils.getFxmlUrl("Init"));
 			scene = new Scene(init);
 		} else {
@@ -171,8 +201,13 @@ public class Main extends Application {
 	public void begin() throws Exception {
 		scene.setRoot(main);
 		loadSystemApps();
-		loadApps();
+		List<Path> failed = loadApps();
 		goHome();
+
+		if (!failed.isEmpty()) {
+			// TODO: make this an alert of some kind (probably snackbar)
+			System.out.println("Apps failed: " + failed);
+		}
 	}
 
 	public void back(ActionEvent event) {
@@ -183,7 +218,7 @@ public class Main extends Application {
 
 	public void goHome() {
 		if (currentApp != null) {
-			currentApp.onExit();
+			currentApp.onClose();
 			currentApp = null;
 		}
 		stage.titleProperty().unbind();
@@ -193,7 +228,7 @@ public class Main extends Application {
 
 	public void openApp(App app) {
 		if (currentApp != null)
-			currentApp.onExit();
+			currentApp.onClose();
 		currentApp = app;
 
 		mc.setScreen(app.getPane());

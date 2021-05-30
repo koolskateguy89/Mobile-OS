@@ -90,12 +90,7 @@ public final class Notepad extends App {
 	}
 
 	@Override
-	public void onExit() {
-		nc.quit();
-	}
-
-	@Override
 	public void onClose() {
-		nc.quit();  // for safety ig
+		nc.quit();
 	}
 }

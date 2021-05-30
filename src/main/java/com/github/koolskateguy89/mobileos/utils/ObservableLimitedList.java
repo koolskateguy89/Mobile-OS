@@ -20,7 +20,7 @@ import lombok.Setter;
  */
 public class ObservableLimitedList<E> extends ObservableListWrapper<E> {
 
-	// Mutations made to the backing list are don't trigger observers
+	// Mutations made to the backing list don't trigger observers
 	@Getter
 	private final List<E> backingList;
 
@@ -89,7 +89,7 @@ public class ObservableLimitedList<E> extends ObservableListWrapper<E> {
 			}
 		} else if (size > limit) {
 			// should not happen
-			throw new RuntimeException("Somehow reached above limit (possibly an 'addAll' op doesn't use 'add')");
+			throw new RuntimeException("Somehow reached above limit (possibly an 'addAll' that doesn't use 'add')");
 		}
 
 		return super.add(value);

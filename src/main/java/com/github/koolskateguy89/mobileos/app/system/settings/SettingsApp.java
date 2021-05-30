@@ -51,10 +51,6 @@ public final class SettingsApp extends App {
 	}
 
 	@Override
-	public void onExit() {
-	}
-
-	@Override
 	public void onClose() {
 	}
 

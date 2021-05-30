@@ -47,7 +47,7 @@ public class Utils {
 		Path root = file.toPath();
 
 		Path apps = root.resolve(Constants.APPS_DIR);
-		if (!Files.exists(apps))
+		if (!Files.isDirectory(apps))
 			Files.createDirectories(apps);
 
 		// TODO: init other dirs [if any - so far none]
@@ -57,7 +57,6 @@ public class Utils {
 	// recursive copy folder: https://stackoverflow.com/a/60621544
 	public static void copyFolder(Path source, Path target, CopyOption... options) throws IOException {
 		Files.walkFileTree(source, new SimpleFileVisitor<>() {
-
 			@Override
 			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
 				Files.createDirectories(target.resolve(source.relativize(dir)));
@@ -67,6 +66,27 @@ public class Utils {
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 				Files.copy(file, target.resolve(source.relativize(file)), options);
+				return FileVisitResult.CONTINUE;
+			}
+		});
+	}
+
+	// recursively delete folder: https://stackoverflow.com/a/27917071
+	public static void deleteDirectory(Path directory) throws IOException {
+		clearDirectory(directory);
+		Files.delete(directory);
+	}
+
+	public static void clearDirectory(Path directory) throws IOException {
+		Files.walkFileTree(directory, new SimpleFileVisitor<>() {
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				Files.delete(file);
+				return FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
 				return FileVisitResult.CONTINUE;
 			}
 		});

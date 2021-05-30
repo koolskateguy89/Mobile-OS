@@ -5,7 +5,6 @@ import java.util.Properties;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
@@ -51,11 +50,6 @@ public final class Explorer extends App {
 
 	@Override
 	public void goBack(ActionEvent event) {
-
-	}
-
-	@Override
-	public void onExit() {
 
 	}
 
