@@ -4,10 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -141,15 +142,13 @@ public class NotepadController {
 	private void loadRecents() throws BackingStoreException {
 		Preferences recentsPrefs = prefs.node("recents");
 
-		HashMap<String, Integer> map = new HashMap<>();
-		for (String key : recentsPrefs.keys())
-			map.put(key, Integer.parseInt(recentsPrefs.get(key, null)));
+		Map<Integer, String> map = new TreeMap<>();
+		for (String key : recentsPrefs.keys()) {
+			int pos = Integer.parseInt(recentsPrefs.get(key, null));
+			map.put(pos, key);
+		}
 
-		// Sort results in original order
-		List<String> list = new ArrayList<>(map.keySet());
-		list.sort(Comparator.comparingInt(map::get));
-
-		for (String recent : list)
+		for (String recent : map.values())
 			recents.add(new File(recent));
 	}
 
