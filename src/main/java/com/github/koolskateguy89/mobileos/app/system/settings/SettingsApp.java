@@ -1,17 +1,18 @@
 package com.github.koolskateguy89.mobileos.app.system.settings;
 
+import java.io.IOException;
 import java.util.Properties;
 import java.util.prefs.Preferences;
 
 import javafx.event.ActionEvent;
-import javafx.scene.control.Label;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.app.App;
+import com.github.koolskateguy89.mobileos.utils.Utils;
 
 import lombok.Getter;
 
@@ -34,9 +35,13 @@ public final class SettingsApp extends App {
 
 	@Getter(lazy = true)
 	private final Pane pane = new VBox() {{
-		var children = this.getChildren();
-		children.add(new Label("Yo my slime"));
-		children.add(new ImageView(SettingsApp.this.getIcon()));
+		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/settings/Screen"));
+		loader.setRoot(this);
+		try {
+			loader.load();
+		} catch (IOException io) {
+			io.printStackTrace();
+		}
 	}};
 
 	@Getter(lazy = true)

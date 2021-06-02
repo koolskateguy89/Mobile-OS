@@ -1,0 +1,11 @@
+.root {
+	-fx-background-color: #201F20;
+}
+
+.titled-pane:expanded {
+	-fx-background-color: #201F20;
+}
+
+.titled-pane:expanded .content {
+	-fx-background-color: #201F20;
+}
