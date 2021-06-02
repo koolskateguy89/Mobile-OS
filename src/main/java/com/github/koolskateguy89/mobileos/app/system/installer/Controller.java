@@ -38,7 +38,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 /**
- * If re-installing(/updating) apps, this basically merges
+ * If re-installing(/updating) apps, this basically merges the new & old folder
  */
 class Controller {
 
