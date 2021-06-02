@@ -25,7 +25,10 @@
                   <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                </accelerator>
             </MenuItem>
-            <Menu fx:id="recent" text="Open _Recent" />
+            <Menu fx:id="recent" text="Open _Recent">
+               <SeparatorMenuItem mnemonicParsing="false" />
+               <MenuItem fx:id="clearRecent" disable="true" mnemonicParsing="false" onAction="#clearRecent" text="Clear" />
+            </Menu>
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem onAction="#save" text="_Save">
                <accelerator>
@@ -107,10 +110,8 @@
       </MenuBar>
       <AnchorPane VBox.vgrow="ALWAYS">
          <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <children>
-               <TextArea fx:id="lineThingy" editable="false" minWidth="-Infinity" prefHeight="486.0" prefWidth="25.0" styleClass="line-numbers" text="1" />
-               <TextArea fx:id="textArea" promptText="Open a file!" />
-            </children>
+            <TextArea fx:id="lineThingy" editable="false" minWidth="-Infinity" prefHeight="486.0" prefWidth="25.0" styleClass="line-numbers" text="1" />
+            <TextArea fx:id="textArea" promptText="Open a file!" />
          </HBox>
       </AnchorPane>
    </children>

@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import javafx.beans.binding.BooleanBinding;
@@ -14,6 +17,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -29,6 +33,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.StageStyle;
+import javafx.util.Pair;
 
 import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.utils.ObservableLimitedList;
@@ -41,8 +46,6 @@ import lombok.Setter;
 public class NotepadController {
 
 	// TODO: {maybe} status bar (caret position, maybe encoding, LF/CRLF)
-	// TODO: [file] Open Recents: separator + "Clear Menu" (at bottom) & save in prefs
-
 
 	// FIXME: Ctrl+H isn't working as the accelerator for replace, instead is seems to be doing 'Delete' instead
 
@@ -56,10 +59,7 @@ public class NotepadController {
 								ITALICS_KEY = "font_italics",
 								SIZE_KEY    = "font_size";
 
-	// maybe use a separate node for recents then a separate prop for each recent - like how Scenebuilder does it
-	// but it does that because it stores other info about it, which this isn't because I cba
-	private static final String RECENTS_KEY = "recents";
-
+	// TODO: maybe change this to a Snackbar
 	private static void handleException(Throwable e, String alertText) {
 		ExceptionDialog ed = new ExceptionDialog(e, alertText);
 		ed.showAndWaitCopy();
@@ -77,7 +77,7 @@ public class NotepadController {
 
 	// max 8 recents
 	private final int maxRecentsSize = 8;
-	private final ObservableLimitedList<File> recents = new ObservableLimitedList<>(maxRecentsSize, true);
+	private final ObservableList<File> recents = new ObservableLimitedList<>(maxRecentsSize, true);
 
 	// very simple: once textArea text changes, this is true
 	final BooleanProperty changed = new SimpleBooleanProperty();
@@ -104,7 +104,6 @@ public class NotepadController {
 		wrapText.setSelected(wrap);
 	}
 
-	// returns if to cancel
 	private boolean cancelDueToUnsavedText() {
 		if (changed.get()) {
 			Alert save = new Alert(Alert.AlertType.WARNING, "Do you want to save current file?",
@@ -122,6 +121,7 @@ public class NotepadController {
 	}
 
 	private void openFile(File file) {
+		// If file is already in recents, put it at start
 		recents.remove(file);
 		recents.add(file);
 
@@ -138,6 +138,31 @@ public class NotepadController {
 		}
 	}
 
+	private void loadRecents() throws BackingStoreException {
+		Preferences recentsPrefs = prefs.node("recents");
+
+		HashMap<String, Integer> map = new HashMap<>();
+		for (String key : recentsPrefs.keys())
+			map.put(key, Integer.parseInt(recentsPrefs.get(key, null)));
+
+		// Sort results in original order
+		List<String> list = new ArrayList<>(map.keySet());
+		list.sort(Comparator.comparingInt(map::get));
+
+		for (String recent : list)
+			recents.add(new File(recent));
+	}
+
+	private void storeRecents() throws BackingStoreException {
+		Preferences recentsPrefs = prefs.node("recents");
+		recentsPrefs.clear();
+
+		for (int i = 0; i < recents.size(); i++) {
+			File recent = recents.get(i);
+			recentsPrefs.put(recent.getAbsolutePath(), Integer.toString(i));
+		}
+	}
+
 	@FXML
 	private TextArea lineThingy;
 
@@ -145,11 +170,11 @@ public class NotepadController {
 	private TextArea textArea;
 
 	@FXML
-	private void initialize() {
+	private void initialize() throws BackingStoreException {
 		// lines
 		lineThingy.fontProperty().bind(textArea.fontProperty());
 
-		// lineThingy.scrollTopProperty() can't be bound because it gets set after this
+		// lineThingy.scrollTopProperty() can't be bound because it gets set after initialize
 		textArea.scrollTopProperty().addListener((obs, oldVal, newVal) -> {
 			lineThingy.setScrollTop(newVal.doubleValue());
 		});
@@ -175,22 +200,43 @@ public class NotepadController {
 			lineThingy.setText(sb.toString());
 		});
 
+		BooleanProperty recentsIsEmpty = new SimpleBooleanProperty();
+		clearRecent.disableProperty().bind(recentsIsEmpty);
+
+		var items = recent.getItems();
+		var subList = items.subList(0, items.size() - 2);
 		// I could be more efficient and not regenerate the entire recent menu every time but cba
-		ListChangeListener<File> recentsListener = change -> {
+		ListChangeListener<File> recentsListener = (change) -> {
+			subList.clear();
+
 			int len = recents.size();
+			recentsIsEmpty.set(len == 0);
+			if (len == 0)
+				return;
+
 			List<MenuItem> result = new ArrayList<>(len);
 
-			if (len == 0) {
-				recent.getItems().clear();
-				return;
-			}
+			//      name,        file, menu
+			HashMap<String, Pair<File, MenuItem>> map = new HashMap<>(len);
 
 			// iterate backwards through recents - so most recent file first
 			ListIterator<File> it = recents.listIterator(len);
 			while (it.hasPrevious()) {
+				MenuItem menu = new MenuItem();
 				File recent = it.previous();
-				// maybe to absolute path?
-				MenuItem menu = new MenuItem(recent.getName());
+
+				String name = recent.getName();
+				if (map.containsKey(name)) {
+					name = recent.getAbsolutePath();
+
+					var pair = map.get(name);
+					String abs = pair.getKey().getAbsolutePath();
+					pair.getValue().setText(abs);
+				} else {
+					map.put(name, new Pair<>(recent, menu));
+				}
+
+				menu.setText(name);
 				menu.setOnAction(event -> {
 					if (!cancelDueToUnsavedText())
 						openFile(recent);
@@ -198,13 +244,12 @@ public class NotepadController {
 				result.add(menu);
 			}
 
-			recent.getItems().setAll(result);
+			subList.addAll(result);
 		};
 		recents.addListener(recentsListener);
+		loadRecents();
 
 		// file
-		//save.disableProperty().bind(fileProp.isNull());
-		//saveAs.disableProperty().bind(textArea.textProperty().isEmpty());
 		revertToSaved.disableProperty().bind(fileProperty.isNull().and(changed));
 
 		// edit
@@ -251,6 +296,14 @@ public class NotepadController {
 	private Menu recent;
 
 	@FXML
+	private MenuItem clearRecent;
+
+	@FXML
+	void clearRecent() {
+		recents.clear();
+	}
+
+	@FXML
 	void save() {
 		File file = fileProperty.get();
 		if (file == null) {
@@ -268,9 +321,9 @@ public class NotepadController {
 	@FXML
 	void saveAs() {
 		fc.setTitle("Save as");
-		File file = fc.showSaveDialog(Main.getStage());
-		if (file != null) {
-			fileProperty.set(file);
+		File target = fc.showSaveDialog(Main.getStage());
+		if (target != null) {
+			fileProperty.set(target);
 			save();
 		}
 	}
@@ -308,6 +361,12 @@ public class NotepadController {
 		prefs.putDouble(SIZE_KEY, size);
 
 		prefs.putBoolean("wrap_text", wrapText.isSelected());
+
+		try {
+			storeRecents();
+		} catch (BackingStoreException e) {
+			handleException(e, "Unable to access preferences");
+		}
 	}
 
 	@FXML
