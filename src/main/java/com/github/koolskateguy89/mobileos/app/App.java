@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Properties;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -115,7 +116,7 @@ public abstract class App {
 	 * @param directory yo my slime
 	 * @param props the properties object holding information about this app
 	 */
-	protected App(@Nullable Path directory, Properties props) {
+	protected App(@Nullable Path directory, @Nonnull Properties props) {
 		this.directory = directory;
 
 		name = props.getProperty("name");

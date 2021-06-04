@@ -25,12 +25,12 @@ public final class SettingsApp extends App {
 		put("backgroundColor", "white");
 	}};
 
-	public SettingsApp(Preferences prefs) {
+	public SettingsApp() {
 		super(null, props);
 	}
 
 	/* Pane:
-	 * Multiple accordions which represent sections (General [appearance,...], {maybe} SysApps, {maybe} apps)
+	 * Multiple VBox's which represent sections
 	 */
 
 	@Getter(lazy = true)
@@ -44,7 +44,7 @@ public final class SettingsApp extends App {
 		}
 	}};
 
-	@Getter(lazy = true)
+	@Getter
 	private final Image icon = new Image("images/icons/Settings.gif");
 
 	@Override
