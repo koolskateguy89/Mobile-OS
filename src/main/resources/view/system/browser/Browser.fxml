@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.web.WebView?>
+
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="512.0" prefWidth="450.0" type="Pane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.koolskateguy89.mobileos.app.system.browser.BrowserController">
+   <children>
+      <WebView fx:id="webView" layoutX="34.0" layoutY="56.0" prefHeight="419.0" prefWidth="374.0" />
+   </children>
+</fx:root>
