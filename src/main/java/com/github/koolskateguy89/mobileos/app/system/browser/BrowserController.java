@@ -67,6 +67,7 @@ public class BrowserController {
 		return tab;
 	}
 
+	// TODO
 	private ContextMenu makeContextMenu(Tab tab) {
 		WebBrowser browser = (WebBrowser) tab.getContent();
 		WebHistory history = browser.getWebHistory();
@@ -80,7 +81,7 @@ public class BrowserController {
 			WebBrowser dupeBrowser = (WebBrowser) dupe.getContent();
 
 			WebHistory dupeHistory = dupeBrowser.getWebHistory();
-			// entries is unmodifiable
+			// FIXME: entries is unmodifiable
 			//dupeHistory.getEntries().addAll(history.getEntries());
 			//dupeHistory.go(history.getCurrentIndex());
 
