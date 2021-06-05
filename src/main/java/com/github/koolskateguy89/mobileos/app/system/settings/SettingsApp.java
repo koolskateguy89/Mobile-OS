@@ -2,7 +2,6 @@ package com.github.koolskateguy89.mobileos.app.system.settings;
 
 import java.io.IOException;
 import java.util.Properties;
-import java.util.prefs.Preferences;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
