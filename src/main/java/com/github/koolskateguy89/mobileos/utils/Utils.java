@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.text.DecimalFormatSymbols;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.InvalidationListener;
@@ -27,9 +26,10 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
-import com.google.common.base.Strings;
 import org.controlsfx.control.textfield.CustomPasswordField;
 import org.controlsfx.control.textfield.CustomTextField;
+
+import com.google.common.base.Strings;
 
 public class Utils {
 
