@@ -26,8 +26,7 @@ public class Apps {
 			Preferences.class,
 	};
 
-	// lmao I wanna change this to just throws `Exception` but who doesn't like seeing this clusterfuck
-	// TODO: in Main, handle exceptions
+	// lmao I wanna change this to just throws `Exception` but who doesn't like seeing this clusterfrick
 	public static App fromPath(Path dir) throws IOException, ClassNotFoundException,
 			NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException
 	{

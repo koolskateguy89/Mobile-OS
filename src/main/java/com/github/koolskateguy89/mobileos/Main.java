@@ -86,9 +86,6 @@ public class Main extends Application {
 		return constructor.newInstance(initargs);
 	}
 
-	// TODO: method to initApp(Path appDir) that calls Apps.fromPath(Path) but with a try catch so it properly handles
-	// exceptions
-
 	private List<Path> loadApps() throws Exception {
 		Path appsDir = Prefs.getAppDirPath();
 

@@ -38,6 +38,7 @@ import javafx.util.Pair;
 
 import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.utils.ObservableLimitedList;
+import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.github.koolskateguy89.mobileos.view.utils.ExceptionDialog;
 import com.github.koolskateguy89.mobileos.view.utils.FindText;
 import com.github.koolskateguy89.mobileos.view.utils.FontSelector;
@@ -404,6 +405,7 @@ public class NotepadController {
 		textArea.paste();
 	}
 
+	// TODO: make open in middle of Main.stage
 	private FindText finder;
 
 	@FXML
@@ -432,8 +434,8 @@ public class NotepadController {
 		alert.initOwner(Main.getStage());
 		alert.setTitle("Go To");
 
-		// TODO: add int-only filter
 		TextField textField = new TextField("1");
+		textField.textProperty().addListener(Utils.onlyAllowNaturalNumbersListener());
 
 		DialogPane dp = alert.getDialogPane();
 		dp.setHeaderText("Line number:");
@@ -442,13 +444,7 @@ public class NotepadController {
 		textField.requestFocus();
 		alert.showAndWait();
 
-		int line;
-		try {
-			line = Integer.parseInt(textField.getText());
-		} catch (NumberFormatException e) {
-			// TODO: remove try/catch once int-only filter is on textField
-			return;
-		}
+		int line = Integer.parseInt(textField.getText());
 
 		try {
 			// lines before the goTo line

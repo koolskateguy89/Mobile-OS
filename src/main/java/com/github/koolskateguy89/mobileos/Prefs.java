@@ -16,7 +16,7 @@ public class Prefs {
 	private static final Preferences prefs = Preferences.userNodeForPackage(Prefs.class);
 
 	private static final Preferences appPrefsParent = prefs.node("apps");
-	public static final Preferences sysAppPrefsParent = prefs.node("sys_apps");   // TODO: give better name
+	private static final Preferences sysAppPrefsParent = prefs.node("sys_apps");
 
 	static Preferences forApp(String name) {
 		return appPrefsParent.node(name);

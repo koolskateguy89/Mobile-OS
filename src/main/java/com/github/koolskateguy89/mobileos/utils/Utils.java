@@ -9,11 +9,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.DecimalFormatSymbols;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
@@ -24,6 +27,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
+import com.google.common.base.Strings;
 import org.controlsfx.control.textfield.CustomPasswordField;
 import org.controlsfx.control.textfield.CustomTextField;
 
@@ -119,7 +123,7 @@ public class Utils {
 	// just straight up copied from org.controlsfx.control.textfield.TextFields.createClearableTextField
 	// why don't they just make it public man
 	private static final Duration FADE_DURATION = Duration.millis(350);
-	private static void setupClearButtonField(TextField inputField, ObjectProperty<Node> rightProperty) {
+	public static void setupClearButtonField(TextField inputField, ObjectProperty<Node> rightProperty) {
 		inputField.getStyleClass().add("clearable-field"); //$NON-NLS-1$
 
 		Region clearButton = new Region();
@@ -156,6 +160,22 @@ public class Utils {
 				fader.play();
 			}
 		});
+	}
+
+
+	public static boolean isNaturalNumber(String str) {
+		for (char c : str.toCharArray()) {
+			if (!Character.isDigit(c))
+				return false;
+		}
+		return true;
+	}
+
+	public static ChangeListener<String> onlyAllowNaturalNumbersListener() {
+		return (obs, oldVal, newVal) -> {
+			if (!Strings.isNullOrEmpty(newVal) && !isNaturalNumber(newVal))
+				((StringProperty) obs).setValue(oldVal);
+		};
 	}
 
 }

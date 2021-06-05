@@ -134,7 +134,7 @@ class Controller {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			finishInstall(progressStage, appDir);
+			askToLoadApp(progressStage, appDir);
 			setDisable(false);
 		});
 		t.setName("Installing app: " + name);
@@ -163,7 +163,7 @@ class Controller {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			finishInstall(progressStage, appDir);
+			askToLoadApp(progressStage, appDir);
 			setDisable(false);
 		});
 		t.setName("Installing app: " + name);
@@ -171,8 +171,7 @@ class Controller {
 		t.start();
 	}
 
-	// TODO: better name
-	private static void finishInstall(Stage progressStage, Path appDir) {
+	private static void askToLoadApp(Stage progressStage, Path appDir) {
 		Platform.runLater(() -> {
 			progressStage.close();
 			Alert alert = new Alert(AlertType.CONFIRMATION, "App installed. Would you like to load it?",

@@ -54,7 +54,6 @@ public class FontSelector extends Stage {
 	@FXML
 	private JFXCheckBox italics;
 
-	// TODO: add filter so that it only accepts doubles
 	@FXML
 	private JFXComboBox<String> sizes;
 
@@ -96,9 +95,13 @@ public class FontSelector extends Stage {
 
 		// update slider when size combo is updated
 		sizes.valueProperty().addListener((obs, oldValue, newValue) -> {
-			double newSize = Double.parseDouble(newValue);
-			if (newSize != sizeSlider.getValue()) {
-				sizeSlider.setValue(newSize);
+			try {
+				double newSize = Double.parseDouble(newValue);
+				if (newSize != sizeSlider.getValue()) {
+					sizeSlider.setValue(newSize);
+				}
+			} catch (NumberFormatException nfe) {
+				((ObjectProperty<String>) obs).setValue(oldValue);
 			}
 		});
 
