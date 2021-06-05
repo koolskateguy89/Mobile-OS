@@ -45,7 +45,7 @@ public final class SettingsApp extends App {
 	}};
 
 	@Getter
-	private final Image icon = new Image("images/icons/Settings.gif");
+	private final Image icon = new Image("view/system/settings/Settings.gif");
 
 	@Override
 	public void onOpen() {
