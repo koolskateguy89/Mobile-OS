@@ -42,6 +42,7 @@ import com.github.koolskateguy89.mobileos.view.utils.ExceptionDialog;
 import com.github.koolskateguy89.mobileos.view.utils.FindText;
 import com.github.koolskateguy89.mobileos.view.utils.FontSelector;
 
+import lombok.AccessLevel;
 import lombok.Setter;
 
 public class NotepadController {
@@ -50,9 +51,7 @@ public class NotepadController {
 
 	// FIXME: Ctrl+H isn't working as the accelerator for replace, instead is seems to be doing 'Delete' instead
 
-	// TODO: line numbers on left of text box
-
-	@Setter
+	@Setter(AccessLevel.MODULE)
 	static Preferences prefs;
 
 	private static final String FAMILY_KEY  = "font_family",
