@@ -89,11 +89,9 @@
             </MenuItem>
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem onAction="#selectAll" text="_Select All">
-               <!--
-					<accelerator>
+					<!--accelerator>
 						<KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-					</accelerator>
-					-->
+					</accelerator-->
             </MenuItem>
             <MenuItem onAction="#unselectAll" text="_Unselect All">
                <accelerator>

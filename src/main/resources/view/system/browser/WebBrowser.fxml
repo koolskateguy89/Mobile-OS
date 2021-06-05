@@ -16,11 +16,7 @@
             <JFXButton fx:id="back" onAction="#back" style="-fx-background-color: grey;" text="Back" />
             <JFXButton fx:id="forward" onAction="#forward" style="-fx-background-color: grey;" text="Forward" />
             <JFXButton fx:id="reloadBtn" onAction="#reload" style="-fx-background-color: grey;" text="Reload" />
-            <JFXTextField fx:id="addressBar" onAction="#go" prefHeight="26.0" prefWidth="221.0">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </JFXTextField>
+            <JFXTextField fx:id="addressBar" onAction="#go" prefHeight="26.0" prefWidth="221.0" />
             <Button mnemonicParsing="false" onAction="#go" text="Go" />
          </children>
       </HBox>

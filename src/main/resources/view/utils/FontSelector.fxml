@@ -30,10 +30,11 @@
 							</VBox>
 							<VBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="226.0" spacing="7.0" HBox.hgrow="ALWAYS">
 								<children>
-                                    <SearchableComboBox fx:id="families" onAction="#updateFont" prefHeight="28.0">
+                           <SearchableComboBox fx:id="families" onAction="#updateFont" prefHeight="28.0">
                               <VBox.margin>
                                  <Insets />
-                              </VBox.margin></SearchableComboBox>
+                              </VBox.margin>
+                           </SearchableComboBox>
 									<JFXCheckBox fx:id="bold" onAction="#updateFont" />
 									<JFXCheckBox fx:id="italics" onAction="#updateFont" />
 									<HBox prefHeight="28.0" prefWidth="256.0">
