@@ -2,6 +2,7 @@ package com.github.koolskateguy89.mobileos.app.system.browser;
 
 import java.io.IOException;
 
+import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +19,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 
-// TODO: history forward/back
 public class WebBrowser extends AnchorPane {
 
 	@Getter @Setter
@@ -115,6 +115,16 @@ public class WebBrowser extends AnchorPane {
 		// TODO: check if loading
 
 		webEngine.reload();
+	}
+
+	// TODO:
+	public void setOnLocationChange(ChangeListener<String> listener) {
+		webEngine.locationProperty().addListener(listener);
+	}
+
+	// TODO: (I have no idea if this will work)
+	public void setOnLoadingWebpage(Runnable func) {
+		webEngine.getLoadWorker().progressProperty().addListener((obs, oldVal, newVal) -> func.run());
 	}
 
 }
