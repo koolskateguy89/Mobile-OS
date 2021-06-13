@@ -12,10 +12,14 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.OverrunStyle;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.SwipeEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.web.WebEngine;
@@ -50,6 +54,7 @@ public class BrowserController {
 
 	// TODO: rename lol
 	private void shush(Event event) {
+		// this is quite iffy
 		// only make a new tab is newTab was selected
 		if (newTab.isSelected())
 			newTab();
@@ -99,10 +104,26 @@ public class BrowserController {
 	// TODO
 	private ContextMenu makeContextMenu(Tab tab) {
 		WebBrowser browser = (WebBrowser) tab.getContent();
+		WebEngine engine = browser.getWebEngine();
 		WebHistory history = browser.getWebHistory();
 
 		ContextMenu cm = new ContextMenu();
 		ObservableList<MenuItem> items = cm.getItems();
+
+		MenuItem newTabRight = new MenuItem("New tab to the right");
+		newTabRight.setOnAction(event -> {
+			Tab newTab = getNewTab();
+			tabs.add(tabs.indexOf(tab) + 1, newTab);
+		});
+		items.add(newTabRight);
+
+		items.add(new SeparatorMenuItem());
+
+		MenuItem reload = new MenuItem("Reload");
+		reload.setOnAction(event -> engine.reload());
+		// Ctrl+R
+		reload.setAccelerator(new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN));
+		items.add(reload);
 
 		MenuItem duplicate = new MenuItem("Duplicate");
 		duplicate.setOnAction(event -> {
@@ -111,12 +132,37 @@ public class BrowserController {
 
 			WebHistory dupeHistory = dupeBrowser.getWebHistory();
 			// FIXME: entries is unmodifiable
+			// I could load every entry but that's very efficient is it
 			//dupeHistory.getEntries().addAll(history.getEntries());
 			//dupeHistory.go(history.getCurrentIndex());
+
+			dupeBrowser.getWebEngine().load(engine.getLocation());
 
 			tabs.add(dupe);
 		});
 		items.add(duplicate);
+
+		items.add(new SeparatorMenuItem());
+
+		MenuItem close = new MenuItem("Close");
+		close.setOnAction(event -> tabs.remove(tab));
+		// Ctrl+W
+		close.setAccelerator(new KeyCodeCombination(KeyCode.W, KeyCombination.CONTROL_DOWN));
+		items.add(close);
+
+		MenuItem closeOthers = new MenuItem("Close other tabs");
+		closeOthers.setOnAction(event -> {
+			// I'm not really sure how to do this
+			tabs.removeIf(t -> t != tab);
+		});
+		items.add(closeOthers);
+
+		MenuItem closeRight = new MenuItem("Close tabs to the right");
+		closeRight.setOnAction(event -> {
+			int idx = tabs.indexOf(tab);
+			tabs.subList(idx + 1, tabs.size()).clear();
+		});
+		items.add(closeRight);
 
 		return cm;
 	}

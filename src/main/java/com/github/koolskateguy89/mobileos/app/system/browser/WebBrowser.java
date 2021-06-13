@@ -4,10 +4,14 @@ import java.io.IOException;
 
 import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Worker;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebErrorEvent;
+import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
 
@@ -125,6 +129,26 @@ public class WebBrowser extends AnchorPane {
 	// TODO: (I have no idea if this will work)
 	public void setOnLoadingWebpage(Runnable func) {
 		webEngine.getLoadWorker().progressProperty().addListener((obs, oldVal, newVal) -> func.run());
+	}
+
+	public void setOnAlert(EventHandler<WebEvent<String>> handler) {
+		webEngine.setOnAlert(handler);
+	}
+
+	public void setOnError(EventHandler<WebErrorEvent> handler) {
+		webEngine.setOnError(handler);
+	}
+
+	public void setOnStatusChanged(EventHandler<WebEvent<String>> handler) {
+		webEngine.setOnStatusChanged(handler);
+	}
+
+	public void setOnResized(EventHandler<WebEvent<Rectangle2D>> handler) {
+		webEngine.setOnResized(handler);
+	}
+
+	public void setOnVisibilityChanged(EventHandler<WebEvent<Boolean>> handler) {
+		webEngine.setOnVisibilityChanged(handler);
 	}
 
 }
