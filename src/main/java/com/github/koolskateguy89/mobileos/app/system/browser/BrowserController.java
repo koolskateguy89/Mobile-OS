@@ -1,6 +1,12 @@
 package com.github.koolskateguy89.mobileos.app.system.browser;
 
+import java.io.IOException;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookieStore;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import javafx.beans.binding.Bindings;
@@ -38,8 +44,10 @@ import com.sun.javafx.scene.control.ContextMenuContent;
 import com.sun.javafx.scene.control.ContextMenuContent.MenuItemContainer;
 import com.sun.webkit.WebPage;
 
-// TODO: add settings (default search engine - whether to search for invalid URLs)
+// TODO: add settings (default search engine - whether to search for invalid URLs); clear cookies
 public class BrowserController {
+
+	static Path dir;
 
 	@FXML
 	private TabPane tabPane;
@@ -48,8 +56,29 @@ public class BrowserController {
 	@FXML
 	private Tab newTab;
 
+	private final Path cookiesPath = dir.resolve("cookies.json");
+
+	PersistentCookieStore cookieStore;
+
 	@FXML
-	private void initialize() {
+	private void initialize() throws IOException {
+		// allow an InMemoryCookieStore to be instantiated
+		CookieManager cm = new CookieManager();
+		CookieHandler.setDefault(cm);
+
+		// the default impl. (not setting a default CookieHandler myself) uses a com.sun...CookieManager which uses a
+		// com.sun...CookieStore which uses a com.sun...Cookie
+		// After looking through the source code, atm I can't find a way to use it ggs
+		com.sun.webkit.network.CookieManager a;
+
+		// get the InMemoryCookieStore
+		CookieStore inMemory = ReflectionHelper.getFieldContent(cm, "cookieJar");
+		// allow permanent storage of cookies
+		cookieStore = new PersistentCookieStore(inMemory);
+		// change the CookieStore being used to the persistent one - unnecessary tbh
+		//ReflectionHelper.setFieldContent(CookieManager.class, cm, "cookieJar", cookieStore);
+
+
 		// prevent switching tab on swipe (as it just creates new tabs constantly): https://stackoverflow.com/a/47841382
 		tabPane.addEventFilter(SwipeEvent.ANY, SwipeEvent::consume);
 
@@ -62,10 +91,6 @@ public class BrowserController {
 			}
 		};
 		tabPane.getTabs().addListener(lcl);
-
-		newTab();
-		// select the tab just made
-		tabPane.getSelectionModel().select(0);
 
 		newTab.setClosable(false);
 		newTab.setOnSelectionChanged(this::shush);
@@ -80,8 +105,25 @@ public class BrowserController {
 	}
 
 	void onOpen() {
-		if (tabs.isEmpty())
+		if (tabs.isEmpty()) {
 			newTab();
+			// select the tab just made
+			tabPane.getSelectionModel().select(0);
+		}
+		try {
+			if (Files.exists(cookiesPath) && !Files.isDirectory(cookiesPath))
+				cookieStore.load(cookiesPath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	void onClose() {
+		try {
+			cookieStore.store(cookiesPath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void newTab() {

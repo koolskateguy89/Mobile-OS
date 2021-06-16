@@ -89,6 +89,9 @@ public class WebBrowser extends AnchorPane {
 
 		// invalid url & dat
 		loadWorker.exceptionProperty().addListener((obs, oldVal, newVal) -> {
+			if (newVal == null)
+				return;
+
 			String reason = newVal.getMessage();
 			/**
 			 * TODO: switch case on reason according to {@link WebEngine.LoadWorker#describeError}

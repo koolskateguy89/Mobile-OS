@@ -1,6 +1,7 @@
 package com.github.koolskateguy89.mobileos.app.system.browser;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Properties;
 
 import javafx.event.ActionEvent;
@@ -11,6 +12,7 @@ import javafx.scene.layout.Pane;
 
 import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.app.App;
+import com.github.koolskateguy89.mobileos.utils.LombokOverride;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 
 import lombok.Getter;
@@ -24,11 +26,12 @@ public class Browser extends App {
 		put("backgroundColor", "white");
 	}};
 
-	public Browser() {
+	public Browser(Path dir) {
 		super(null, props);
+		BrowserController.dir = dir;
 	}
 
-	@Getter(lazy = true)
+	@Getter(lazy = true) @LombokOverride
 	private final Pane pane = new AnchorPane() {{
 		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/browser/Browser"));
 		loader.setRoot(this);
@@ -42,7 +45,7 @@ public class Browser extends App {
 
 	private BrowserController bc;
 
-	@Getter
+	@Getter @LombokOverride
 	// TODO: browser icon
 	private final Image icon = AppConstants.FALLBACK_ICON;
 
@@ -57,6 +60,7 @@ public class Browser extends App {
 
 	@Override
 	public void onClose() {
+		bc.onClose();
 	}
 
 }

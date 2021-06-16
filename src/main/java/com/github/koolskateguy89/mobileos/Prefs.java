@@ -41,6 +41,10 @@ public class Prefs {
 		return rootDirPath.resolve(Constants.APPS_DIR);
 	}
 
+	public static Path getSysAppDirPath() {
+		return rootDirPath.resolve(Constants.SYS_APPS_DIR);
+	}
+
 	static {
 		// Save preferences upon JVM shutdown
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {

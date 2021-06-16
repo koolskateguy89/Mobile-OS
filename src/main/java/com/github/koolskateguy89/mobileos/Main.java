@@ -56,12 +56,16 @@ public class Main extends Application {
 	private void loadSystemApps() throws Exception {
 		Set<Class<? extends App>> clazzes = findSystemApps();
 
+		Path sysAppsPrefs = Prefs.getSysAppDirPath();
+
 		List<App> sysApps = new ArrayList<>(clazzes.size());
 		for (Class<? extends App> clazz : clazzes) {
 			String name = clazz.getSimpleName();
-			Preferences appPrefs = Prefs.forSystemApp(name);
 
-			App app = initSysApp(clazz, appPrefs);
+			Preferences appPrefs = Prefs.forSystemApp(name);
+			Path sysAppDir = sysAppsPrefs.resolve(name);
+
+			App app = initSysApp(clazz, sysAppDir, appPrefs);
 			sysApps.add(app);
 		}
 
@@ -71,7 +75,7 @@ public class Main extends Application {
 		hc.initSystemApps(sysApps);
 	}
 
-	private static App initSysApp(Class<? extends App> clazz, Preferences appPrefs) throws Exception {
+	private static App initSysApp(Class<? extends App> clazz, Path appDir, Preferences appPrefs) throws Exception {
 		Constructor<? extends App> constructor;
 		Object[] initargs;
 		try {
@@ -79,9 +83,18 @@ public class Main extends Application {
 			constructor = clazz.getDeclaredConstructor();
 			initargs = new Object[0];
 		} catch (NoSuchMethodException nsme) {
-			// with prefs
-			constructor = clazz.getDeclaredConstructor(Preferences.class);
-			initargs = new Object[] {appPrefs};
+			try {
+				// with prefs
+				constructor = clazz.getDeclaredConstructor(Preferences.class);
+				initargs = new Object[]{appPrefs};
+			} catch (NoSuchMethodException nsme1) {
+				// with path, no prefs
+				constructor = clazz.getDeclaredConstructor(Path.class);
+				initargs = new Object[]{appDir};
+
+				if (Files.isDirectory(appDir))
+					Files.createDirectories(appDir);
+			}
 		}
 		return constructor.newInstance(initargs);
 	}

@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 
 import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.app.App;
+import com.github.koolskateguy89.mobileos.utils.LombokOverride;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 
 import lombok.Getter;
@@ -35,7 +36,7 @@ public final class Notepad extends App {
 		NotepadController.setPrefs(prefs);
 	}
 
-	@Getter(lazy = true)
+	@Getter(lazy = true) @LombokOverride
 	private final Pane pane = new VBox() {{
 		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/notepad/Editor"));
 		loader.setRoot(this);

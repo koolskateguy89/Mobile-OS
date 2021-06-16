@@ -54,6 +54,10 @@ public class Utils {
 		if (!Files.isDirectory(apps))
 			Files.createDirectories(apps);
 
+		Path sysApps = root.resolve(Constants.SYS_APPS_DIR);
+		if (!Files.isDirectory(sysApps))
+			Files.createDirectories(sysApps);
+
 		// TODO: init other dirs [if any - so far none]
 	}
 
