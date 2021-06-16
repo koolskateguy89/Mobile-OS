@@ -5,9 +5,12 @@ import java.util.List;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -22,10 +25,18 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.SwipeEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
+import javafx.scene.web.WebHistory.Entry;
+import javafx.scene.web.WebView;
+import javafx.stage.Window;
 
 import com.github.koolskateguy89.mobileos.app.App;
+import com.jfoenix.adapters.ReflectionHelper;
+import com.sun.javafx.scene.control.ContextMenuContent;
+import com.sun.javafx.scene.control.ContextMenuContent.MenuItemContainer;
+import com.sun.webkit.WebPage;
 
 // TODO: add settings (default search engine - whether to search for invalid URLs)
 public class BrowserController {
@@ -44,19 +55,32 @@ public class BrowserController {
 
 		// this is in order to keep the newTab tab at the end
 		tabs = tabPane.getTabs().subList(0, 0);
+		// Once all tabs have been closed, close the app
+		ListChangeListener<Tab> lcl = change -> {
+			if (change.getList().size() == 1) {
+				//Main.getInstance().goHome();
+			}
+		};
+		tabPane.getTabs().addListener(lcl);
 
 		newTab();
 		// select the tab just made
 		tabPane.getSelectionModel().select(0);
 
+		newTab.setClosable(false);
 		newTab.setOnSelectionChanged(this::shush);
 	}
 
 	// TODO: rename lol
 	private void shush(Event event) {
-		// this is quite iffy
+		// this is very iffy
 		// only make a new tab is newTab was selected
 		if (newTab.isSelected())
+			newTab();
+	}
+
+	void onOpen() {
+		if (tabs.isEmpty())
 			newTab();
 	}
 
@@ -67,7 +91,7 @@ public class BrowserController {
 		tabPane.getSelectionModel().select(tab);
 	}
 
-	private static Tab getNewTab() {
+	private Tab getNewTab() {
 		WebBrowser browser = new WebBrowser();
 		WebEngine engine = browser.getWebEngine();
 		Tab tab = new Tab(null, browser);
@@ -97,6 +121,47 @@ public class BrowserController {
 		lbl.textProperty().bind(engine.titleProperty());
 
 		tab.setGraphic(new HBox(4, iv, lbl));
+
+		WebView webView = browser.getWebView();
+
+		// How to alter WebView context menu: https://stackoverflow.com/a/27047819
+		webView.setOnContextMenuRequested(contextMenuEvent -> {
+			for (Window window : Window.getWindows()) {
+				if (!(window instanceof ContextMenu))
+					continue;
+
+				if (window.getScene() == null || window.getScene().getRoot() == null)
+					continue;
+
+				Parent root = window.getScene().getRoot();
+
+				if (root.getChildrenUnmodifiable().isEmpty())
+					continue;
+
+				// access to context menu content
+				Node popup = root.getChildrenUnmodifiable().get(0);
+
+				if (popup.lookup(".context-menu") == null)
+					continue;
+
+				Node bridge = popup.lookup(".context-menu");
+				ContextMenuContent cmc = (ContextMenuContent) ((Parent) bridge).getChildrenUnmodifiable().get(0);
+
+				VBox itemsContainer = cmc.getItemsContainer();
+
+				MenuItemContainer inNewWindow = (MenuItemContainer) itemsContainer.getChildren().get(1);
+				MenuItem mi = inNewWindow.getItem();
+				if (mi.getText().equals("Open Link in New Window")) {
+					mi.setText("Open Link in New Tab");
+					/*
+					mi.setOnAction(e -> {
+						// ahhh how do I get the link ffssss
+						// maybe I let it start loading then use the location from the loading?
+					});
+					*/
+				}
+			}
+		});
 
 		return tab;
 	}
@@ -128,15 +193,30 @@ public class BrowserController {
 		MenuItem duplicate = new MenuItem("Duplicate");
 		duplicate.setOnAction(event -> {
 			Tab dupe = getNewTab();
+			dupe.setContextMenu(makeContextMenu(dupe));
 			WebBrowser dupeBrowser = (WebBrowser) dupe.getContent();
+			WebEngine dupeEngine = dupeBrowser.getWebEngine();
 
 			WebHistory dupeHistory = dupeBrowser.getWebHistory();
 			// FIXME: entries is unmodifiable
-			// I could load every entry but that's very efficient is it
-			//dupeHistory.getEntries().addAll(history.getEntries());
-			//dupeHistory.go(history.getCurrentIndex());
+			// I could load every entry but that's not very efficient is it, I've tried and it doesn't work as I don't
+			// wait for them to load ffs
 
-			dupeBrowser.getWebEngine().load(engine.getLocation());
+			/* I've tried:
+			 *  - using reflection to get the modifiable list in dupeHistory then adding to it. 'Operational' but doesn't
+			 *      work as it seems the 'actual' impl. is through the BackForwardList, which I have no idea how to add
+			 *      to.
+			 *  - using reflection to get the BackForwardList, but I couldn't find a way to add to it even using private
+			 *      methods.
+			 */
+
+			// this doesn't even work ffs
+			WebPage page = ReflectionHelper.getFieldContent(dupeEngine, "page");
+			for (Entry entry : history.getEntries()) {
+				page.open(page.getMainFrame(), entry.getUrl());
+			}
+
+			//dupeBrowser.getWebEngine().load(engine.getLocation());
 
 			tabs.add(dupe);
 		});
@@ -145,6 +225,7 @@ public class BrowserController {
 		items.add(new SeparatorMenuItem());
 
 		MenuItem close = new MenuItem("Close");
+		// This doesn't work when the tab is first :/
 		close.setOnAction(event -> tabs.remove(tab));
 		// Ctrl+W
 		close.setAccelerator(new KeyCodeCombination(KeyCode.W, KeyCombination.CONTROL_DOWN));
@@ -152,7 +233,7 @@ public class BrowserController {
 
 		MenuItem closeOthers = new MenuItem("Close other tabs");
 		closeOthers.setOnAction(event -> {
-			// I'm not really sure how to do this
+			// I'm not really sure how best to do this
 			tabs.removeIf(t -> t != tab);
 		});
 		items.add(closeOthers);

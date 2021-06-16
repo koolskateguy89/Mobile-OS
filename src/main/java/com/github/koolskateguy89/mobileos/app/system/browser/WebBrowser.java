@@ -51,6 +51,7 @@ public class WebBrowser extends AnchorPane {
 	private Worker<Void> loadWorker;
 
 	// TODO: bind back&forward disableProperty
+	// TODO: show history upon holding button
 	@FXML
 	private JFXButton back;
 	@FXML
@@ -68,6 +69,10 @@ public class WebBrowser extends AnchorPane {
 		webEngine = webView.getEngine();
 		webHistory = webEngine.getHistory();
 		loadWorker = webEngine.getLoadWorker();
+
+		setOnLocationChange((obs, oldLocation, newLocation) -> {
+			addressBar.setText(newLocation);
+		});
 
 		// TODO: basically handle address error
 		loadWorker.stateProperty().addListener((obs, oldState, newState) -> {
@@ -116,19 +121,30 @@ public class WebBrowser extends AnchorPane {
 
 	@FXML
 	void reload() {
-		// TODO: check if loading
+		if (isLoading()) {
+			loadWorker.cancel();
+			back();
+		} else {
+			webEngine.reload();
+		}
+	}
 
-		webEngine.reload();
+	public boolean isLoading() {
+		return loadWorker.isRunning();
 	}
 
 	// TODO:
+
 	public void setOnLocationChange(ChangeListener<String> listener) {
 		webEngine.locationProperty().addListener(listener);
 	}
 
 	// TODO: (I have no idea if this will work)
 	public void setOnLoadingWebpage(Runnable func) {
-		webEngine.getLoadWorker().progressProperty().addListener((obs, oldVal, newVal) -> func.run());
+		loadWorker.runningProperty().addListener((obs, wasRunning, isRunning) -> {
+			if (isRunning)
+				func.run();
+		});
 	}
 
 	public void setOnAlert(EventHandler<WebEvent<String>> handler) {

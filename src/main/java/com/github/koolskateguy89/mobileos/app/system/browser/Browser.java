@@ -34,10 +34,13 @@ public class Browser extends App {
 		loader.setRoot(this);
 		try {
 			loader.load();
+			bc = loader.getController();
 		} catch (IOException io) {
 			io.printStackTrace();
 		}
 	}};
+
+	private BrowserController bc;
 
 	@Getter
 	// TODO: browser icon
@@ -45,6 +48,7 @@ public class Browser extends App {
 
 	@Override
 	public void onOpen() {
+		bc.onOpen();
 	}
 
 	@Override
