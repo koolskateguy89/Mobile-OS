@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 
 import org.controlsfx.control.textfield.CustomTextField;
 
@@ -45,13 +47,21 @@ public class NotesController {
 			return Utils.containsIgnoreCase(title, query) || Utils.containsIgnoreCase(content, query);
 		}).collect(Collectors.toList());
 
-		// TODO: diplay only results
+		// TODO: display only search results
 	}
 
 	@FXML
 	private void newNote() {
-		Note note = new Note("TestTitle" + notes.size(), "TextContent");
+		Note note = new Note("TestTitle" + notes.size(), "TestContent");
 		notes.add(note);
+
+		// add lines between NotePreviews, imitating iOS Notes
+		if (!vbox.getChildren().isEmpty()) {
+			Line line = new Line(0, 0, vbox.getPrefWidth(), 0);
+			line.setStroke(Color.WHITE);
+			vbox.getChildren().add(line);
+		}
+
 		vbox.getChildren().add(new NotePreview(note, this));
 	}
 

@@ -17,6 +17,7 @@ import com.github.koolskateguy89.mobileos.utils.Utils;
 
 import lombok.Getter;
 
+// TODO: detailProperty - Note title
 public class Notes extends App {
 
 	private static final Properties props = new Properties() {{
