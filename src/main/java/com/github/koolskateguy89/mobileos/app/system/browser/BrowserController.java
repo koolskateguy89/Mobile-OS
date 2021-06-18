@@ -56,7 +56,7 @@ public class BrowserController {
 	@FXML
 	private Tab newTab;
 
-	private final Path cookiesPath = dir.resolve("cookies.json");
+	private final Path cookiesPath = dir.resolve("cookies.properties");
 
 	PersistentCookieStore cookieStore;
 
@@ -124,6 +124,12 @@ public class BrowserController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	void back() {
+		Tab currentTab = tabPane.getSelectionModel().getSelectedItem();
+		WebBrowser browser = (WebBrowser) currentTab.getContent();
+		browser.back();
 	}
 
 	private void newTab() {

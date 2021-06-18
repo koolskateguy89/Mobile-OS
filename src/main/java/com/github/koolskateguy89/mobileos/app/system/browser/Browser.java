@@ -27,7 +27,7 @@ public class Browser extends App {
 	}};
 
 	public Browser(Path dir) {
-		super(null, props);
+		super(dir, props);
 		BrowserController.dir = dir;
 	}
 
@@ -56,6 +56,7 @@ public class Browser extends App {
 
 	@Override
 	public void goBack(ActionEvent event) {
+		bc.back();
 	}
 
 	@Override
