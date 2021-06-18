@@ -1,0 +1,9 @@
+.root {
+	-fx-background-color: #585858;
+}
+
+/* let's see if it inherits from
+.label {
+	-fx-text-fill: white;
+}
+*/
