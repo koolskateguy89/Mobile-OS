@@ -127,19 +127,19 @@ public abstract class App {
 	}
 
 
-	protected Path getPath(String str) {
+	public Path getPath(String str) {
 		return directory.resolve(str);
 	}
 
-	protected Path getPath(Path path) {
+	public Path getPath(Path path) {
 		return directory.resolve(path);
 	}
 
-	protected File getFile(String str) {
+	public File getFile(String str) {
 		return directory.resolve(str).toFile();
 	}
 
-	protected File getFile(Path path) {
+	public File getFile(Path path) {
 		return directory.resolve(path).toFile();
 	}
 
@@ -156,7 +156,7 @@ public abstract class App {
 	 *
 	 * @return the {@code Image}
 	 */
-	protected final Image getImageFromDirectory(String path) {
+	public final Image getImageFromDirectory(String path) {
 		return new Image("file:" + directory.resolve(path));
 	}
 
