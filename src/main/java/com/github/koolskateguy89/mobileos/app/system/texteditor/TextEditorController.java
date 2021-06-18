@@ -1,4 +1,4 @@
-package com.github.koolskateguy89.mobileos.app.system.notepad;
+package com.github.koolskateguy89.mobileos.app.system.texteditor;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +46,7 @@ import com.github.koolskateguy89.mobileos.view.utils.FontSelector;
 import lombok.AccessLevel;
 import lombok.Setter;
 
-public class NotepadController {
+public class TextEditorController {
 
 	// TODO: {maybe} status bar (caret position, maybe encoding, LF/CRLF)
 

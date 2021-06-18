@@ -1,4 +1,4 @@
-package com.github.koolskateguy89.mobileos.app.system.notepad;
+package com.github.koolskateguy89.mobileos.app.system.texteditor;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,23 +22,23 @@ import com.github.koolskateguy89.mobileos.utils.Utils;
 
 import lombok.Getter;
 
-public final class Notepad extends App {
+public final class TextEditor extends App {
 
 	private static final Properties props = new Properties() {{
-		put("name", "Notepad");
+		put("name", "Text Editor");
 		put("version", Main.VERSION);
 		put("appType", "SYSTEM");
 		put("backgroundColor", "lightblue");
 	}};
 
-	public Notepad(Preferences prefs) {
+	public TextEditor(Preferences prefs) {
 		super(null, props);
-		NotepadController.setPrefs(prefs);
+		TextEditorController.setPrefs(prefs);
 	}
 
 	@Getter(lazy = true) @LombokOverride
 	private final Pane pane = new VBox() {{
-		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/notepad/Editor"));
+		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/texteditor/Editor"));
 		loader.setRoot(this);
 		try {
 			loader.load();
@@ -69,12 +69,12 @@ public final class Notepad extends App {
 
 		StringBinding changedBinding = Bindings.createStringBinding(() -> changedProp.get() ? "*" : "", changedProp);
 
-		Notepad.super.detailProperty.bind(nameBinding.concat(changedBinding));
+		TextEditor.super.detailProperty.bind(nameBinding.concat(changedBinding));
 	}};
 
-	private NotepadController nc;
+	private TextEditorController nc;
 
-	// TODO: Notepad icon
+	// TODO: TextEditor icon
 	@Override
 	public Image getIcon() {
 		return AppConstants.FALLBACK_ICON;
