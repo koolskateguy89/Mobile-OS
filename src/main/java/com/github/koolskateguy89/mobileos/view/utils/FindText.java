@@ -23,9 +23,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
-import com.github.koolskateguy89.mobileos.Main;
 import org.controlsfx.control.textfield.CustomTextField;
 
+import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXRadioButton;
