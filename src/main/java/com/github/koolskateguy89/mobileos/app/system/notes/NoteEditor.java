@@ -11,7 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.jfoenix.controls.JFXTextField;
 
-// TODO: everything
+// TODO: everything (including FXML file)
 class NoteEditor extends AnchorPane {
 
 	private final Note note;

@@ -19,11 +19,11 @@ import com.github.koolskateguy89.mobileos.utils.Utils;
 // TODO: Settings: Font,
 public class NotesController {
 
-	SimpleObjectProperty<Note> currentNote = new SimpleObjectProperty<>();
+	final SimpleObjectProperty<Note> currentNote = new SimpleObjectProperty<>();
 
-	List<Note> notes = new ArrayList<>();
+	final List<Note> notes = new ArrayList<>();
 
-	ObjectProperty<Font> fontProperty = new SimpleObjectProperty<>(Font.getDefault());
+	final ObjectProperty<Font> fontProperty = new SimpleObjectProperty<>(Font.getDefault());
 
 	void openNote(Note note) {
 		currentNote.set(note);

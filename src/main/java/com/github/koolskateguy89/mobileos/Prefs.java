@@ -9,7 +9,7 @@ import com.github.koolskateguy89.mobileos.utils.Constants;
 import lombok.Getter;
 
 // basically a read-only static implementation of `java.util.prefs.Preferences`
-public class Prefs {
+public final class Prefs {
 
 	private Prefs() {}
 
