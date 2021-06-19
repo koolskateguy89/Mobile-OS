@@ -14,6 +14,7 @@ import org.controlsfx.control.textfield.CustomTextField;
 
 import com.github.koolskateguy89.mobileos.utils.Utils;
 
+// TODO: Settings: Font,
 public class NotesController {
 
 	SimpleObjectProperty<Note> currentNote = new SimpleObjectProperty<>();

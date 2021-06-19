@@ -3,6 +3,7 @@ package com.github.koolskateguy89.mobileos.app.system.notes;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Properties;
+import java.util.prefs.Preferences;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -28,8 +29,11 @@ public class Notes extends App {
 		put("backgroundColor", "lime");
 	}};
 
-	public Notes(Path dir) {
+	static Preferences prefs;
+
+	public Notes(Path dir, Preferences prefs) {
 		super(dir, props);
+		Notes.prefs = prefs;
 	}
 
 	NotesController nc;
