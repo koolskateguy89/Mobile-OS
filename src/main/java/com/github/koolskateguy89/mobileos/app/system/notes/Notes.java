@@ -1,9 +1,12 @@
-package com.github.koolskateguy89.mobileos.app.system.browser;
+package com.github.koolskateguy89.mobileos.app.system.notes;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Properties;
+import java.util.prefs.Preferences;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.image.Image;
@@ -17,51 +20,56 @@ import com.github.koolskateguy89.mobileos.utils.Utils;
 
 import lombok.Getter;
 
-public class Browser extends App {
+public class Notes extends App {
 
 	private static final Properties props = new Properties() {{
-		put("name", "Browser");
+		put("name", "Notes");
 		put("version", Main.VERSION);
 		put("appType", "SYSTEM");
-		put("backgroundColor", "white");
+		put("backgroundColor", "lime");
 	}};
 
-	public Browser(Path dir) {
+	static Preferences prefs;
+
+	public Notes(Path dir, Preferences prefs) {
 		super(dir, props);
-		BrowserController.dir = dir;
+		Notes.prefs = prefs;
 	}
+
+	NotesController nc;
 
 	@Getter(lazy = true) @LombokOverride
 	private final Pane pane = new AnchorPane() {{
-		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/browser/Browser"));
+		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/notes/Notes"));
 		loader.setRoot(this);
 		try {
 			loader.load();
-			bc = loader.getController();
+			nc = loader.getController();
 		} catch (IOException io) {
 			io.printStackTrace();
 		}
+
+		StringBinding detailBinding = Bindings.createStringBinding(() -> {
+			Note currentNote = nc.currentNote.get();
+			return currentNote == null ? "" : " - " + currentNote.getTitle();
+		}, nc.currentNote);
+		Notes.this.detailProperty.bind(detailBinding);
 	}};
 
-	private BrowserController bc;
-
 	@Getter @LombokOverride
-	// TODO: browser icon
+	// TODO: notes icon
 	private final Image icon = AppConstants.FALLBACK_ICON;
 
 	@Override
 	public void onOpen() {
-		bc.onOpen();
 	}
 
 	@Override
 	public void goBack(ActionEvent event) {
-		bc.back();
 	}
 
 	@Override
 	public void onClose() {
-		bc.onClose();
 	}
 
 }

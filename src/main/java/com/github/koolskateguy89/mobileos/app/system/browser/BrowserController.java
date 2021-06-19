@@ -38,7 +38,6 @@ import javafx.scene.web.WebHistory.Entry;
 import javafx.scene.web.WebView;
 import javafx.stage.Window;
 
-import com.github.koolskateguy89.mobileos.app.App;
 import com.jfoenix.adapters.ReflectionHelper;
 import com.sun.javafx.scene.control.ContextMenuContent;
 import com.sun.javafx.scene.control.ContextMenuContent.MenuItemContainer;
@@ -56,7 +55,7 @@ public class BrowserController {
 	@FXML
 	private Tab newTab;
 
-	private final Path cookiesPath = dir.resolve("cookies.json");
+	private final Path cookiesPath = dir.resolve("cookies.properties");
 
 	PersistentCookieStore cookieStore;
 
@@ -93,11 +92,10 @@ public class BrowserController {
 		tabPane.getTabs().addListener(lcl);
 
 		newTab.setClosable(false);
-		newTab.setOnSelectionChanged(this::shush);
+		newTab.setOnSelectionChanged(this::newTabSelected);
 	}
 
-	// TODO: rename lol
-	private void shush(Event event) {
+	private void newTabSelected(Event event) {
 		// this is very iffy
 		// only make a new tab is newTab was selected
 		if (newTab.isSelected())
@@ -126,6 +124,12 @@ public class BrowserController {
 		}
 	}
 
+	void back() {
+		Tab currentTab = tabPane.getSelectionModel().getSelectedItem();
+		WebBrowser browser = (WebBrowser) currentTab.getContent();
+		browser.back();
+	}
+
 	private void newTab() {
 		Tab tab = getNewTab();
 		tab.setContextMenu(makeContextMenu(tab));
@@ -142,9 +146,8 @@ public class BrowserController {
 		ObjectBinding<Image> favIcon = Bindings.createObjectBinding(() -> {
 			String location = engine.getLocation();
 
-			// TODO: change icon (maybe loading icon or something idk)
 			if (location.isEmpty())
-				return App.AppConstants.FALLBACK_ICON;
+				return null;
 
 			URL url = new URL(location);
 			String host = url.getHost();
@@ -208,7 +211,6 @@ public class BrowserController {
 		return tab;
 	}
 
-	// TODO
 	private ContextMenu makeContextMenu(Tab tab) {
 		WebBrowser browser = (WebBrowser) tab.getContent();
 		WebEngine engine = browser.getWebEngine();

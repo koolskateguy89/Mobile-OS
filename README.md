@@ -4,8 +4,8 @@ This is basically replicating a mobile OS, think of it as a homeless man's Andro
 
 ## Applications
 
-- Applications are stored as folders, in which the application has free reign apart from...
-- Applications return a `Pane` (450x512) which is displayed
+- Applications are stored as folders, in which the application has free rein apart from...
+- Applications return a `Pane` (450x524) which is displayed. (See [Example_App_Pane.fxml](Example_App_Pane.fxml))
 
 
 ### Application Development
@@ -26,28 +26,27 @@ Pre-requisites to develop:
 
 The main class needs to extend [`App`](src/main/java/com/github/koolskateguy89/mobileos/app/App.java), and needs a
 `public` constructor with parameters `Path, Properties` or `Path, Properties, Preferences`. If both are defined, the one with the
-later parameters (incl. `java.util.Preferences`) is used.
+latter parameters (incl. `java.util.Preferences`) is used.
 
 ### Folder structure
 
 | Name | Description |
 | ---- | ----------- |
-| ./app.jar | Compiled application source code |
 | A | B |
-| ./info.properties | Properties file containing application details (see [info.properties](#info.properties) below) |
+| ./info.properties | Properties file containing application details (see [info.properties](#infoproperties-very-important) below) |
 
+The rest is however you want.
 
 #### info.properties (very important)
 
 | Key | Description | Example |
 | --- | ----------- | ------- |
 | name | The app's name | ExampleApp |
-| mainClassName | The canonical name of the class that extends `App` | com.github.koolskateguy89.example.MyApp |
-| jarPath | The relative path to the application jar (relative from the application directory) | app.jar |
-| iconPath | The path to the application's icon | ./Image.png |
 | version | The app's version | 1.0 |
 | appType | The app's `AppType` | UTILITY |
 | backgroundColor | (Optional - default white) The background color for your icon (HTML or CSS) | `#FFFFFF` or `red` |
+| mainClassName | The canonical name of the class that extends `App` | com.github.koolskateguy89.example.MyApp |
+| jarPath | The relative path to the application jar (relative from the application directory) | app.jar |
 | A | B |
 
 You can define more if you want, a `java.util.Properties` representing this file is passed to the App
@@ -63,6 +62,11 @@ TODO: this
 
 ## Default Applications
 
-- [Settings]
-- [Notepad]
+- [Browser](src/main/java/com/github/koolskateguy89/mobileos/app/system/browser/Browser.java)
+- [Text Editor](src/main/java/com/github/koolskateguy89/mobileos/app/system/texteditor/TextEditor.java)
+- [AppInstaller](src/main/java/com/github/koolskateguy89/mobileos/app/system/installer/Installer.java)
+- [Notes](src/main/java/com/github/koolskateguy89/mobileos/app/system/notes/Notes.java)  
+
+- [Settings](src/main/java/com/github/koolskateguy89/mobileos/app/system/settings/SettingsApp.java)
+- [Explorer](src/main/java/com/github/koolskateguy89/mobileos/app/system/explorer/Explorer.java)
 - TODO

@@ -86,14 +86,20 @@ public class Main extends Application {
 			try {
 				// with prefs
 				constructor = clazz.getDeclaredConstructor(Preferences.class);
-				initargs = new Object[]{appPrefs};
+				initargs = new Object[] {appPrefs};
 			} catch (NoSuchMethodException nsme1) {
-				// with path, no prefs
-				constructor = clazz.getDeclaredConstructor(Path.class);
-				initargs = new Object[]{appDir};
+				try {
+					// with path, no prefs
+					constructor = clazz.getDeclaredConstructor(Path.class);
+					initargs = new Object[] {appDir};
+				} catch (NoSuchMethodException nsme2) {
+					// with path, with prefs
+					constructor = clazz.getDeclaredConstructor(Path.class, Preferences.class);
+					initargs = new Object[] {appDir, appPrefs};
+				}
 
-				if (Files.isDirectory(appDir))
-					Files.createDirectories(appDir);
+				if (!Files.isDirectory(appDir))
+						Files.createDirectories(appDir);
 			}
 		}
 		return constructor.newInstance(initargs);
@@ -226,11 +232,16 @@ public class Main extends Application {
 		// home screen 'doesnt' go back - well i cba
 	}
 
+	public boolean atHome() {
+		return currentApp == null;
+	}
+
 	public void goHome() {
 		if (currentApp != null) {
 			currentApp.onClose();
 			currentApp = null;
 		}
+
 		stage.titleProperty().unbind();
 		stage.setTitle(DEFAULT_TITLE);
 		mc.setScreen(home);

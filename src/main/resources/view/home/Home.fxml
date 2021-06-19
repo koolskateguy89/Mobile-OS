@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="root" prefHeight="512.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.koolskateguy89.mobileos.view.home.HomeController">
+<VBox fx:id="root" prefHeight="524.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.koolskateguy89.mobileos.view.home.HomeController">
    <children>
-      <TabPane fx:id="tabPane" prefHeight="450.0" prefWidth="450.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE" />
+      <StackPane fx:id="homePaneWrapper" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="450.0" />
       <HBox fx:id="faveBox" prefHeight="62.0" prefWidth="450.0" spacing="10.0">
          <children>
             <StackPane fx:id="fav0" prefHeight="150.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />

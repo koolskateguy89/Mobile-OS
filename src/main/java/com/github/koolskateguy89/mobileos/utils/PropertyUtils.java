@@ -12,7 +12,7 @@ public class PropertyUtils {
 	private PropertyUtils() {}
 
 	// Adapted from javafx.beans.binding.Bindings.isEmpty
-	public static BooleanBinding isBlank(final ObservableStringValue op) {
+	public static BooleanBinding isBlank(ObservableStringValue op) {
 		if (op == null) {
 			throw new NullPointerException("Operand cannot be null");
 		}

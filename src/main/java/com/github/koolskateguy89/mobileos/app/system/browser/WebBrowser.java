@@ -70,7 +70,7 @@ public class WebBrowser extends AnchorPane {
 		webHistory = webEngine.getHistory();
 		loadWorker = webEngine.getLoadWorker();
 
-		setOnLocationChange((obs, oldLocation, newLocation) -> {
+		addOnLocationChange((obs, oldLocation, newLocation) -> {
 			addressBar.setText(newLocation);
 		});
 
@@ -136,14 +136,11 @@ public class WebBrowser extends AnchorPane {
 		return loadWorker.isRunning();
 	}
 
-	// TODO:
-
-	public void setOnLocationChange(ChangeListener<String> listener) {
+	public void addOnLocationChange(ChangeListener<String> listener) {
 		webEngine.locationProperty().addListener(listener);
 	}
 
-	// TODO: (I have no idea if this will work)
-	public void setOnLoadingWebpage(Runnable func) {
+	public void addOnLoadingWebpage(Runnable func) {
 		loadWorker.runningProperty().addListener((obs, wasRunning, isRunning) -> {
 			if (isRunning)
 				func.run();
@@ -158,12 +155,12 @@ public class WebBrowser extends AnchorPane {
 		webEngine.setOnError(handler);
 	}
 
-	public void setOnStatusChanged(EventHandler<WebEvent<String>> handler) {
-		webEngine.setOnStatusChanged(handler);
-	}
-
 	public void setOnResized(EventHandler<WebEvent<Rectangle2D>> handler) {
 		webEngine.setOnResized(handler);
+	}
+
+	public void setOnStatusChanged(EventHandler<WebEvent<String>> handler) {
+		webEngine.setOnStatusChanged(handler);
 	}
 
 	public void setOnVisibilityChanged(EventHandler<WebEvent<Boolean>> handler) {

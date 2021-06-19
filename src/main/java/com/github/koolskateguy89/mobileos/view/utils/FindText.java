@@ -25,6 +25,7 @@ import javafx.stage.Window;
 
 import org.controlsfx.control.textfield.CustomTextField;
 
+import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXRadioButton;
@@ -49,6 +50,21 @@ public class FindText extends Stage {
 		this.tic = tic;
 		initStyle(StageStyle.UTILITY);
 		initOwner(owner);
+
+		if (owner == null) {
+			Stage main = Main.getStage();
+			// Show in middle of main stage
+			this.setOnShown(windowEvent -> {
+				double mainX = main.getX();
+				double mainY = main.getY();
+
+				double xOff = (main.getWidth() - getWidth()) / 2;
+				double yOff = (main.getHeight() - getHeight()) / 2;
+
+				setX(mainX + xOff);
+				setY(mainY + yOff);
+			});
+		}
 
 		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("utils/Find"));
 		loader.setRoot(this);
@@ -200,7 +216,6 @@ public class FindText extends Stage {
 
 		String target = tf.getText();
 		String replace = replaceTf.getText();
-
 
 		if (regex.isSelected())
 			text = handleRegex(text, s -> s.replaceFirst(target, replace));

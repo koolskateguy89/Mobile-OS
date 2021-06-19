@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root prefHeight="512.0" prefWidth="450.0" stylesheets="@Editor.css" type="VBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.koolskateguy89.mobileos.app.system.texteditor.TextEditorController">
+<fx:root prefHeight="524.0" prefWidth="450.0" stylesheets="@Editor.css" type="VBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.koolskateguy89.mobileos.app.system.texteditor.TextEditorController">
    <children>
       <MenuBar style="-fx-background-color: #888888;">
          <Menu text="_File">
@@ -102,14 +102,11 @@
             <CheckMenuItem fx:id="wrapText" text="_Wrap Text" />
             <MenuItem onAction="#font" text="_Font" />
          </Menu>
-         <Menu text="_Help">
-            <MenuItem mnemonicParsing="false" text="About [App name shusuh]" />
-         </Menu>
       </MenuBar>
       <AnchorPane VBox.vgrow="ALWAYS">
-         <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <TextArea fx:id="lineThingy" editable="false" minWidth="-Infinity" prefHeight="486.0" prefWidth="25.0" styleClass="line-numbers" text="1" />
-            <TextArea fx:id="textArea" promptText="Open a file!" />
+         <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TextArea id="line-numbers" fx:id="lineThingy" editable="false" maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefWidth="25.0" text="1" />
+            <TextArea fx:id="textArea" maxWidth="1.7976931348623157E308" promptText="Open a file!" HBox.hgrow="ALWAYS" />
          </HBox>
       </AnchorPane>
    </children>

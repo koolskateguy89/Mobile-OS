@@ -1,16 +1,9 @@
 package com.github.koolskateguy89.mobileos.view.home;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -18,13 +11,12 @@ import javafx.scene.layout.VBox;
 import com.github.koolskateguy89.mobileos.Settings;
 import com.github.koolskateguy89.mobileos.app.App;
 import com.github.koolskateguy89.mobileos.utils.Constants;
-import com.github.koolskateguy89.mobileos.utils.Utils;
 
 public class HomeController {
 
 	@FXML
-	private TabPane tabPane;
-	private List<Tab> tabs;
+	private StackPane homePaneWrapper;
+	private HomePane homePane;
 
 	@FXML
 	private VBox root;
@@ -47,7 +39,8 @@ public class HomeController {
 
 	@FXML
 	public void initialize() {
-		tabs = tabPane.getTabs();
+		homePane = new HomePane();
+		homePaneWrapper.getChildren().add(homePane);
 
 		root.backgroundProperty().bind(Settings.BACKGROUND_PROPERTY);
 
@@ -55,90 +48,18 @@ public class HomeController {
 		Settings.setBackground(Constants.DEFAULT_BACKGROUND);
 	}
 
-	private static final URL grid = Utils.getFxmlUrl("home/HomeGrid");
-	private static GridPane newGrid() {
-		try {
-			return FXMLLoader.load(grid);
-		} catch (IOException io) {
-			// should not happen
-			io.printStackTrace();
-			return new GridPane();
-		}
-	}
-
 	// The first tab is for system applications
 	public void initSystemApps(List<App> systemApps) {
-		final int len = systemApps.size();
-		int i = 0;
-
-		GridPane grid = newGrid();
-		tabs.add(0, new Tab("0", grid));
-		rowLoop: for (int row = 0; row < 4; row++) {
-			for (int col = 0; col < 4; col++) {
-				if (i >= len)
-					break rowLoop;
-
-				App app = systemApps.get(i);
-				i++;
-
-				Node appNode = app.getNode();
-				grid.add(appNode, col, row);
-			}
-		}
+		homePane.initSystemApps(systemApps);
 	}
 
 	// Installed apps start from second tab
 	public void initApps(List<App> apps) {
-		final int len = apps.size();
-		int i = 0;
-		int tab = 1;
-
-		// Using a do while loop as we still want a tab to show even if there are no apps
-		doWhile: do {
-			GridPane grid = newGrid();
-			tabs.add(new Tab(Integer.toString(tab), grid));
-			tab++;
-
-			for (int row = 0; row < 4; row++) {
-				for (int col = 0; col < 4; col++) {
-					if (i >= len)
-						break doWhile;
-
-					App app = apps.get(i);
-					i++;
-
-					Node appNode = app.getNode();
-					grid.add(appNode, col, row);
-				}
-			}
-		} while (i < len);
-
-		// Show the second tab (first non-system tab)
-		//tabPane.getSelectionModel().select(1);
+		homePane.initApps(apps);
 	}
 
 	public void addApp(App app) {
-		int size = tabs.size();
-
-		Tab tab = tabs.get(size - 1);
-
-		GridPane grid = (GridPane) tab.getContent();
-
-		if (grid.getChildren().size() == 16) {
-			// full grid
-			grid = newGrid();
-			tab = new Tab(Integer.toString(size), grid);
-			tabs.add(tab);
-
-			grid.add(app.getNode(), 0, 0);
-		} else {
-			int apps = grid.getChildren().size();
-
-			int row = apps / 4;
-			int col = apps & 3; //apps % 4
-
-			grid.add(app.getNode(), col, row);
-		}
+		homePane.addApp(app);
 	}
 
 	public void initFaves(List<App> faves) {

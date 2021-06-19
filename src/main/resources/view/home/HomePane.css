@@ -1,0 +1,11 @@
+.bottom-circle {
+	-fx-text-fill: black; /* FIXME: text isn't showing */
+	-fx-background-color: grey;
+
+	/* Rounded button: https://stackoverflow.com/a/26851888 */
+	-fx-background-radius: 1em;
+    -fx-min-width: 17px;
+    -fx-min-height: 17px;
+    -fx-max-width: 17px;
+    -fx-max-height: 17px;
+}

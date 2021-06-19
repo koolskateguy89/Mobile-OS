@@ -18,16 +18,15 @@ import lombok.Setter;
  * <i>should</i> be fine.
  * @param <E> list type
  */
+@Getter
 public class ObservableLimitedList<E> extends ObservableListWrapper<E> {
 
-	// Mutations made to the backing list don't trigger observers
-	@Getter
+	// Mutations made to the backing list don't trigger observers but are reflected in this :)
 	private final List<E> backingList;
 
-	@Getter @Setter
+	@Setter
 	private boolean tail;
 
-	@Getter
 	private final int limit;
 
 	public ObservableLimitedList(int limit, boolean tail) {
