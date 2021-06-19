@@ -48,8 +48,6 @@ import lombok.Setter;
 
 public class TextEditorController {
 
-	// TODO: {maybe} status bar (caret position, maybe encoding, LF/CRLF)
-
 	// FIXME: Ctrl+H isn't working as the accelerator for replace, instead is seems to be doing 'Delete' instead
 
 	@Setter(AccessLevel.MODULE)
@@ -405,7 +403,6 @@ public class TextEditorController {
 		textArea.paste();
 	}
 
-	// TODO: make open in middle of Main.stage
 	private FindText finder;
 
 	@FXML
@@ -452,7 +449,7 @@ public class TextEditorController {
 
 			int lenBefore = linesBefore.mapToInt(String::length).sum();
 
-			lenBefore += line - 1; // account for new lines (bit weird - TODO: better this comment)
+			lenBefore += line - 1; // account for line separators
 			textArea.selectPositionCaret(lenBefore);
 
 			// don't select any text
