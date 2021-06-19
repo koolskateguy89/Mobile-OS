@@ -226,11 +226,16 @@ public class Main extends Application {
 		// home screen 'doesnt' go back - well i cba
 	}
 
+	public boolean atHome() {
+		return currentApp == null;
+	}
+
 	public void goHome() {
 		if (currentApp != null) {
 			currentApp.onClose();
 			currentApp = null;
 		}
+
 		stage.titleProperty().unbind();
 		stage.setTitle(DEFAULT_TITLE);
 		mc.setScreen(home);

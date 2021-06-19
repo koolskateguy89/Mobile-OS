@@ -16,7 +16,7 @@
             <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="62.0" prefWidth="52.0" HBox.hgrow="ALWAYS">
                <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#back" text="Back" textFill="WHITE">
                   <font>
-                     <Font fx:id="navFont" name="System Bold" size="12.0" />
+                     <Font fx:id="navFont" name="System Bold" size="20.0" />
                   </font>
                </JFXButton>
             </StackPane>
