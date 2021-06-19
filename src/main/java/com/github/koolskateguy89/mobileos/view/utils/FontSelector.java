@@ -9,6 +9,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -65,9 +67,12 @@ public class FontSelector extends Stage {
 
 	@FXML
 	private void initialize() {
+		// ESC closes this
+		getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.ESCAPE), this::close);
+
 		families.getItems().addAll(Font.getFamilies());
 
-		// TODO: add sizes to sizes
+		sizes.getItems().addAll("8", "10", "12", "14", "18", "24", "36", "48");
 
 		// update GUI elements when font is updated
 		fontProperty.addListener((obs, oldFont, newFont) -> {

@@ -107,9 +107,9 @@
          </Menu>
       </MenuBar>
       <AnchorPane VBox.vgrow="ALWAYS">
-         <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <TextArea fx:id="lineThingy" editable="false" minWidth="-Infinity" prefHeight="486.0" prefWidth="25.0" styleClass="line-numbers" text="1" />
-            <TextArea fx:id="textArea" promptText="Open a file!" />
+         <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TextArea id="line-numbers" fx:id="lineThingy" editable="false" minWidth="-Infinity" prefHeight="486.0" prefWidth="25.0" text="1" />
+            <TextArea fx:id="textArea" maxWidth="1.7976931348623157E308" promptText="Open a file!" HBox.hgrow="ALWAYS" />
          </HBox>
       </AnchorPane>
    </children>

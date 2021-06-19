@@ -217,7 +217,6 @@ public class FindText extends Stage {
 		String target = tf.getText();
 		String replace = replaceTf.getText();
 
-
 		if (regex.isSelected())
 			text = handleRegex(text, s -> s.replaceFirst(target, replace));
 		else    // String replaceFirst without regex: https://stackoverflow.com/a/43436659
