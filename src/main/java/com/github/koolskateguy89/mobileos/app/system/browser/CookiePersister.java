@@ -11,12 +11,13 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
 
+import org.reflections.ReflectionUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.jfoenix.adapters.ReflectionHelper;
-import org.reflections.ReflectionUtils;
 
 import lombok.SneakyThrows;
 
