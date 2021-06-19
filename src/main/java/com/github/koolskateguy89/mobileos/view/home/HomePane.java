@@ -22,7 +22,7 @@ import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.app.App;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 
-// This is basically meant to be a better TabPane
+// This is basically meant to be a more tailored TabPane
 class HomePane extends AnchorPane {
 
 	HomePane() {
