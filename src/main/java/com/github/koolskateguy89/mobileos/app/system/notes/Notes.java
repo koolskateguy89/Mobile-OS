@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Properties;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.image.Image;
@@ -17,7 +19,6 @@ import com.github.koolskateguy89.mobileos.utils.Utils;
 
 import lombok.Getter;
 
-// TODO: detailProperty - Note title
 public class Notes extends App {
 
 	private static final Properties props = new Properties() {{
@@ -43,6 +44,12 @@ public class Notes extends App {
 		} catch (IOException io) {
 			io.printStackTrace();
 		}
+
+		StringBinding detailBinding = Bindings.createStringBinding(() -> {
+			Note currentNote = nc.currentNote.get();
+			return currentNote == null ? "" : " - " + currentNote.getTitle();
+		}, nc.currentNote);
+		Notes.this.detailProperty.bind(detailBinding);
 	}};
 
 	@Getter @LombokOverride

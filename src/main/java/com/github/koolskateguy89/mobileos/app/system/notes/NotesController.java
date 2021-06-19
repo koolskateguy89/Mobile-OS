@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -12,22 +13,21 @@ import javafx.scene.shape.Line;
 import org.controlsfx.control.textfield.CustomTextField;
 
 import com.github.koolskateguy89.mobileos.utils.Utils;
-import com.jfoenix.controls.JFXButton;
 
 public class NotesController {
+
+	SimpleObjectProperty<Note> currentNote = new SimpleObjectProperty<>();
 
 	List<Note> notes = new ArrayList<>();
 
 	void openNote(Note note) {
+		currentNote.set(note);
 		// TODO
 		System.out.println("Open: " + note.getTitle());
 	}
 
 	@FXML
 	private CustomTextField searchBar;
-
-	@FXML
-	private JFXButton newNote;
 
 	@FXML
 	private VBox vbox;

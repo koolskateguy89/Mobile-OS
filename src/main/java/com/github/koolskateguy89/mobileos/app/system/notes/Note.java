@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -54,11 +56,11 @@ class Note {
 	}
 
 	String getTitle() {
-		return title.getValue();
+		return title.get();
 	}
 
 	void setTitle(String title) {
-		this.title.setValue(title);
+		this.title.set(title);
 		update();
 	}
 
@@ -67,24 +69,40 @@ class Note {
 	}
 
 	String getContent() {
-		return content.getValue();
+		return content.get();
 	}
 
 	void setContent(String content) {
-		this.content.setValue(content);
+		this.content.set(content);
 		update();
 	}
 
 	private void update() {
-		dateModified.setValue(new Date());
+		dateModified.set(new Date());
 	}
 
 	@Override
 	public String toString() {
-		return title + "=" + content;
+		return title.get() + "=" + content.get();
 	}
 
-	public static Note fromFile(Path file) throws IOException, ParseException {
+	public void saveToFile(@Nonnull Path file) throws IOException {
+		StringBuilder sb = new StringBuilder(dateCreated.toString())
+				.append('\n')
+				.append(dateModified.get().toString())
+				.append('\n')
+				.append(title)
+				.append('\n')
+				.append(content.get());
+
+		Files.writeString(file, sb.toString());
+	}
+
+	public static void saveToFile(@Nonnull Note note, @Nonnull Path file) throws IOException {
+		note.saveToFile(file);
+	}
+
+	public static Note loadFromFile(@Nonnull Path file) throws IOException, ParseException {
 		List<String> lines = Files.readAllLines(file);
 
 		DateFormat df = new SimpleDateFormat();
