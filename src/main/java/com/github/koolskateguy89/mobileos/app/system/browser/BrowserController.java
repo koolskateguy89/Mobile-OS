@@ -2,8 +2,6 @@ package com.github.koolskateguy89.mobileos.app.system.browser;
 
 import java.io.IOException;
 import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.CookieStore;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,6 +40,7 @@ import com.jfoenix.adapters.ReflectionHelper;
 import com.sun.javafx.scene.control.ContextMenuContent;
 import com.sun.javafx.scene.control.ContextMenuContent.MenuItemContainer;
 import com.sun.webkit.WebPage;
+import com.sun.webkit.network.CookieManager;
 
 // TODO: add settings (default search engine - whether to search for invalid URLs); clear cookies
 public class BrowserController {
@@ -57,26 +56,23 @@ public class BrowserController {
 
 	private final Path cookiesPath = dir.resolve("cookies.properties");
 
-	PersistentCookieStore cookieStore;
+	//PersistentCookieStore cookieStore;
+	CookiePersister cp;
 
 	@FXML
-	private void initialize() throws IOException {
-		// allow an InMemoryCookieStore to be instantiated
+	private void initialize() {
+		// the default CookieHandler class that is used if no default CookieHandler is explicitly set
 		CookieManager cm = new CookieManager();
 		CookieHandler.setDefault(cm);
 
-		// the default impl. (not setting a default CookieHandler myself) uses a com.sun...CookieManager which uses a
-		// com.sun...CookieStore which uses a com.sun...Cookie
+		// com.sun.webkit.network.CookieStore (package private)
+		Object cookieStore = ReflectionHelper.getFieldContent(cm, "store");
+		cp = new CookiePersister(cookieStore);
+
+		// TODO: delete once cookies are sorted out
+		// com.sun...CookieStore (package private) which uses a com.sun...Cookie (package private)
 		// After looking through the source code, atm I can't find a way to use it ggs
-		com.sun.webkit.network.CookieManager a;
-
-		// get the InMemoryCookieStore
-		CookieStore inMemory = ReflectionHelper.getFieldContent(cm, "cookieJar");
-		// allow permanent storage of cookies
-		cookieStore = new PersistentCookieStore(inMemory);
-		// change the CookieStore being used to the persistent one - unnecessary tbh
-		//ReflectionHelper.setFieldContent(CookieManager.class, cm, "cookieJar", cookieStore);
-
+		//com.sun.webkit.network.CookieStore b;
 
 		// prevent switching tab on swipe (as it just creates new tabs constantly): https://stackoverflow.com/a/47841382
 		tabPane.addEventFilter(SwipeEvent.ANY, SwipeEvent::consume);
@@ -110,7 +106,7 @@ public class BrowserController {
 		}
 		try {
 			if (Files.exists(cookiesPath) && !Files.isDirectory(cookiesPath))
-				cookieStore.load(cookiesPath);
+				cp.load(cookiesPath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -118,7 +114,7 @@ public class BrowserController {
 
 	void onClose() {
 		try {
-			cookieStore.store(cookiesPath);
+			cp.store(cookiesPath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
