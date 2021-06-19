@@ -5,7 +5,7 @@ This is basically replicating a mobile OS, think of it as a homeless man's Andro
 ## Applications
 
 - Applications are stored as folders, in which the application has free rein apart from...
-- Applications return a `Pane` (450x512) which is displayed. (See [Example_App_Pane.fxml](Example_App_Pane.fxml))
+- Applications return a `Pane` (450x524) which is displayed. (See [Example_App_Pane.fxml](Example_App_Pane.fxml))
 
 
 ### Application Development
