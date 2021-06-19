@@ -4,8 +4,8 @@
 
 	/* Rounded button: https://stackoverflow.com/a/26851888 */
 	-fx-background-radius: 1em;
-    -fx-min-width: 17px;
-    -fx-min-height: 17px;
-    -fx-max-width: 17px;
-    -fx-max-height: 17px;
+	-fx-min-width: 17px;
+	-fx-min-height: 17px;
+	-fx-max-width: 17px;
+	-fx-max-height: 17px;
 }

@@ -1,9 +1,9 @@
 /* Hide TextArea scrollbar: https://stackoverflow.com/a/61778111 */
 #line-numbers .scroll-bar:vertical {
-    -fx-pref-width: 1;
-    -fx-opacity: 0;
+	-fx-pref-width: 1;
+	-fx-opacity: 0;
 }
 #line-numbers .scroll-bar:horizontal {
-    -fx-pref-height: 1;
-    -fx-opacity: 0;
+	-fx-pref-height: 1;
+	-fx-opacity: 0;
 }

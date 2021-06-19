@@ -8,22 +8,22 @@
 <?import com.jfoenix.controls.JFXButton?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="450.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.koolskateguy89.mobileos.view.MainController">
-   <children>
-      <StackPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="524.0" prefWidth="450.0" VBox.vgrow="ALWAYS" />
-      <Line endX="349.29290771484375" endY="0.8929298520088196" fill="WHITE" startX="-100.0" stroke="WHITE" VBox.vgrow="ALWAYS" />
-      <HBox alignment="CENTER" prefHeight="61.0" prefWidth="900.0" style="-fx-background-color: black;">
-         <children>
-            <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="62.0" prefWidth="52.0" HBox.hgrow="ALWAYS">
-               <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#back" text="Back" textFill="WHITE">
-                  <font>
-                     <Font fx:id="navFont" name="System Bold" size="20.0" />
-                  </font>
-               </JFXButton>
-            </StackPane>
-            <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
-               <JFXButton font="$navFont" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#home" text="Home" textFill="WHITE" />
-            </StackPane>
-         </children>
-      </HBox>
-   </children>
+	<children>
+		<StackPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="524.0" prefWidth="450.0" VBox.vgrow="ALWAYS" />
+		<Line endX="349.29290771484375" endY="0.8929298520088196" fill="WHITE" startX="-100.0" stroke="WHITE" VBox.vgrow="ALWAYS" />
+		<HBox alignment="CENTER" prefHeight="61.0" prefWidth="900.0" style="-fx-background-color: black;">
+			<children>
+				<StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="62.0" prefWidth="52.0" HBox.hgrow="ALWAYS">
+					<JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#back" text="Back" textFill="WHITE">
+						<font>
+							<Font fx:id="navFont" name="System Bold" size="20.0" />
+						</font>
+					</JFXButton>
+				</StackPane>
+				<StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
+					<JFXButton font="$navFont" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#home" text="Home" textFill="WHITE" />
+				</StackPane>
+			</children>
+		</HBox>
+	</children>
 </VBox>

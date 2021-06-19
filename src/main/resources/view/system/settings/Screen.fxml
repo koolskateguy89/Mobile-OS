@@ -6,27 +6,27 @@
 <?import javafx.scene.layout.VBox?>
 
 <fx:root fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="524.0" prefWidth="450.0" stylesheets="@Settings.css" type="VBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.koolskateguy89.mobileos.app.system.settings.SettingsController">
-   <children>
-      <VBox prefHeight="84.0" prefWidth="450.0" />
-      <VBox prefHeight="106.0" prefWidth="450.0" />
-      <Accordion prefHeight="217.0" prefWidth="450.0">
-         <panes>
-            <TitledPane animated="false" text="untitled 1">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-               </content>
-            </TitledPane>
-            <TitledPane animated="false" text="untitled 2">
-               <content>
-                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-               </content>
-            </TitledPane>
-            <TitledPane animated="false" text="untitled 3">
-               <content>
-                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-               </content>
-            </TitledPane>
-        </panes>
-      </Accordion>
-   </children>
+	<children>
+		<VBox prefHeight="84.0" prefWidth="450.0" />
+		<VBox prefHeight="106.0" prefWidth="450.0" />
+		<Accordion prefHeight="217.0" prefWidth="450.0">
+			<panes>
+				<TitledPane animated="false" text="untitled 1">
+					<content>
+						<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+					</content>
+				</TitledPane>
+				<TitledPane animated="false" text="untitled 2">
+					<content>
+					  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+					</content>
+				</TitledPane>
+				<TitledPane animated="false" text="untitled 3">
+					<content>
+					  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+					</content>
+				</TitledPane>
+		  </panes>
+		</Accordion>
+	</children>
 </fx:root>

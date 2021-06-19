@@ -25,10 +25,10 @@
 
 	/* Rounded button: https://stackoverflow.com/a/26851888 */
 	-fx-background-radius: 5em;
-    -fx-min-width: 30px;
-    -fx-min-height: 30px;
-    -fx-max-width: 30px;
-    -fx-max-height: 30px;
+	-fx-min-width: 30px;
+	-fx-min-height: 30px;
+	-fx-max-width: 30px;
+	-fx-max-height: 30px;
 }
 
 #notes {
