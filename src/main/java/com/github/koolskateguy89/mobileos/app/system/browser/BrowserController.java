@@ -54,20 +54,14 @@ public class BrowserController {
 	@FXML
 	private Tab newTab;
 
-	private final Path cookiesPath = dir.resolve("cookies.properties");
-
-	//PersistentCookieStore cookieStore;
-	CookiePersister cp;
+	CookieManager cm;
+	private final Path cookiesPath = dir.resolve("cookies.json");
 
 	@FXML
 	private void initialize() {
 		// the default CookieHandler class that is used if no default CookieHandler is explicitly set
-		CookieManager cm = new CookieManager();
+		cm = new CookieManager();
 		CookieHandler.setDefault(cm);
-
-		// com.sun.webkit.network.CookieStore (package private)
-		Object cookieStore = ReflectionHelper.getFieldContent(cm, "store");
-		cp = new CookiePersister(cookieStore);
 
 		// TODO: delete once cookies are sorted out
 		// com.sun...CookieStore (package private) which uses a com.sun...Cookie (package private)
@@ -106,7 +100,7 @@ public class BrowserController {
 		}
 		try {
 			if (Files.exists(cookiesPath) && !Files.isDirectory(cookiesPath))
-				cp.load(cookiesPath);
+				CookieUtils.load(cookiesPath, cm);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -114,7 +108,7 @@ public class BrowserController {
 
 	void onClose() {
 		try {
-			cp.store(cookiesPath);
+			CookieUtils.store(cookiesPath, cm);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
