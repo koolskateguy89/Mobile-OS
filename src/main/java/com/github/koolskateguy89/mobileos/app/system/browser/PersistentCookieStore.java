@@ -20,7 +20,7 @@ import com.google.gson.JsonParser;
 import lombok.NonNull;
 
 // It's still a bit iffy sometimes
-private class PersistentCookieStore implements CookieStore {
+class PersistentCookieStore implements CookieStore {
 
 	private final CookieStore store;
 
