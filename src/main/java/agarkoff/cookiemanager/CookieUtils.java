@@ -1,4 +1,4 @@
-package com.github.koolskateguy89.mobileos.app.system.browser;
+package agarkoff.cookiemanager;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -45,7 +45,7 @@ public class CookieUtils {
 	 *
 	 */
 
-	public static void store(@NonNull Path path, CookieManager cm) throws IOException {
+	public static void store(CookieManager cm, @NonNull Path path) throws IOException {
 		// com.sun.webkit.network.CookieStore (package private)
 		Object cookieStore = ReflectionHelper.getFieldContent(cm, "store");
 
@@ -64,7 +64,7 @@ public class CookieUtils {
 		Files.writeString(path, json);
 	}
 
-	public static void load(@NonNull Path path, CookieManager cm) throws IOException {
+	public static void load(CookieManager cm, @NonNull Path path) throws IOException {
 		String json = Files.readString(path);
 
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -89,8 +89,7 @@ public class CookieUtils {
 				));
 			}
 
-
-			URI uri = URI.create(String.format("http://%s/)", domain));
+			URI uri = URI.create(String.format("http://%s/", domain));
 			cm.put(uri, map);
 		});
 	}

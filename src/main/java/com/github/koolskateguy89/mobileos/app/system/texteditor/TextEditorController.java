@@ -204,6 +204,7 @@ public class TextEditorController {
 		var subList = items.subList(0, items.size() - 2);
 		// I could be more efficient and not regenerate the entire recent menu every time but cba
 		ListChangeListener<File> recentsListener = (change) -> {
+			change.next();
 			subList.clear();
 
 			int len = recents.size();

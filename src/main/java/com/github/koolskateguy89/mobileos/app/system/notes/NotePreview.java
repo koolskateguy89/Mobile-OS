@@ -4,7 +4,10 @@ import java.io.IOException;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.layout.AnchorPane;
 
 import com.github.koolskateguy89.mobileos.utils.Utils;
@@ -49,6 +52,20 @@ class NotePreview extends AnchorPane {
 		dateModified.textProperty().bind(note.dateModifiedProperty().asString());
 
 		preview.textProperty().bind(note.contentProperty());
+
+		handleFont(this);
+	}
+
+	private void handleFont(Node node) {
+		if (node instanceof Parent) {
+			Parent p = (Parent) node;
+			p.getChildrenUnmodifiable().forEach(this::handleFont);
+		}
+		if (node instanceof Labeled) {
+			Labeled l = (Labeled) node;
+			if (!l.fontProperty().isBound())
+				l.fontProperty().bind(controller.fontProperty);
+		}
 	}
 
 	@FXML

@@ -1,0 +1,8 @@
+/* .tab-label is used for all tabs */
+.normal-tab-label {
+	-fx-alignment: center-left;
+	-fx-text-overrun: clip;
+	-fx-min-width: 80;
+	-fx-pref-width: 80;
+	-fx-max-width: 80;
+}

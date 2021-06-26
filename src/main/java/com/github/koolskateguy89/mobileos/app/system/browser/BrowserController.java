@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.collections.ListChangeListener;
@@ -18,29 +19,32 @@ import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.SwipeEvent;
-import javafx.scene.layout.HBox;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebHistory.Entry;
-import javafx.scene.web.WebView;
 import javafx.stage.Window;
+
+import org.reflections.ReflectionUtils;
 
 import com.jfoenix.adapters.ReflectionHelper;
 import com.sun.javafx.scene.control.ContextMenuContent;
 import com.sun.javafx.scene.control.ContextMenuContent.MenuItemContainer;
 import com.sun.webkit.WebPage;
 import com.sun.webkit.network.CookieManager;
+
+import agarkoff.cookiemanager.CookieUtils;
 
 // TODO: add settings (default search engine - whether to search for invalid URLs); clear cookies
 public class BrowserController {
@@ -63,19 +67,25 @@ public class BrowserController {
 		cm = new CookieManager();
 		CookieHandler.setDefault(cm);
 
-		// TODO: delete once cookies are sorted out
-		// com.sun...CookieStore (package private) which uses a com.sun...Cookie (package private)
-		// After looking through the source code, atm I can't find a way to use it ggs
-		//com.sun.webkit.network.CookieStore b;
-
-		// prevent switching tab on swipe (as it just creates new tabs constantly): https://stackoverflow.com/a/47841382
-		tabPane.addEventFilter(SwipeEvent.ANY, SwipeEvent::consume);
+		// prevent switching tab on trackpad(?) swipe (as it just creates new tabs constantly)
+		tabPane.addEventFilter(KeyEvent.ANY, keyEvent -> {
+			// we only care about LEFT or RIGHT (triggered by the trackpad swipe)
+			if (keyEvent.getCode() == KeyCode.LEFT || keyEvent.getCode() == KeyCode.RIGHT) {
+				// if the target is the tabPane, it's an event that we want
+				if (keyEvent.getTarget() != tabPane) {
+					// consume the event so it doesn't do anything
+					keyEvent.consume();
+				}
+			}
+		});
 
 		// this is in order to keep the newTab tab at the end
 		tabs = tabPane.getTabs().subList(0, 0);
-		// Once all tabs have been closed, close the app
+		// Once all tabs have been closed, close the app (?)
 		ListChangeListener<Tab> lcl = change -> {
+			change.next();
 			if (change.getList().size() == 1) {
+				// TODO:
 				//Main.getInstance().goHome();
 			}
 		};
@@ -83,10 +93,51 @@ public class BrowserController {
 
 		newTab.setClosable(false);
 		newTab.setOnSelectionChanged(this::newTabSelected);
+
+		Platform.runLater(this::configureTabHeaders);
 	}
 
+	private static final Class<?> TAB_HEADER_AREA = ReflectionUtils.forName("javafx.scene.control.skin.TabPaneSkin$TabHeaderArea");
+	private static final Class<?> TAB_HEADER_SKIN = ReflectionUtils.forName("javafx.scene.control.skin.TabPaneSkin$TabHeaderSkin");
+
+	/*
+	 * Found out the selector that gets stuff using ScenicView
+	 * https://github.com/JonathanGiles/scenic-view
+	 *
+	 * TabPaneSkin uses TabPaneSkin$TabHeaderArea which uses a StackPane (headersRegion).
+	 * It adds TabPaneSkin$TabHeaderSkin's to the StackPane
+	 */
+	private void configureTabHeaders() {
+		Node tabHeaderArea = tabPane.lookup(".tab-header-area");
+
+		StackPane headersRegion = ReflectionHelper.getFieldContent(TAB_HEADER_AREA, tabHeaderArea, "headersRegion");
+
+		// configure the initial TabHeaderSkin as the tab has already been added once this is called
+		Node firstTabSkin = headersRegion.getChildren().get(0);
+		configureTabHeaderSkin(firstTabSkin);
+
+		ListChangeListener<Node> lcl = change -> {
+			if (change.next() && change.wasAdded())
+				change.getAddedSubList().forEach(BrowserController::configureTabHeaderSkin);
+		};
+		headersRegion.getChildren().addListener(lcl);
+	}
+
+	private static void configureTabHeaderSkin(Node tabHeaderSkin) {
+		Tab tab = ReflectionHelper.getFieldContent(TAB_HEADER_SKIN, tabHeaderSkin, "tab");
+		Label label = ReflectionHelper.getFieldContent(TAB_HEADER_SKIN, tabHeaderSkin, "label");
+
+		label.getStyleClass().add("normal-tab-label");
+
+		WebBrowser browser = (WebBrowser) tab.getContent();
+
+		Tooltip tooltip = new Tooltip();
+		tooltip.textProperty().bind(browser.getWebEngine().locationProperty());
+		label.setTooltip(tooltip);
+	}
+
+	// this is very iffy
 	private void newTabSelected(Event event) {
-		// this is very iffy
 		// only make a new tab is newTab was selected
 		if (newTab.isSelected())
 			newTab();
@@ -100,7 +151,7 @@ public class BrowserController {
 		}
 		try {
 			if (Files.exists(cookiesPath) && !Files.isDirectory(cookiesPath))
-				CookieUtils.load(cookiesPath, cm);
+				CookieUtils.load(cm, cookiesPath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -108,7 +159,7 @@ public class BrowserController {
 
 	void onClose() {
 		try {
-			CookieUtils.store(cookiesPath, cm);
+			CookieUtils.store(cm, cookiesPath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -131,6 +182,7 @@ public class BrowserController {
 		WebBrowser browser = new WebBrowser();
 		WebEngine engine = browser.getWebEngine();
 		Tab tab = new Tab(null, browser);
+		tab.textProperty().bind(engine.titleProperty());
 
 		// favicon: https://stackoverflow.com/a/35327398
 		ObjectBinding<Image> favIcon = Bindings.createObjectBinding(() -> {
@@ -148,19 +200,10 @@ public class BrowserController {
 
 		ImageView iv = new ImageView();
 		iv.imageProperty().bind(favIcon);
-
-		Label lbl = new Label();
-		lbl.setMinWidth(80);
-		lbl.setMaxWidth(80);
-		lbl.setTextOverrun(OverrunStyle.CLIP);
-		lbl.textProperty().bind(engine.titleProperty());
-
-		tab.setGraphic(new HBox(4, iv, lbl));
-
-		WebView webView = browser.getWebView();
+		tab.setGraphic(iv);
 
 		// How to alter WebView context menu: https://stackoverflow.com/a/27047819
-		webView.setOnContextMenuRequested(contextMenuEvent -> {
+		browser.getWebView().setOnContextMenuRequested(contextMenuEvent -> {
 			for (Window window : Window.getWindows()) {
 				if (!(window instanceof ContextMenu))
 					continue;
