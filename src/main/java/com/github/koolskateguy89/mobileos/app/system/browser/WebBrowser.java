@@ -2,12 +2,15 @@ package com.github.koolskateguy89.mobileos.app.system.browser;
 
 import java.io.IOException;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Worker;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebErrorEvent;
@@ -23,6 +26,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 
+// TODO: progressBar using loadWorker.progressProperty() (ReadOnlyDoubleProperty)
 public class WebBrowser extends AnchorPane {
 
 	@Getter @Setter
@@ -48,18 +52,20 @@ public class WebBrowser extends AnchorPane {
 	private WebEngine webEngine;
 	@Getter
 	private WebHistory webHistory;
+	@Getter
 	private Worker<Void> loadWorker;
 
-	// TODO: bind back&forward disableProperty
 	// TODO: show history upon holding button
 	@FXML
 	private JFXButton back;
+	private BooleanBinding canGoBack;
+
 	@FXML
 	private JFXButton forward;
+	private BooleanBinding canGoForward;
 
-	// TODO: add reload icon & change icon if loading
 	@FXML
-	private JFXButton reloadBtn;
+	private ImageView reloadView;
 
 	@FXML @Getter
 	private JFXTextField addressBar;
@@ -70,9 +76,23 @@ public class WebBrowser extends AnchorPane {
 		webHistory = webEngine.getHistory();
 		loadWorker = webEngine.getLoadWorker();
 
-		addOnLocationChange((obs, oldLocation, newLocation) -> {
+		// update addressBar on location change
+		addLocationListener((obs, oldLocation, newLocation) -> {
 			addressBar.setText(newLocation);
 		});
+
+		// update reloadBtn icon when loading webpage
+		loadWorker.runningProperty().addListener((obs, wasRunning, isRunning) -> {
+			reloadView.setId(isRunning ? "cancel-img" : "reload-img");
+		});
+
+		// disable forward/back depending on history
+		canGoBack = webHistory.currentIndexProperty().greaterThan(0);
+		back.disableProperty().bind(canGoBack.not());
+		canGoForward = webHistory.currentIndexProperty().lessThan(
+				Bindings.size(webHistory.getEntries()).subtract(1)
+		);
+		forward.disableProperty().bind(canGoForward.not());
 
 		// TODO: basically handle address error
 		loadWorker.stateProperty().addListener((obs, oldState, newState) -> {
@@ -103,25 +123,28 @@ public class WebBrowser extends AnchorPane {
 	}
 
 	@FXML
-	void go() {
+	public void go() {
 		String url = addressBar.getText();
 		webEngine.load(url);
 	}
 
 	@FXML
-	void back() {
-		if (webHistory.getCurrentIndex() > 0)
+	public void back() {
+		if (canGoBack())
 			webHistory.go(-1);
 	}
 
 	@FXML
-	void forward() {
-		if (webHistory.getCurrentIndex() < webHistory.getEntries().size() - 1)
+	public void forward() {
+		if (canGoForward())
 			webHistory.go(1);
 	}
 
+	/**
+	 * Different behavior when loading: cancels loading & goes back to previous page
+	 */
 	@FXML
-	void reload() {
+	public void reload() {
 		if (isLoading()) {
 			loadWorker.cancel();
 			back();
@@ -142,35 +165,65 @@ public class WebBrowser extends AnchorPane {
 		return loadWorker.isRunning();
 	}
 
-	public void addOnLocationChange(ChangeListener<String> listener) {
+	public boolean canGoBack() {
+		return canGoBack.get();
+	}
+
+	public boolean canGoForward() {
+		return canGoForward.get();
+	}
+
+	public void addLocationListener(ChangeListener<String> listener) {
 		webEngine.locationProperty().addListener(listener);
 	}
 
-	public void addOnLoadingWebpage(Runnable func) {
+	public void addOnWebPageLoad(Runnable func) {
 		loadWorker.runningProperty().addListener((obs, wasRunning, isRunning) -> {
 			if (isRunning)
 				func.run();
 		});
 	}
 
+	/**
+	 * {@link WebEngine#onAlertProperty()}
+	 */
 	public void setOnAlert(EventHandler<WebEvent<String>> handler) {
 		webEngine.setOnAlert(handler);
 	}
 
+	/**
+	 * {@link WebEngine#onErrorProperty()}
+	 */
 	public void setOnError(EventHandler<WebErrorEvent> handler) {
 		webEngine.setOnError(handler);
 	}
 
+	/**
+	 * {@link WebEngine#onResizedProperty()}
+	 */
 	public void setOnResized(EventHandler<WebEvent<Rectangle2D>> handler) {
 		webEngine.setOnResized(handler);
 	}
 
+	/**
+	 * {@link WebEngine#onStatusChangedProperty()}
+	 */
 	public void setOnStatusChanged(EventHandler<WebEvent<String>> handler) {
 		webEngine.setOnStatusChanged(handler);
 	}
 
+	/**
+	 * {@link WebEngine#onVisibilityChangedProperty()}
+	 */
 	public void setOnVisibilityChanged(EventHandler<WebEvent<Boolean>> handler) {
 		webEngine.setOnVisibilityChanged(handler);
+	}
+
+	/**
+	 * {@link WebEngine#setUserAgent(String)}
+	 */
+	public void setUserAgent(String userAgent) {
+		webEngine.setUserAgent(userAgent);
 	}
 
 }

@@ -13,3 +13,6 @@
 #reload-img {
 	-fx-image: url("https://image.flaticon.com/icons/png/512/126/126502.png");
 }
+#cancel-img {
+	-fx-image: url("https://image.flaticon.com/icons/png/512/748/748122.png");
+}
