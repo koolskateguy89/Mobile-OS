@@ -29,7 +29,7 @@ public class WebBrowser extends AnchorPane {
 	private String defaultUrl;
 
 	public WebBrowser() {
-		this("https://google.com");
+		this(null);
 	}
 
 	@SneakyThrows(IOException.class)
