@@ -96,7 +96,8 @@
 				<MenuItem onAction="#unselectAll" text="_Unselect All">
 					<accelerator>
 						<KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
-					</accelerator></MenuItem>
+					</accelerator>
+				</MenuItem>
 			</Menu>
 			<Menu text="F_ormat">
 				<CheckMenuItem fx:id="wrapText" text="_Wrap Text" />
