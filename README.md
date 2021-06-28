@@ -10,7 +10,7 @@ This is basically replicating a mobile OS, think of it as a homeless man's Andro
 
 ### Application Development
 
-(Use [Maven])
+(Use [Maven (min v3.1.0)]())
 
 Pre-requisites to develop:
 1. Run `mvn install` on the mobile-os project
