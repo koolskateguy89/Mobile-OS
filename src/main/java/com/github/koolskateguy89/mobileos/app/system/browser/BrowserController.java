@@ -51,6 +51,8 @@ public class BrowserController {
 
 	static Path dir;
 
+	private static final String DEFAULT_URL = "https://google.com";
+
 	@FXML
 	private TabPane tabPane;
 	private List<Tab> tabs;
@@ -179,7 +181,8 @@ public class BrowserController {
 	}
 
 	private Tab getNewTab() {
-		WebBrowser browser = new WebBrowser();
+		WebBrowser browser = new WebBrowser(DEFAULT_URL);
+		browser.loadDefaultUrl();
 		WebEngine engine = browser.getWebEngine();
 		Tab tab = new Tab(null, browser);
 		tab.textProperty().bind(engine.titleProperty());

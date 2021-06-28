@@ -100,8 +100,6 @@ public class WebBrowser extends AnchorPane {
 
 			}
 		});
-
-		webEngine.load(defaultUrl);
 	}
 
 	@FXML
@@ -130,6 +128,14 @@ public class WebBrowser extends AnchorPane {
 		} else {
 			webEngine.reload();
 		}
+	}
+
+	public void loadDefaultUrl() {
+		load(defaultUrl);
+	}
+
+	public void load(String url) {
+		webEngine.load(url);
 	}
 
 	public boolean isLoading() {

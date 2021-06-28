@@ -1,3 +1,15 @@
 .button {
 	-fx-background-color: grey;
 }
+
+#back-img {
+	-fx-image: url("https://img.icons8.com/ios-glyphs/50/000000/long-arrow-left.png");
+}
+
+#forward-img {
+	-fx-image: url("https://img.icons8.com/ios-glyphs/50/000000/long-arrow-right.png");
+}
+
+#reload-img {
+	-fx-image: url("https://image.flaticon.com/icons/png/512/126/126502.png");
+}
