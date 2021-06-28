@@ -20,6 +20,10 @@ import javafx.beans.property.StringProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+/*
+ * Not sure whether to include the NotePreview & NoteEditor here & lazily instantiate.
+ */
+
 @EqualsAndHashCode
 class Note {
 
@@ -30,6 +34,9 @@ class Note {
 
 	private final StringProperty title;
 	private final StringProperty content;
+
+	@Getter(lazy = true)
+	private final NotePreview preview = new NotePreview(this);
 
 	Note(String title, String content) {
 		this.title = new SimpleStringProperty(title);
@@ -87,15 +94,14 @@ class Note {
 	}
 
 	public void saveToFile(@Nonnull Path file) throws IOException {
-		StringBuilder sb = new StringBuilder(dateCreated.toString())
-				.append('\n')
-				.append(dateModified.get().toString())
-				.append('\n')
-				.append(title)
-				.append('\n')
-				.append(content.get());
+		String str = String.join("\n",
+				dateCreated.toString(),
+				dateModified.get().toString(),
+				title.get(),
+				contentProperty().get()
+		);
 
-		Files.writeString(file, sb.toString());
+		Files.writeString(file, str);
 	}
 
 	public static void saveToFile(@Nonnull Note note, @Nonnull Path file) throws IOException {

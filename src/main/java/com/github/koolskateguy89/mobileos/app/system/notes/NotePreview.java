@@ -20,11 +20,8 @@ class NotePreview extends AnchorPane {
 	@Getter
 	private final Note note;
 
-	final NotesController controller;
-
-	NotePreview(Note note, NotesController controller) {
+	NotePreview(Note note) {
 		this.note = note;
-		this.controller = controller;
 
 		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/notes/NotePreview"));
 		loader.setRoot(this);
@@ -64,13 +61,13 @@ class NotePreview extends AnchorPane {
 		if (node instanceof Labeled) {
 			Labeled l = (Labeled) node;
 			if (!l.fontProperty().isBound())
-				l.fontProperty().bind(controller.fontProperty);
+				l.fontProperty().bind(NotesController.instance.fontProperty);
 		}
 	}
 
 	@FXML
 	private void open() {
-		controller.openNote(this.note);
+		NotesController.instance.openNote(this.note);
 	}
 
 }

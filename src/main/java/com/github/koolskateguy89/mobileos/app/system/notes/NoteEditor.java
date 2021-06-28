@@ -62,7 +62,7 @@ class NoteEditor extends AnchorPane {
 
 	@FXML
 	void back() {
-		//controller.goToMain() or something
+		controller.loadUsualContent();
 	}
 
 }

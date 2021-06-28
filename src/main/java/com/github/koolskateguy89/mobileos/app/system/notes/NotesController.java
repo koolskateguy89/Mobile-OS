@@ -1,12 +1,15 @@
 package com.github.koolskateguy89.mobileos.app.system.notes;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -19,9 +22,14 @@ import com.github.koolskateguy89.mobileos.utils.Utils;
 // TODO: Settings: Font,
 public class NotesController {
 
+	static NotesController instance;
+	public NotesController() {
+		instance = this;
+	}
+
 	final SimpleObjectProperty<Note> currentNote = new SimpleObjectProperty<>();
 
-	final List<Note> notes = new ArrayList<>();
+	final ObservableList<Note> notes = FXCollections.observableArrayList();
 
 	final ObjectProperty<Font> fontProperty = new SimpleObjectProperty<>(Font.getDefault());
 
@@ -31,6 +39,10 @@ public class NotesController {
 		System.out.println("Open: " + note.getTitle());
 		NoteEditor editor; // = new NoteEditor(note, Path.of("Test.note"), this);
 	}
+	
+	@FXML
+	private AnchorPane root;
+	private List<Node> usualContent;
 
 	@FXML
 	private CustomTextField searchBar;
@@ -40,11 +52,16 @@ public class NotesController {
 
 	@FXML
 	private void initialize() {
+		usualContent = List.copyOf(root.getChildren());
 		Utils.makeClearable(searchBar);
 	}
 
+	void loadUsualContent() {
+		root.getChildren().setAll(usualContent);
+	}
+
 	@FXML
-	private void search() {
+	void search() {
 		String query = searchBar.getText();
 
 		List<Note> result = notes.stream().filter(note -> {
@@ -58,7 +75,7 @@ public class NotesController {
 	}
 
 	@FXML
-	private void newNote() {
+	void newNote() {
 		Note note = new Note("TestTitle" + notes.size(), "TestContent");
 		notes.add(note);
 
@@ -69,7 +86,7 @@ public class NotesController {
 			vbox.getChildren().add(line);
 		}
 
-		vbox.getChildren().add(new NotePreview(note, this));
+		vbox.getChildren().add(note.getPreview());
 	}
 
 }
