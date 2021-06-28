@@ -52,6 +52,7 @@ public class NotesController {
 
 	@FXML
 	private void initialize() {
+		// not sure this works how I want it to
 		usualContent = List.copyOf(root.getChildren());
 		Utils.makeClearable(searchBar);
 	}
