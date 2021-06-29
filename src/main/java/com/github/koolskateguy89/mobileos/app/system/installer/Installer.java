@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
@@ -31,7 +32,7 @@ public final class Installer extends App {
 	private final Controller controller = new Controller();
 
 	@Getter(lazy = true) @LombokOverride
-	private final Pane pane = new Pane() {{
+	private final Node pane = new Pane() {{
 		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/installer/Installer"));
 		loader.setRoot(this);
 		loader.setController(controller);

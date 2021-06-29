@@ -1,4 +1,4 @@
-package com.github.koolskateguy89.mobileos.view;
+package com.github.koolskateguy89.mobileos.fx;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

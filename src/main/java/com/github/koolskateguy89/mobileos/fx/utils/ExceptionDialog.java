@@ -1,4 +1,4 @@
-package com.github.koolskateguy89.mobileos.view.utils;
+package com.github.koolskateguy89.mobileos.fx.utils;
 
 import java.util.Optional;
 

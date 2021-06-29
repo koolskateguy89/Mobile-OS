@@ -1,4 +1,4 @@
-package com.github.koolskateguy89.mobileos.view.home;
+package com.github.koolskateguy89.mobileos.fx.home;
 
 import java.util.List;
 

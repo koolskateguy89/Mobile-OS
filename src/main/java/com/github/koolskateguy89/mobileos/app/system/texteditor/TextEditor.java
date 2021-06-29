@@ -11,8 +11,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import com.github.koolskateguy89.mobileos.Main;
@@ -37,7 +37,7 @@ public final class TextEditor extends App {
 	}
 
 	@Getter(lazy = true) @LombokOverride
-	private final Pane pane = new VBox() {{
+	private final Node pane = new VBox() {{
 		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/texteditor/Editor"));
 		loader.setRoot(this);
 		try {

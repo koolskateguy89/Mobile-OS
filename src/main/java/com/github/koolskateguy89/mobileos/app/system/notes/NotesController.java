@@ -54,6 +54,8 @@ public class NotesController {
 	private void initialize() {
 		// not sure this works how I want it to
 		usualContent = List.copyOf(root.getChildren());
+		//usualContent = new ArrayList<>(root.getChildren());
+
 		Utils.makeClearable(searchBar);
 	}
 

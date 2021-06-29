@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
@@ -34,7 +35,7 @@ public final class Explorer extends App {
 	}
 
 	@Getter(lazy = true) @LombokOverride
-	private final Pane pane = new Pane() {{
+	private final Node pane = new Pane() {{
 		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/explorer/Explorer"));
 		loader.setRoot(this);
 		try {

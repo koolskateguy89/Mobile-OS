@@ -9,9 +9,9 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 
 import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.app.App;
@@ -39,7 +39,7 @@ public class Notes extends App {
 	NotesController nc;
 
 	@Getter(lazy = true) @LombokOverride
-	private final Pane pane = new AnchorPane() {{
+	private final Node pane = new AnchorPane() {{
 		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/notes/Notes"));
 		loader.setRoot(this);
 		try {

@@ -92,6 +92,12 @@
             <version>2.8.7</version>
         </dependency>
 
+        <!-- FontAwesomeFX - TODO -->
+        <dependency>
+            <groupId>de.jensd</groupId>
+            <artifactId>fontawesomefx</artifactId>
+            <version>8.9</version>
+        </dependency>
 
     </dependencies>
 

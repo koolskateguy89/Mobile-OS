@@ -37,11 +37,11 @@ import javafx.stage.StageStyle;
 import javafx.util.Pair;
 
 import com.github.koolskateguy89.mobileos.Main;
+import com.github.koolskateguy89.mobileos.fx.utils.ExceptionDialog;
+import com.github.koolskateguy89.mobileos.fx.utils.FindText;
+import com.github.koolskateguy89.mobileos.fx.utils.FontSelector;
 import com.github.koolskateguy89.mobileos.utils.ObservableLimitedList;
 import com.github.koolskateguy89.mobileos.utils.Utils;
-import com.github.koolskateguy89.mobileos.view.utils.ExceptionDialog;
-import com.github.koolskateguy89.mobileos.view.utils.FindText;
-import com.github.koolskateguy89.mobileos.view.utils.FontSelector;
 
 import lombok.AccessLevel;
 import lombok.Setter;

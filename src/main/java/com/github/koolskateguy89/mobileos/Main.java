@@ -27,9 +27,9 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 import com.github.koolskateguy89.mobileos.app.App;
+import com.github.koolskateguy89.mobileos.fx.MainController;
+import com.github.koolskateguy89.mobileos.fx.home.HomeController;
 import com.github.koolskateguy89.mobileos.utils.Utils;
-import com.github.koolskateguy89.mobileos.view.MainController;
-import com.github.koolskateguy89.mobileos.view.home.HomeController;
 
 import lombok.Getter;
 
@@ -232,7 +232,7 @@ public class Main extends Application {
 		// home screen 'doesnt' go back - well i cba
 	}
 
-	public boolean atHome() {
+	public boolean isAtHome() {
 		return currentApp == null;
 	}
 

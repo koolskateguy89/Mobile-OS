@@ -1,4 +1,4 @@
-package com.github.koolskateguy89.mobileos.view.home;
+package com.github.koolskateguy89.mobileos.fx.home;
 
 import java.io.IOException;
 import java.net.URL;
@@ -21,6 +21,8 @@ import javafx.scene.layout.StackPane;
 import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.app.App;
 import com.github.koolskateguy89.mobileos.utils.Utils;
+
+import lombok.SneakyThrows;
 
 // This is basically meant to be a more tailored TabPane
 class HomePane extends AnchorPane {
@@ -48,14 +50,9 @@ class HomePane extends AnchorPane {
 	}
 
 	private static final URL grid = Utils.getFxmlUrl("home/HomeGrid");
+	@SneakyThrows(IOException.class)
 	private static GridPane newGrid() {
-		try {
-			return FXMLLoader.load(grid);
-		} catch (IOException io) {
-			// should not happen
-			io.printStackTrace();
-			return new GridPane();
-		}
+		return FXMLLoader.load(grid);
 	}
 
 	private Button newBottomButton(GridPane grid, int pos) {
@@ -74,7 +71,7 @@ class HomePane extends AnchorPane {
 			scene.getAccelerators().put(new KeyCharacterCombination(s, KeyCombination.CONTROL_DOWN), () -> {
 				// Need to make sure we are home as the accelerator is 'global'
 				// HomePane.this.isFocused nor isVisible work
-				if (Main.getInstance().atHome()) {
+				if (Main.getInstance().isAtHome()) {
 					openTab(grid, button);
 				}
 			});
@@ -125,6 +122,8 @@ class HomePane extends AnchorPane {
 			bottom.getChildren().add(button);
 
 			tab++;
+
+			//apps.forEach(this::addApp);
 
 			for (int row = 0; row < 4; row++) {
 				for (int col = 0; col < 4; col++) {

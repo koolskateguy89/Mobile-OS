@@ -5,8 +5,8 @@ import java.util.Properties;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import com.github.koolskateguy89.mobileos.Main;
@@ -33,7 +33,7 @@ public final class SettingsApp extends App {
 	 */
 
 	@Getter(lazy = true)
-	private final Pane pane = new VBox() {{
+	private final Node pane = new VBox() {{
 		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/settings/Screen"));
 		loader.setRoot(this);
 		try {
@@ -44,7 +44,7 @@ public final class SettingsApp extends App {
 	}};
 
 	@Getter
-	private final Image icon = new Image("view/system/settings/Settings.gif");
+	private final Image icon = new Image("fx/system/settings/Settings.gif");
 
 	@Override
 	public void onOpen() {
