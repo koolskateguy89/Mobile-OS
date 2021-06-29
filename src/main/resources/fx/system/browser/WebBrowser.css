@@ -1,5 +1,9 @@
-.button {
-	-fx-background-color: grey;
+* { /* variables */
+	menu-background: grey;
+}
+
+#toolbar {
+	-fx-background-color: menu-background;
 }
 
 #back-img {
@@ -10,9 +14,20 @@
 	-fx-image: url("https://img.icons8.com/ios-glyphs/50/000000/long-arrow-right.png");
 }
 
+/* when loading (reload wheel) */
 #reload-img {
 	-fx-image: url("https://image.flaticon.com/icons/png/512/126/126502.png");
 }
-#cancel-img {
+/* when loading (X) */
+#reload-img:loading {
 	-fx-image: url("https://image.flaticon.com/icons/png/512/748/748122.png");
+}
+
+/* when not loading */
+#progress-bar > .track, #progress-bar > .bar {
+	-fx-background-color: menu-background;
+}
+/* when loading */
+#progress-bar:loading > .bar {
+	-fx-background-color: blue;
 }

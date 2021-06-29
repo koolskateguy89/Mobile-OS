@@ -6,9 +6,9 @@ import java.util.Properties;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 
 import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.app.App;
@@ -32,7 +32,7 @@ public class Browser extends App {
 	}
 
 	@Getter(lazy = true) @LombokOverride
-	private final Pane pane = new AnchorPane() {{
+	private final Node pane = new TabPane() {{
 		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/browser/Browser"));
 		loader.setRoot(this);
 		try {

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+
+<fx:root fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="524.0" prefWidth="450.0" stylesheets="@Browser.css" tabClosingPolicy="ALL_TABS" type="TabPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.koolskateguy89.mobileos.app.system.browser.BrowserController">
+	<Tab fx:id="newTab" closable="false" text="+" />
+</fx:root>

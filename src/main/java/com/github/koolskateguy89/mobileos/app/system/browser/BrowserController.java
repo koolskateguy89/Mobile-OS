@@ -1,5 +1,6 @@
 package com.github.koolskateguy89.mobileos.app.system.browser;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.CookieHandler;
 import java.net.URL;
@@ -9,6 +10,7 @@ import java.util.List;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -46,7 +48,7 @@ import com.sun.webkit.network.CookieManager;
 
 import agarkoff.cookiemanager.CookieUtils;
 
-// TODO: add settings (default search engine - whether to search for invalid URLs); clear cookies
+// TODO: add settings (default search engine - whether to search for invalid URLs); clear cookies;
 public class BrowserController {
 
 	static Path dir;
@@ -59,6 +61,8 @@ public class BrowserController {
 
 	@FXML
 	private Tab newTab;
+
+	private final File userDataDirectory = dir.resolve("data").toFile();
 
 	CookieManager cm;
 	private final Path cookiesPath = dir.resolve("cookies.json");
@@ -83,6 +87,7 @@ public class BrowserController {
 
 		// this is in order to keep the newTab tab at the end
 		tabs = tabPane.getTabs().subList(0, 0);
+
 		// Once all tabs have been closed, close the app (?)
 		ListChangeListener<Tab> lcl = change -> {
 			change.next();
@@ -174,6 +179,10 @@ public class BrowserController {
 	}
 
 	private void newTab() {
+		// close every tab's context menu (newTab causes a ConcurrentModificationException if a CM is open)
+		// lmao it doesn't even work, I think cos this is all on FxApplicationThread
+		tabs.forEach(tab -> tab.getContextMenu().hide());
+
 		Tab tab = getNewTab();
 		tab.setContextMenu(makeContextMenu(tab));
 		tabs.add(tab);
@@ -183,7 +192,10 @@ public class BrowserController {
 	private Tab getNewTab() {
 		WebBrowser browser = new WebBrowser(DEFAULT_URL);
 		browser.loadDefaultUrl();
+
 		WebEngine engine = browser.getWebEngine();
+		engine.setUserDataDirectory(userDataDirectory);
+
 		Tab tab = new Tab(null, browser);
 		tab.textProperty().bind(engine.titleProperty());
 
@@ -290,6 +302,8 @@ public class BrowserController {
 			 *      methods.
 			 */
 
+			// I'm pretty sure it uses native code to do web stuff sooooo
+
 			// this doesn't even work ffs
 			WebPage page = ReflectionHelper.getFieldContent(dupeEngine, "page");
 			for (Entry entry : history.getEntries()) {
@@ -305,7 +319,6 @@ public class BrowserController {
 		items.add(new SeparatorMenuItem());
 
 		MenuItem close = new MenuItem("Close");
-		// This doesn't work when the tab is first :/
 		close.setOnAction(event -> tabs.remove(tab));
 		// Ctrl+W
 		close.setAccelerator(new KeyCodeCombination(KeyCode.W, KeyCombination.CONTROL_DOWN));
@@ -316,6 +329,7 @@ public class BrowserController {
 			// I'm not really sure how best to do this
 			tabs.removeIf(t -> t != tab);
 		});
+		closeOthers.disableProperty().bind(Bindings.size(tabPane.getTabs()).isEqualTo(2));
 		items.add(closeOthers);
 
 		MenuItem closeRight = new MenuItem("Close tabs to the right");
@@ -323,6 +337,11 @@ public class BrowserController {
 			int idx = tabs.indexOf(tab);
 			tabs.subList(idx + 1, tabs.size()).clear();
 		});
+		BooleanBinding noTabsToTheRight = Bindings.createBooleanBinding(() -> {
+			int idx = tabs.indexOf(tab);
+			return idx < tabs.size();
+		}, tabPane.getTabs());
+		closeRight.disableProperty().bind(noTabsToTheRight);
 		items.add(closeRight);
 
 		return cm;

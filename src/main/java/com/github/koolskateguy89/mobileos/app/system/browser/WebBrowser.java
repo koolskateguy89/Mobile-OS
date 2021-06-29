@@ -1,17 +1,27 @@
 package com.github.koolskateguy89.mobileos.app.system.browser;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.ObjectBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Worker;
+import javafx.css.PseudoClass;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebErrorEvent;
 import javafx.scene.web.WebEvent;
@@ -20,14 +30,14 @@ import javafx.scene.web.WebView;
 
 import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXTextField;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 
-// TODO: progressBar using loadWorker.progressProperty() (ReadOnlyDoubleProperty)
-public class WebBrowser extends AnchorPane {
+public class WebBrowser extends VBox {
 
 	@Getter @Setter
 	private String defaultUrl;
@@ -46,6 +56,38 @@ public class WebBrowser extends AnchorPane {
 		loader.load();
 	}
 
+	// Handle holding button: https://stackoverflow.com/a/41199986
+	// Show button ContextMenu upon hold
+	static class HoldHandler implements EventHandler<MouseEvent> {
+		final long duration;
+		long startTime;
+
+		final Button button;
+
+		HoldHandler(Duration duration, Button button) {
+			this.duration = duration.toMillis();
+			this.button = button;
+		}
+
+		@Override
+		public void handle(MouseEvent event) {
+			if (event.isConsumed())
+				return;
+
+			// only on LMB hold
+			if (event.getButton().equals(MouseButton.PRIMARY)) {
+				if (event.getEventType().equals(MouseEvent.MOUSE_PRESSED)) {
+					startTime = System.currentTimeMillis();
+				} else if (event.getEventType().equals(MouseEvent.MOUSE_RELEASED)) {
+					if (System.currentTimeMillis() - startTime > duration) {
+						button.getContextMenu().show(button, event.getScreenX(), event.getScreenY());
+						event.consume();
+					}
+				}
+			}
+		}
+	}
+
 	@FXML @Getter
 	private WebView webView;
 	@Getter
@@ -59,16 +101,86 @@ public class WebBrowser extends AnchorPane {
 	@FXML
 	private JFXButton back;
 	private BooleanBinding canGoBack;
+	private final ContextMenu backMenu = new ContextMenu();
+	private ObjectBinding<List<MenuItem>> neededForNoGc;
 
 	@FXML
 	private JFXButton forward;
 	private BooleanBinding canGoForward;
+	private final ContextMenu forwardMenu = new ContextMenu();
+	private ObjectBinding<List<MenuItem>> neededForNoGc1;
+
+	private final PseudoClass LOADING_PS = PseudoClass.getPseudoClass("loading");
 
 	@FXML
 	private ImageView reloadView;
 
 	@FXML @Getter
 	private JFXTextField addressBar;
+
+	@FXML
+	private JFXProgressBar progressBar;
+
+	// sort of broken - the title doesn't show until back/forward is actually pressed I think (sometimes)
+	// also there are [probably] realllly inefficient but I cannot be bothered
+
+	private void setupBackContextMenu() {
+		var entries = webHistory.getEntries();
+		ObjectBinding<List<MenuItem>> binding = Bindings.createObjectBinding(() -> {
+			final int idx = webHistory.getCurrentIndex(); // idx == backs.size()
+
+			List<WebHistory.Entry> backs = entries.subList(0, idx);
+			List<MenuItem> result = new ArrayList<>(idx);
+
+			for (int i = 0; i < idx; i++) {
+				WebHistory.Entry entry = backs.get(i);
+				MenuItem mi = new MenuItem(entry.getTitle());
+				final int finalI = i;
+				// essentially go back enough times to get to this entry (don't load the url as it'll alter history)
+				mi.setOnAction(event -> webHistory.go(finalI - idx));
+				result.add(mi);
+			}
+
+			return result;
+		}, entries, webHistory.currentIndexProperty());
+
+		binding.addListener((obs, oldValue, newValue) -> {
+			backMenu.getItems().setAll(newValue);
+		});
+
+		// need a global reference so the Binding won't be GC'd
+		neededForNoGc = binding;
+	}
+
+	private void setupForwardContextMenu() {
+		var entries = webHistory.getEntries();
+		ObjectBinding<List<MenuItem>> binding = Bindings.createObjectBinding(() -> {
+			final int idx = webHistory.getCurrentIndex();
+			if (idx >= entries.size())
+				return List.of();
+
+			List<WebHistory.Entry> forwards = entries.subList(idx + 1, entries.size());
+			List<MenuItem> result = new ArrayList<>(forwards.size());
+
+			for (int i = 0; i < forwards.size(); i++) {
+				WebHistory.Entry entry = forwards.get(i);
+				MenuItem mi = new MenuItem(entry.getTitle());
+				final int finalI = i;
+				// essentially go forward enough to get to this entry
+				mi.setOnAction(event -> webHistory.go(finalI + 1));
+				result.add(mi);
+			}
+
+			return result;
+		}, entries, webHistory.currentIndexProperty());
+
+		binding.addListener((obs, oldValue, newValue) -> {
+			forwardMenu.getItems().setAll(newValue);
+		});
+
+		// need a global reference so the Binding won't be GC'd
+		neededForNoGc1 = binding;
+	}
 
 	@FXML
 	private void initialize() {
@@ -81,18 +193,35 @@ public class WebBrowser extends AnchorPane {
 			addressBar.setText(newLocation);
 		});
 
-		// update reloadBtn icon when loading webpage
-		loadWorker.runningProperty().addListener((obs, wasRunning, isRunning) -> {
-			reloadView.setId(isRunning ? "cancel-img" : "reload-img");
-		});
-
 		// disable forward/back depending on history
 		canGoBack = webHistory.currentIndexProperty().greaterThan(0);
 		back.disableProperty().bind(canGoBack.not());
-		canGoForward = webHistory.currentIndexProperty().lessThan(
-				Bindings.size(webHistory.getEntries()).subtract(1)
-		);
+		canGoForward = webHistory.currentIndexProperty().lessThan(Bindings.size(webHistory.getEntries()).subtract(1));
 		forward.disableProperty().bind(canGoForward.not());
+
+		// show history upon holding back/forward (using contextMenu)
+		final Duration duration = Duration.ofMillis(500);
+		back.addEventFilter(MouseEvent.ANY, new HoldHandler(duration, back));
+		forward.addEventFilter(MouseEvent.ANY, new HoldHandler(duration, forward));
+
+		// show history upon right clicking back/forward
+		back.setContextMenu(backMenu);
+		setupBackContextMenu();
+		forward.setContextMenu(forwardMenu);
+		setupForwardContextMenu();
+
+		// update reloadBtn icon when loading webpage (using the ":loading" pseudoclass)
+		loadWorker.runningProperty().addListener((obs, wasRunning, isRunning) -> {
+			reloadView.pseudoClassStateChanged(LOADING_PS, isRunning);
+		});
+
+		// bind progressBar progress to loadWorker progress
+		progressBar.progressProperty().bind(loadWorker.progressProperty());
+		// implement the user of ":loading" pseudoclass
+		loadWorker.runningProperty().addListener((obs, wasRunning, isRunning) -> {
+			progressBar.pseudoClassStateChanged(LOADING_PS, isRunning);
+		});
+
 
 		// TODO: basically handle address error
 		loadWorker.stateProperty().addListener((obs, oldState, newState) -> {
