@@ -13,7 +13,7 @@ public class Constants {
 	public static final String SYS_APPS_DIR = "sys_apps";
 
 	// Url to the image for the default background
-	public static final String DEFAULT_BACKGROUND = "images/backgrounds/Default.jpg";
+	public static final String DEFAULT_BACKGROUND = "com/github/koolskateguy89/mobileos/images/backgrounds/Default.jpg";
 
 	public static final Font BOLD = Font.font("System", FontWeight.BOLD, 12);
 

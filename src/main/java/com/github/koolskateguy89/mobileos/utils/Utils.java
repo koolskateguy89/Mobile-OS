@@ -43,7 +43,7 @@ public class Utils {
 
 	// DON'T USE THIS EXTERNALLY
 	public static URL getFxmlUrl(String name) {
-		return getUrl("fx/%s.fxml".formatted(name));
+		return getUrl("com/github/koolskateguy89/mobileos/fx/%s.fxml".formatted(name));
 	}
 
 

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXProgressBar?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXProgressBar?>
-<?import com.jfoenix.controls.JFXTextField?>
 
 <fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="493.0" prefWidth="450.0" stylesheets="@WebBrowser.css" type="VBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
@@ -28,8 +30,14 @@
                   <ImageView id="reload-img" fx:id="reloadView" fitHeight="18.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" />
                </graphic>
 				</JFXButton>
-				<JFXTextField fx:id="addressBar" onAction="#go" prefHeight="26.0" prefWidth="284.0" />
+				<JFXTextField fx:id="addressBar" onAction="#go" prefHeight="26.0" prefWidth="250.0" />
             <JFXButton onAction="#go" text="Go" />
+            <MenuButton id="menu-button" fx:id="menu" mnemonicParsing="false">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Action 1" />
+                <MenuItem mnemonicParsing="false" text="Action 2" />
+              </items>
+            </MenuButton>
 			</children>
 		</HBox>
       <JFXProgressBar id="progress-bar" fx:id="progressBar" prefHeight="3.0" prefWidth="450.0">

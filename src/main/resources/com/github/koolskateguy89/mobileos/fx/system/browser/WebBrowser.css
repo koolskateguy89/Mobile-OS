@@ -23,6 +23,10 @@
 	-fx-image: url("https://image.flaticon.com/icons/png/512/748/748122.png");
 }
 
+#menu-button {
+	-fx-background-color: menu-background;
+}
+
 /* when not loading */
 #progress-bar > .track, #progress-bar > .bar {
 	-fx-background-color: menu-background;
