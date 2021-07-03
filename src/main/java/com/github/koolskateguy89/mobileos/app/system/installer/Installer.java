@@ -21,7 +21,6 @@ public final class Installer extends App {
 	private static final Properties props = new Properties() {{
 		put("name", "AppInstaller");
 		put("version", Main.VERSION);
-		put("appType", "SYSTEM");
 		put("backgroundColor", "red");
 	}};
 
@@ -43,11 +42,9 @@ public final class Installer extends App {
 		}
 	}};
 
-	// TODO: AppInstaller icon
-	@Override
-	public Image getIcon() {
-		return null;
-	}
+	@Getter @LombokOverride
+	// Icon made by Freepik (www.freepik.com) from www.flaticon.com
+	private final Image icon = new Image("https://image.flaticon.com/icons/png/512/4230/4230756.png");
 
 	@Override
 	public void onOpen() {

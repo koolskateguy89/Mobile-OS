@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 
 import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.app.App;
+import com.github.koolskateguy89.mobileos.utils.LombokOverride;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 
 import lombok.Getter;
@@ -31,7 +32,7 @@ public final class SettingsApp extends App {
 	 * Multiple VBox's which represent sections
 	 */
 
-	@Getter(lazy = true)
+	@Getter(lazy = true) @LombokOverride
 	private final Node pane = new VBox() {{
 		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/settings/Screen"));
 		loader.setRoot(this);
@@ -42,8 +43,9 @@ public final class SettingsApp extends App {
 		}
 	}};
 
-	@Getter
-	private final Image icon = new Image("com/github/koolskateguy89/mobileos/fx/system/settings/Settings.gif");
+	@Getter @LombokOverride
+	// Icon made by Good Ware (www.flaticon.com/authors/good-ware) from www.flaticon.com
+	private final Image icon = new Image("https://image.flaticon.com/icons/png/512/1084/1084979.png");
 
 	@Override
 	public void onOpen() {

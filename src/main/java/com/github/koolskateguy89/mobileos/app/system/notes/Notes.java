@@ -25,8 +25,7 @@ public class Notes extends App {
 	private static final Properties props = new Properties() {{
 		put("name", "Notes");
 		put("version", Main.VERSION);
-		put("appType", "SYSTEM");
-		put("backgroundColor", "lime");
+		put("backgroundColor", "white");
 	}};
 
 	static Preferences prefs;
@@ -58,7 +57,8 @@ public class Notes extends App {
 
 	@Getter @LombokOverride
 	// TODO: notes icon
-	private final Image icon = AppConstants.FALLBACK_ICON;
+	// Icon made by Freepik (www.freepik.com) from www.flaticon.com
+	private final Image icon = new Image("https://image.flaticon.com/icons/png/512/4021/4021693.png");
 
 	@Override
 	public void onOpen() {

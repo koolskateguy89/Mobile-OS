@@ -22,7 +22,6 @@ public class Browser extends App {
 	private static final Properties props = new Properties() {{
 		put("name", "Browser");
 		put("version", Main.VERSION);
-		put("appType", "SYSTEM");
 		put("backgroundColor", "white");
 	}};
 
@@ -46,8 +45,8 @@ public class Browser extends App {
 	private BrowserController bc;
 
 	@Getter @LombokOverride
-	// TODO: browser icon
-	private final Image icon = AppConstants.FALLBACK_ICON;
+	// Icon made by Freepik (www.freepik.com) from www.flaticon.com
+	private final Image icon = new Image("https://image.flaticon.com/icons/png/512/3003/3003511.png");
 
 	@Override
 	public void onOpen() {

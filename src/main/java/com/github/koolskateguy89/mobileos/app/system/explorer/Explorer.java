@@ -21,17 +21,11 @@ public final class Explorer extends App {
 	private static final Properties props = new Properties() {{
 		put("name", "Explorer");
 		put("version", Main.VERSION);
-		put("appType", "SYSTEM");
 		put("backgroundColor", "yellow");
 	}};
 
 	public Explorer() {
 		super(null, props);
-	}
-
-	@Override
-	public Image getIcon() {
-		return null;
 	}
 
 	@Getter(lazy = true) @LombokOverride
@@ -44,6 +38,10 @@ public final class Explorer extends App {
 			io.printStackTrace();
 		}
 	}};
+
+	@Getter @LombokOverride
+	// Icon made by DinosoftLabs (www.flaticon.com/authors/dinosoftlabs) from www.flaticon.com
+	private final Image icon = new Image("https://image.flaticon.com/icons/png/512/3617/3617042.png");
 
 	@Override
 	public void onOpen() {

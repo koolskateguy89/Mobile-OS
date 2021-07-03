@@ -27,8 +27,7 @@ public final class TextEditor extends App {
 	private static final Properties props = new Properties() {{
 		put("name", "Text Editor");
 		put("version", Main.VERSION);
-		put("appType", "SYSTEM");
-		put("backgroundColor", "lightblue");
+		put("backgroundColor", "white");
 	}};
 
 	public TextEditor(Preferences prefs) {
@@ -74,11 +73,9 @@ public final class TextEditor extends App {
 
 	private TextEditorController nc;
 
-	// TODO: TextEditor icon
-	@Override
-	public Image getIcon() {
-		return AppConstants.FALLBACK_ICON;
-	}
+	@Getter @LombokOverride
+	// Icon made by Smashicons (www.flaticon.com/authors/smashicons) from www.flaticon.com
+	private final Image icon = new Image("https://image.flaticon.com/icons/png/512/1512/1512772.png");
 
 	@Override
 	public void onOpen() {

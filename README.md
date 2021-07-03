@@ -10,7 +10,7 @@ This is basically replicating a mobile OS, think of it as a homeless man's Andro
 
 ### Application Development
 
-(Use [Maven (min v3.1.0)]())
+(Use [Maven (min v3.1.0)](https://maven.apache.org/))
 
 Pre-requisites to develop:
 1. Run `mvn install` on the mobile-os project
@@ -32,7 +32,6 @@ latter parameters (incl. `java.util.Preferences`) is used.
 
 | Name | Description |
 | ---- | ----------- |
-| A | B |
 | ./info.properties | Properties file containing application details (see [info.properties](#infoproperties-very-important) below) |
 
 The rest is however you want.
@@ -43,14 +42,13 @@ The rest is however you want.
 | --- | ----------- | ------- |
 | name | The app's name | ExampleApp |
 | version | The app's version | 1.0 |
-| appType | The app's `AppType` | UTILITY |
 | backgroundColor | (Optional - default white) The background color for your icon (HTML or CSS) | `#FFFFFF` or `red` |
-| mainClassName | The canonical name of the class that extends `App` | com.github.koolskateguy89.example.MyApp |
+| mainClassName | The fully-qualified name of the class that extends `App` | com.github.koolskateguy89.example.MyApp |
 | jarPath | The relative path to the application jar (relative from the application directory) | app.jar |
 | A | B |
 
-You can define more if you want, a `java.util.Properties` representing this file is passed to the App
-in its constructor.
+A `java.util.Properties` object representing this file gets passed to the App in its constructor (you can define more
+properties if you want).
 
 The rest of the folder is _almost_ entirely how you want it (see [Restrictions](#restrictions) below)
 
@@ -70,3 +68,15 @@ TODO: this
 - [Settings](src/main/java/com/github/koolskateguy89/mobileos/app/system/settings/SettingsApp.java)
 - [Explorer](src/main/java/com/github/koolskateguy89/mobileos/app/system/explorer/Explorer.java)
 - TODO
+
+## Credits/Acknowledgements
+
+- Browser icon made by [Freepik] from [www.flaticon.com]
+- Text Editor icon made by [Smashicons](https://www.flaticon.com/authors/smashicons) from [www.flaticon.com]
+- AppInstaller icon made by [Freepik] from [www.flaticon.com]
+- Notes icon made be [Freepik] from [www.flaticon.com]
+- Settings icon made by [Good Ware](https://www.flaticon.com/authors/good-ware) from [www.flaticon.com]
+- Explorer icon made by [DinosoftLabs](https://www.flaticon.com/authors/dinosoftlabs) from [www.flaticon.com]
+
+[www.flaticon.com]: https://www.flaticon.com
+[Freepik]: https://www.freepik.com

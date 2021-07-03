@@ -64,6 +64,8 @@ public abstract class App {
 	// Stage title will be [name][detailProperty.get()], adding a space is up to you
 	protected final StringProperty detailProperty = new SimpleStringProperty("");
 
+	// TODO: implement better way of app icon basically
+
 	// trying to replicate Javascript IIFE lmao
 	@Getter(lazy = true) @EqualsAndHashCode.Exclude
 	private final Button button = new Button() {{
