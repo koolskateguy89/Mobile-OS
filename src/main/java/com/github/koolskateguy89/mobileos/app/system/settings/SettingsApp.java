@@ -21,7 +21,7 @@ public final class SettingsApp extends App {
 	private static final Properties props = new Properties() {{
 		put("name", "Settings");
 		put("version", Main.VERSION);
-		put("backgroundColor", "white");
+		put("backgroundColor", "#50C878");  // emerald green
 	}};
 
 	public SettingsApp() {
@@ -44,8 +44,8 @@ public final class SettingsApp extends App {
 	}};
 
 	@Getter @LombokOverride
-	// Icon made by Good Ware (www.flaticon.com/authors/good-ware) from www.flaticon.com
-	private final Image icon = new Image("https://image.flaticon.com/icons/png/512/1084/1084979.png");
+	// Icon made by srip (www.flaticon.com/authors/srip) from www.flaticon.com
+	private final Image icon = new Image("https://image.flaticon.com/icons/png/512/2092/2092119.png");
 
 	@Override
 	public void onOpen() {

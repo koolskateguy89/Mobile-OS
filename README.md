@@ -75,7 +75,7 @@ TODO: this
 - Text Editor icon made by [Smashicons](https://www.flaticon.com/authors/smashicons) from [www.flaticon.com]
 - AppInstaller icon made by [Freepik] from [www.flaticon.com]
 - Notes icon made be [Freepik] from [www.flaticon.com]
-- Settings icon made by [Good Ware](https://www.flaticon.com/authors/good-ware) from [www.flaticon.com]
+- Settings icon made by [srip](https://www.flaticon.com/authors/srip) from [www.flaticon.com]
 - Explorer icon made by [DinosoftLabs](https://www.flaticon.com/authors/dinosoftlabs) from [www.flaticon.com]
 
 [www.flaticon.com]: https://www.flaticon.com
