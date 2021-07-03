@@ -56,9 +56,7 @@ class HomePane extends AnchorPane {
 	}
 
 	private Button newBottomButton(GridPane grid, int pos) {
-		String s = Integer.toString(pos + 1);
-		// FIXME: text isn't showing for some reason
-		Button button = new Button(s); // maybe don't have any text?
+		Button button = new Button();
 		button.getStyleClass().add("bottom-circle");
 
 		button.setOnAction(e -> openTab(grid, button));
@@ -68,7 +66,8 @@ class HomePane extends AnchorPane {
 			Scene scene = Main.getStage().getScene();
 			// When CTRL+pos is pressed, open this tab
 			// This could be problematic if other apps want to use CTRL+number
-			scene.getAccelerators().put(new KeyCharacterCombination(s, KeyCombination.CONTROL_DOWN), () -> {
+			String character = Integer.toString(pos + 1);
+			scene.getAccelerators().put(new KeyCharacterCombination(character, KeyCombination.CONTROL_DOWN), () -> {
 				// Need to make sure we are home as the accelerator is 'global'
 				// HomePane.this.isFocused nor isVisible work
 				if (Main.getInstance().isAtHome()) {

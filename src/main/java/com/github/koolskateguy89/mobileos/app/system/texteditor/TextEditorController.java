@@ -58,7 +58,7 @@ public class TextEditorController {
 								ITALICS_KEY = "font_italics",
 								SIZE_KEY    = "font_size";
 
-	// TODO: maybe change this to a Snackbar
+	// TODO: change this to a Snackbar
 	private static void handleException(Throwable e, String alertText) {
 		ExceptionDialog ed = new ExceptionDialog(e, alertText);
 		ed.showAndWaitCopy();
@@ -66,8 +66,7 @@ public class TextEditorController {
 
 	private final FileChooser fc = new FileChooser();
 	{
-		// TODO: better way to do this
-		fc.setInitialDirectory(new File(System.getProperty("user.home") + "/Desktop"));
+		fc.setInitialDirectory(new File(System.getProperty("user.home") + File.separatorChar + "Desktop"));
 	}
 
 	private final FontSelector fs = new FontSelector(Main.getStage());

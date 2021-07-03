@@ -108,7 +108,7 @@ public class WebBrowser extends VBox {
 	@Getter
 	private Worker<Void> loadWorker;
 
-	// TODO: show history upon holding button
+	// TODO: show history upon holding button (done-ish)
 	@FXML
 	private JFXButton back;
 	private BooleanBinding canGoBack;
@@ -274,7 +274,6 @@ public class WebBrowser extends VBox {
 
 		// TODO: basically handle address error
 		loadWorker.stateProperty().addListener((obs, oldState, newState) -> {
-			//System.out.println(newState);
 			if (newState == Worker.State.FAILED) {
 				// TODO
 				// maybe still be null (no known exception despite fail)

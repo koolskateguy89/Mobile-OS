@@ -56,7 +56,6 @@ public class Notes extends App {
 	}};
 
 	@Getter @LombokOverride
-	// TODO: notes icon
 	// Icon made by Freepik (www.freepik.com) from www.flaticon.com
 	private final Image icon = new Image("https://image.flaticon.com/icons/png/512/4021/4021693.png");
 
