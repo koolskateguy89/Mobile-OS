@@ -37,7 +37,7 @@ public abstract class App {
 
 	public static class AppConstants {
 		// Image to fallback on if icon loading doesn't work
-		public static final Image FALLBACK_ICON = new Image("images/icons/fallback-application-icon.png");
+		public static final Image FALLBACK_ICON = new Image("com/github/koolskateguy89/mobileos/images/icons/fallback-application-icon.png");
 
 		// The name of the file with an application's properties
 		public static final String PROPERTIES = "info.properties";
@@ -57,8 +57,6 @@ public abstract class App {
 	protected final String name;
 
 	protected final String version;
-
-	protected final AppType appType;
 
 	@EqualsAndHashCode.Exclude
 	protected final String backgroundColor;
@@ -121,7 +119,6 @@ public abstract class App {
 
 		name = props.getProperty("name");
 		version = props.getProperty("version");
-		appType = AppType.valueOf(props.getProperty("appType"));
 
 		backgroundColor = (String) props.getOrDefault("backgroundColor", "white");
 	}

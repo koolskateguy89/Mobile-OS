@@ -20,7 +20,6 @@ public final class SettingsApp extends App {
 	private static final Properties props = new Properties() {{
 		put("name", "Settings");
 		put("version", Main.VERSION);
-		put("appType", "SYSTEM");
 		put("backgroundColor", "white");
 	}};
 
@@ -44,7 +43,7 @@ public final class SettingsApp extends App {
 	}};
 
 	@Getter
-	private final Image icon = new Image("fx/system/settings/Settings.gif");
+	private final Image icon = new Image("com/github/koolskateguy89/mobileos/fx/system/settings/Settings.gif");
 
 	@Override
 	public void onOpen() {
