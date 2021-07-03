@@ -8,24 +8,33 @@ import java.util.List;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.css.PseudoClass;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Orientation;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebErrorEvent;
 import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebHistory;
+import javafx.scene.web.WebHistory.Entry;
 import javafx.scene.web.WebView;
 
 import com.github.koolskateguy89.mobileos.utils.Utils;
@@ -88,6 +97,8 @@ public class WebBrowser extends VBox {
 		}
 	}
 
+	private static final List<Object> avoidGC = new ArrayList<>();
+
 	@FXML @Getter
 	private WebView webView;
 	@Getter
@@ -102,13 +113,11 @@ public class WebBrowser extends VBox {
 	private JFXButton back;
 	private BooleanBinding canGoBack;
 	private final ContextMenu backMenu = new ContextMenu();
-	private ObjectBinding<List<MenuItem>> neededForNoGc;
 
 	@FXML
 	private JFXButton forward;
 	private BooleanBinding canGoForward;
 	private final ContextMenu forwardMenu = new ContextMenu();
-	private ObjectBinding<List<MenuItem>> neededForNoGc1;
 
 	private final PseudoClass LOADING_PS = PseudoClass.getPseudoClass("loading");
 
@@ -117,6 +126,12 @@ public class WebBrowser extends VBox {
 
 	@FXML @Getter
 	private JFXTextField addressBar;
+
+	@FXML
+	private MenuButton menu;
+	public ObservableList<MenuItem> getMenuItems() {
+		return menu.getItems();
+	}
 
 	@FXML
 	private JFXProgressBar progressBar;
@@ -129,11 +144,11 @@ public class WebBrowser extends VBox {
 		ObjectBinding<List<MenuItem>> binding = Bindings.createObjectBinding(() -> {
 			final int idx = webHistory.getCurrentIndex(); // idx == backs.size()
 
-			List<WebHistory.Entry> backs = entries.subList(0, idx);
+			List<Entry> backs = entries.subList(0, idx);
 			List<MenuItem> result = new ArrayList<>(idx);
 
 			for (int i = 0; i < idx; i++) {
-				WebHistory.Entry entry = backs.get(i);
+				Entry entry = backs.get(i);
 				MenuItem mi = new MenuItem(entry.getTitle());
 				final int finalI = i;
 				// essentially go back enough times to get to this entry (don't load the url as it'll alter history)
@@ -149,7 +164,7 @@ public class WebBrowser extends VBox {
 		});
 
 		// need a global reference so the Binding won't be GC'd
-		neededForNoGc = binding;
+		avoidGC.add(binding);
 	}
 
 	private void setupForwardContextMenu() {
@@ -159,11 +174,11 @@ public class WebBrowser extends VBox {
 			if (idx >= entries.size())
 				return List.of();
 
-			List<WebHistory.Entry> forwards = entries.subList(idx + 1, entries.size());
+			List<Entry> forwards = entries.subList(idx + 1, entries.size());
 			List<MenuItem> result = new ArrayList<>(forwards.size());
 
 			for (int i = 0; i < forwards.size(); i++) {
-				WebHistory.Entry entry = forwards.get(i);
+				Entry entry = forwards.get(i);
 				MenuItem mi = new MenuItem(entry.getTitle());
 				final int finalI = i;
 				// essentially go forward enough to get to this entry
@@ -179,7 +194,38 @@ public class WebBrowser extends VBox {
 		});
 
 		// need a global reference so the Binding won't be GC'd
-		neededForNoGc1 = binding;
+		avoidGC.add(binding);
+	}
+
+	private void setupMenu() {
+		var items = menu.getItems();
+
+		JFXButton zoomOut = new JFXButton("-");
+		zoomOut.setOnAction(actionEvent -> {
+			webView.setZoom(webView.getZoom() - 0.1);
+		});
+
+		// ffs using 'webView.zoomProperty().multiply(100).asString().concat("%")' includes floating point imprecision
+		StringBinding zoomBinding = Bindings.createStringBinding(() -> {
+			double zoom = webView.getZoom() * 100;
+			int accurateValue = (int) zoom;
+			return accurateValue + "%";
+		}, webView.zoomProperty());
+		Label zoomLevel = new Label();
+		zoomLevel.textProperty().bind(zoomBinding);
+
+		JFXButton zoomIn = new JFXButton("+");
+		zoomIn.setOnAction(actionEvent -> {
+			webView.setZoom(webView.getZoom() + 0.1);
+		});
+
+		HBox zoomNode = new HBox(2);
+		zoomNode.getChildren().addAll(new Label("Zoom"), new Separator(Orientation.VERTICAL), zoomOut, zoomLevel, zoomIn);
+
+		CustomMenuItem zoom = new CustomMenuItem(zoomNode);
+		items.add(zoom);
+		
+		//items.add(new SeparatorMenuItem());
 	}
 
 	@FXML
@@ -187,6 +233,8 @@ public class WebBrowser extends VBox {
 		webEngine = webView.getEngine();
 		webHistory = webEngine.getHistory();
 		loadWorker = webEngine.getLoadWorker();
+
+		setupMenu();
 
 		// update addressBar on location change
 		addLocationListener((obs, oldLocation, newLocation) -> {
@@ -221,6 +269,7 @@ public class WebBrowser extends VBox {
 		loadWorker.runningProperty().addListener((obs, wasRunning, isRunning) -> {
 			progressBar.pseudoClassStateChanged(LOADING_PS, isRunning);
 		});
+
 
 
 		// TODO: basically handle address error

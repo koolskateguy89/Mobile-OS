@@ -6,6 +6,7 @@ import java.net.CookieHandler;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Platform;
@@ -58,6 +59,20 @@ public class BrowserController {
 	@FXML
 	private TabPane tabPane;
 	private List<Tab> tabs;
+	// added to the Menu of each WebBrowser
+	private final List<MenuItem> browserMenuItems = new ArrayList<>() {{
+		add(new SeparatorMenuItem());
+
+		MenuItem newTab = new MenuItem("New tab");
+		newTab.setOnAction(actionEvent -> newTab());
+		// CTRL+T
+		newTab.setAccelerator(new KeyCodeCombination(KeyCode.T, KeyCombination.CONTROL_DOWN));
+		add(newTab);
+
+		MenuItem settings = new MenuItem("Settings");
+		// TODO: browser settings
+		add(settings);
+	}};
 
 	@FXML
 	private Tab newTab;
@@ -98,7 +113,6 @@ public class BrowserController {
 		};
 		tabPane.getTabs().addListener(lcl);
 
-		newTab.setClosable(false);
 		newTab.setOnSelectionChanged(this::newTabSelected);
 
 		Platform.runLater(this::configureTabHeaders);
@@ -192,6 +206,7 @@ public class BrowserController {
 	private Tab getNewTab() {
 		WebBrowser browser = new WebBrowser(DEFAULT_URL);
 		browser.loadDefaultUrl();
+		browser.getMenuItems().addAll(browserMenuItems);
 
 		WebEngine engine = browser.getWebEngine();
 		engine.setUserDataDirectory(userDataDirectory);
@@ -234,10 +249,11 @@ public class BrowserController {
 				// access to context menu content
 				Node popup = root.getChildrenUnmodifiable().get(0);
 
-				if (popup.lookup(".context-menu") == null)
+				Node bridge = popup.lookup(".context-menu");
+
+				if (bridge == null)
 					continue;
 
-				Node bridge = popup.lookup(".context-menu");
 				ContextMenuContent cmc = (ContextMenuContent) ((Parent) bridge).getChildrenUnmodifiable().get(0);
 
 				VBox itemsContainer = cmc.getItemsContainer();
@@ -247,6 +263,7 @@ public class BrowserController {
 				if (mi.getText().equals("Open Link in New Window")) {
 					mi.setText("Open Link in New Tab");
 					/*
+					TODO:
 					mi.setOnAction(e -> {
 						// ahhh how do I get the link ffssss
 						// maybe I let it start loading then use the location from the loading?
