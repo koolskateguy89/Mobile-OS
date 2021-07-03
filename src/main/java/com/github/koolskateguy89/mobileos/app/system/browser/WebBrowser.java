@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
@@ -200,6 +201,7 @@ public class WebBrowser extends VBox {
 	private void setupMenu() {
 		var items = menu.getItems();
 
+		//<editor-fold desc="Zoom">
 		JFXButton zoomOut = new JFXButton("-");
 		zoomOut.setOnAction(actionEvent -> {
 			webView.setZoom(webView.getZoom() - 0.1);
@@ -220,11 +222,41 @@ public class WebBrowser extends VBox {
 		});
 
 		HBox zoomNode = new HBox(2);
-		zoomNode.getChildren().addAll(new Label("Zoom"), new Separator(Orientation.VERTICAL), zoomOut, zoomLevel, zoomIn);
+		zoomNode.getChildren().addAll(
+				new Label("Zoom       "), new Separator(Orientation.VERTICAL), zoomOut, zoomLevel, zoomIn);
 
 		CustomMenuItem zoom = new CustomMenuItem(zoomNode);
 		items.add(zoom);
-		
+		//</editor-fold>
+
+		//<editor-fold desc="Font Scale">
+		JFXButton fsDecrease = new JFXButton("-");
+		fsDecrease.setOnAction(actionEvent -> {
+			webView.setFontScale(webView.getFontScale() - 0.1);
+		});
+
+		StringBinding fsBinding = Bindings.createStringBinding(() -> {
+			double fontScale = webView.getFontScale();
+			// use int to eliminate floating point imprecision
+			double accurateValue = ((int) fontScale * 100) * 0.01;
+			return accurateValue + "x";
+		}, webView.fontScaleProperty());
+		Label fontScaleLbl = new Label();
+		fontScaleLbl.textProperty().bind(fsBinding);
+
+		JFXButton fsIncrease = new JFXButton("+");
+		fsIncrease.setOnAction(actionEvent -> {
+			webView.setFontScale(webView.getFontScale() + 0.1);
+		});
+
+		HBox fsNode = new HBox(2);
+		fsNode.getChildren().addAll(
+				new Label("Font Scale"), new Separator(Orientation.VERTICAL), fsDecrease, fontScaleLbl, fsIncrease);
+
+		CustomMenuItem fontScale = new CustomMenuItem(fsNode);
+		items.add(fontScale);
+		//</editor-fold>
+
 		//items.add(new SeparatorMenuItem());
 	}
 
@@ -235,6 +267,14 @@ public class WebBrowser extends VBox {
 		loadWorker = webEngine.getLoadWorker();
 
 		setupMenu();
+
+		Platform.runLater(() -> {
+			// FIXME: this doesn't actually change the outerHeight :(
+			//System.out.println(webEngine.executeScript("window.outerWidth"));
+			//System.out.println(webEngine.executeScript("window.outerHeight"));
+
+			webEngine.executeScript(String.format("window.resizeTo(%s, %s)", webView.getWidth(), webView.getHeight()));
+		});
 
 		// update addressBar on location change
 		addLocationListener((obs, oldLocation, newLocation) -> {
