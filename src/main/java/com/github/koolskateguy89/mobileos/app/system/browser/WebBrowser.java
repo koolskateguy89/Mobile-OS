@@ -2,13 +2,10 @@ package com.github.koolskateguy89.mobileos.app.system.browser;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
@@ -27,6 +24,7 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -69,13 +67,13 @@ public class WebBrowser extends VBox {
 	// Handle holding button: https://stackoverflow.com/a/41199986
 	// Show button ContextMenu upon hold
 	static class HoldHandler implements EventHandler<MouseEvent> {
-		final long duration;
+		final long holdDuration;
 		long startTime;
 
 		final Button button;
 
-		HoldHandler(Duration duration, Button button) {
-			this.duration = duration.toMillis();
+		HoldHandler(Duration holdDuration, Button button) {
+			this.holdDuration = holdDuration.toMillis();
 			this.button = button;
 		}
 
@@ -89,16 +87,27 @@ public class WebBrowser extends VBox {
 				if (event.getEventType().equals(MouseEvent.MOUSE_PRESSED)) {
 					startTime = System.currentTimeMillis();
 				} else if (event.getEventType().equals(MouseEvent.MOUSE_RELEASED)) {
-					if (System.currentTimeMillis() - startTime > duration) {
-						button.getContextMenu().show(button, event.getScreenX(), event.getScreenY());
+					if (System.currentTimeMillis() - startTime > holdDuration) {
+						ContextMenuEvent cme = new ContextMenuEvent(
+								event.getSource(),
+								event.getTarget(),
+								ContextMenuEvent.CONTEXT_MENU_REQUESTED,
+								event.getX(),
+								event.getY(),
+								event.getScreenX(),
+								event.getScreenY(),
+								true,
+								event.getPickResult()
+						);
+						// request button's context menu
+						button.fireEvent(cme);
+
 						event.consume();
 					}
 				}
 			}
 		}
 	}
-
-	private static final List<Object> avoidGC = new ArrayList<>();
 
 	@FXML @Getter
 	private WebView webView;
@@ -113,12 +122,10 @@ public class WebBrowser extends VBox {
 	@FXML
 	private JFXButton back;
 	private BooleanBinding canGoBack;
-	private final ContextMenu backMenu = new ContextMenu();
 
 	@FXML
 	private JFXButton forward;
 	private BooleanBinding canGoForward;
-	private final ContextMenu forwardMenu = new ContextMenu();
 
 	private final PseudoClass LOADING_PS = PseudoClass.getPseudoClass("loading");
 
@@ -137,65 +144,45 @@ public class WebBrowser extends VBox {
 	@FXML
 	private JFXProgressBar progressBar;
 
-	// sort of broken - the title doesn't show until back/forward is actually pressed I think (sometimes)
-	// also there are [probably] realllly inefficient but I cannot be bothered
+	// sort of broken - the title doesn't show until back/forward is actually pressed like twice (its really weird)
+	// I'm not sure why but the Entry's title is blank despite that not being 'reality'
 
-	private void setupBackContextMenu() {
-		var entries = webHistory.getEntries();
-		ObjectBinding<List<MenuItem>> binding = Bindings.createObjectBinding(() -> {
-			final int idx = webHistory.getCurrentIndex(); // idx == backs.size()
+	private void backContextMenu(ContextMenuEvent cme) {
+		ContextMenu cm = new ContextMenu();
 
-			List<Entry> backs = entries.subList(0, idx);
-			List<MenuItem> result = new ArrayList<>(idx);
+		final int idx = webHistory.getCurrentIndex();
 
-			for (int i = 0; i < idx; i++) {
-				Entry entry = backs.get(i);
-				MenuItem mi = new MenuItem(entry.getTitle());
-				final int finalI = i;
-				// essentially go back enough times to get to this entry (don't load the url as it'll alter history)
-				mi.setOnAction(event -> webHistory.go(finalI - idx));
-				result.add(mi);
-			}
+		// reverse order so start with most recent entry
+		for (int i = idx - 1; i >= 0; i--) {
+			Entry entry = webHistory.getEntries().get(i);
+			MenuItem mi = new MenuItem(entry.getTitle());
 
-			return result;
-		}, entries, webHistory.currentIndexProperty());
+			int finalI = i;
+			mi.setOnAction(actionEvent -> webHistory.go(finalI - idx));
 
-		binding.addListener((obs, oldValue, newValue) -> {
-			backMenu.getItems().setAll(newValue);
-		});
+			cm.getItems().add(mi);
+		}
 
-		// need a global reference so the Binding won't be GC'd
-		avoidGC.add(binding);
+		cm.show(back, cme.getScreenX(), cme.getScreenY());
 	}
 
-	private void setupForwardContextMenu() {
-		var entries = webHistory.getEntries();
-		ObjectBinding<List<MenuItem>> binding = Bindings.createObjectBinding(() -> {
-			final int idx = webHistory.getCurrentIndex();
-			if (idx >= entries.size())
-				return List.of();
+	private void forwardContextMenu(ContextMenuEvent cme) {
+		ContextMenu cm = new ContextMenu();
 
-			List<Entry> forwards = entries.subList(idx + 1, entries.size());
-			List<MenuItem> result = new ArrayList<>(forwards.size());
+		final int idx = webHistory.getCurrentIndex();
+		final int size = webHistory.getEntries().size();
 
-			for (int i = 0; i < forwards.size(); i++) {
-				Entry entry = forwards.get(i);
-				MenuItem mi = new MenuItem(entry.getTitle());
-				final int finalI = i;
-				// essentially go forward enough to get to this entry
-				mi.setOnAction(event -> webHistory.go(finalI + 1));
-				result.add(mi);
-			}
+		for (int i = idx + 1; i < size; i++) {
+			Entry entry = webHistory.getEntries().get(i);
+			MenuItem mi = new MenuItem(entry.getTitle());
 
-			return result;
-		}, entries, webHistory.currentIndexProperty());
+			int finalI = i;
+			mi.setOnAction(actionEvent -> webHistory.go(finalI + 1));
 
-		binding.addListener((obs, oldValue, newValue) -> {
-			forwardMenu.getItems().setAll(newValue);
-		});
+			cm.getItems().add(mi);
+		}
 
-		// need a global reference so the Binding won't be GC'd
-		avoidGC.add(binding);
+		cm.show(forward, cme.getScreenX(), cme.getScreenY());
 	}
 
 	private void setupMenu() {
@@ -203,9 +190,7 @@ public class WebBrowser extends VBox {
 
 		//<editor-fold desc="Zoom">
 		JFXButton zoomOut = new JFXButton("-");
-		zoomOut.setOnAction(actionEvent -> {
-			webView.setZoom(webView.getZoom() - 0.1);
-		});
+		zoomOut.setOnAction(actionEvent -> webView.setZoom(webView.getZoom() - 0.1));
 
 		// ffs using 'webView.zoomProperty().multiply(100).asString().concat("%")' includes floating point imprecision
 		StringBinding zoomBinding = Bindings.createStringBinding(() -> {
@@ -217,9 +202,7 @@ public class WebBrowser extends VBox {
 		zoomLevel.textProperty().bind(zoomBinding);
 
 		JFXButton zoomIn = new JFXButton("+");
-		zoomIn.setOnAction(actionEvent -> {
-			webView.setZoom(webView.getZoom() + 0.1);
-		});
+		zoomIn.setOnAction(actionEvent -> webView.setZoom(webView.getZoom() + 0.1));
 
 		HBox zoomNode = new HBox(2);
 		zoomNode.getChildren().addAll(
@@ -231,9 +214,7 @@ public class WebBrowser extends VBox {
 
 		//<editor-fold desc="Font Scale">
 		JFXButton fsDecrease = new JFXButton("-");
-		fsDecrease.setOnAction(actionEvent -> {
-			webView.setFontScale(webView.getFontScale() - 0.1);
-		});
+		fsDecrease.setOnAction(actionEvent -> webView.setFontScale(webView.getFontScale() - 0.1));
 
 		StringBinding fsBinding = Bindings.createStringBinding(() -> {
 			double fontScale = webView.getFontScale();
@@ -245,9 +226,7 @@ public class WebBrowser extends VBox {
 		fontScaleLbl.textProperty().bind(fsBinding);
 
 		JFXButton fsIncrease = new JFXButton("+");
-		fsIncrease.setOnAction(actionEvent -> {
-			webView.setFontScale(webView.getFontScale() + 0.1);
-		});
+		fsIncrease.setOnAction(actionEvent -> webView.setFontScale(webView.getFontScale() + 0.1));
 
 		HBox fsNode = new HBox(2);
 		fsNode.getChildren().addAll(
@@ -288,15 +267,13 @@ public class WebBrowser extends VBox {
 		forward.disableProperty().bind(canGoForward.not());
 
 		// show history upon holding back/forward (using contextMenu)
-		final Duration duration = Duration.ofMillis(500);
-		back.addEventFilter(MouseEvent.ANY, new HoldHandler(duration, back));
-		forward.addEventFilter(MouseEvent.ANY, new HoldHandler(duration, forward));
+		final Duration holdDuration = Duration.ofMillis(500);
+		back.addEventFilter(MouseEvent.ANY, new HoldHandler(holdDuration, back));
+		forward.addEventFilter(MouseEvent.ANY, new HoldHandler(holdDuration, forward));
 
 		// show history upon right clicking back/forward
-		back.setContextMenu(backMenu);
-		setupBackContextMenu();
-		forward.setContextMenu(forwardMenu);
-		setupForwardContextMenu();
+		back.setOnContextMenuRequested(this::backContextMenu);
+		forward.setOnContextMenuRequested(this::forwardContextMenu);
 
 		// update reloadBtn icon when loading webpage (using the ":loading" pseudoclass)
 		loadWorker.runningProperty().addListener((obs, wasRunning, isRunning) -> {
