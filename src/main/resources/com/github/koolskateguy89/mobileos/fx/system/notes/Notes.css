@@ -31,7 +31,7 @@
 	-fx-max-height: 30px;
 }
 
-#notes {
+#note-list {
 	-fx-background-color: secondary-color;
 	-fx-background-radius: 5px; /* Rounded corners */
 }

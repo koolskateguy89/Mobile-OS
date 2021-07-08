@@ -29,9 +29,11 @@ public class Notes extends App {
 	}};
 
 	static Preferences prefs;
+	static Path dir;
 
 	public Notes(Path dir, Preferences prefs) {
 		super(dir, props);
+		Notes.dir = dir;
 		Notes.prefs = prefs;
 	}
 
@@ -65,10 +67,12 @@ public class Notes extends App {
 
 	@Override
 	public void goBack(ActionEvent event) {
+		nc.goBack();
 	}
 
 	@Override
 	public void onClose() {
+		nc.onClose();
 	}
 
 }

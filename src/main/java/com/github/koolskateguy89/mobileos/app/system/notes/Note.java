@@ -1,31 +1,40 @@
 package com.github.koolskateguy89.mobileos.app.system.notes;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
-import javax.annotation.Nonnull;
-
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Font;
+
+import com.github.koolskateguy89.mobileos.utils.Utils;
+import com.google.gson.JsonObject;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-
-/*
- * Not sure whether to include the NotePreview & NoteEditor here & lazily instantiate.
- */
+import lombok.Setter;
 
 @EqualsAndHashCode
 class Note {
+
+	// pattern of Date.toString()
+	static final DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
 
 	@Getter
 	private final Date dateCreated;
@@ -36,26 +45,46 @@ class Note {
 	private final StringProperty content;
 
 	@Getter(lazy = true)
-	private final NotePreview preview = new NotePreview(this);
+	private final NotePreview preview = new NotePreview();
+
+	@Getter @Setter
+	private NoteEditor editor;
+
+	Note() {
+		this("", "");
+	}
 
 	Note(String title, String content) {
 		this.title = new SimpleStringProperty(title);
+		this.title.addListener((obs) -> update());
 		this.content = new SimpleStringProperty(content);
+		this.content.addListener((obs) -> update());
 
 		dateCreated = new Date();
 		dateModified = new SimpleObjectProperty<>((Date) dateCreated.clone());
+
 	}
 
 	private Note(String title, String content, Date dateCreated, Date dateModified) {
 		this.title = new SimpleStringProperty(title);
+		this.title.addListener((obs) -> update());
 		this.content = new SimpleStringProperty(content);
+		this.content.addListener((obs) -> update());
 
 		this.dateCreated = dateCreated;
 		this.dateModified = new SimpleObjectProperty<>(dateModified);
 	}
 
+	private void update() {
+		dateModified.set(new Date());
+	}
+
 	ReadOnlyObjectProperty<Date> dateModifiedProperty() {
 		return dateModified;
+	}
+
+	Date getDateModified() {
+		return dateModified.get();
 	}
 
 	StringProperty titleProperty() {
@@ -84,45 +113,92 @@ class Note {
 		update();
 	}
 
-	private void update() {
-		dateModified.set(new Date());
-	}
-
 	@Override
 	public String toString() {
-		return title.get() + "=" + content.get();
+		return "Note[title=" + title + ", content=" + content + "]";
 	}
 
-	public void saveToFile(@Nonnull Path file) throws IOException {
-		String str = String.join("\n",
-				dateCreated.toString(),
-				dateModified.get().toString(),
-				title.get(),
-				contentProperty().get()
-		);
-
-		Files.writeString(file, str);
+	public JsonObject toJson() {
+		JsonObject obj = new JsonObject();
+		obj.addProperty("title", getTitle());
+		obj.addProperty("content", getContent());
+		obj.addProperty("dateCreated", getDateCreated().toString());
+		obj.addProperty("dateModified", getDateModified().toString());
+		return obj;
 	}
 
-	public static void saveToFile(@Nonnull Note note, @Nonnull Path file) throws IOException {
-		note.saveToFile(file);
-	}
+	public static Note fromJson(JsonObject obj) throws ParseException {
+		Date dateCreated = df.parse(obj.get("dateCreated").getAsString());
 
-	public static Note loadFromFile(@Nonnull Path file) throws IOException, ParseException {
-		List<String> lines = Files.readAllLines(file);
+		Date dateModified = df.parse(obj.get("dateModified").getAsString());
 
-		DateFormat df = new SimpleDateFormat();
+		String title = obj.get("title").getAsString();
 
-		String created = lines.get(0);
-		Date dateCreated = df.parse(created);
-
-		String modified = lines.get(1);
-		Date dateModified = df.parse(modified);
-
-		String title = lines.get(2);
-		String content = String.join("\n", lines.subList(3, lines.size()));
+		String content = obj.get("content").getAsString();
 
 		return new Note(title, content, dateCreated, dateModified);
+	}
+
+
+	// TODO: context menu
+	class NotePreview extends AnchorPane {
+
+		@Getter
+		final Note note = Note.this;
+
+		NotePreview() {
+			FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/notes/NotePreview"));
+			loader.setRoot(this);
+			loader.setController(this);
+			try {
+				loader.load();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		@FXML
+		private Label title;
+
+		@FXML
+		private Label dateModified;
+
+		@FXML
+		private Label preview;
+
+		@FXML
+		private void initialize() {
+			title.textProperty().bind(note.titleProperty());
+			dateModified.textProperty().bind(note.dateModifiedProperty().asString());
+			preview.textProperty().bind(note.contentProperty());
+
+			handleFont(this);
+		}
+
+		private void handleFont(Node node) {
+			if (node instanceof Parent) {
+				Parent p = (Parent) node;
+				p.getChildrenUnmodifiable().forEach(this::handleFont);
+			}
+			if (node instanceof Labeled) {
+				Labeled l = (Labeled) node;
+				if (!l.fontProperty().isBound()) {
+					final double size = l.getFont().getSize();
+
+					ObjectBinding<Font> binding = Bindings.createObjectBinding(() -> {
+						String family = NotesController.instance.fontProperty.get().getFamily();
+						return Font.font(family, size);
+					}, NotesController.instance.fontProperty);
+					l.fontProperty().bind(binding);
+				}
+			}
+		}
+
+		@FXML
+		void open(MouseEvent event) {
+			NotesController.instance.openNote(this.note);
+		}
+
 	}
 
 }

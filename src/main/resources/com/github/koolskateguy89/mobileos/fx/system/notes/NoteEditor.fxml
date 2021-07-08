@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<fx:root id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="524.0" prefWidth="450.0" stylesheets="@NoteEditor.css" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <JFXButton id="back" contentDisplay="GRAPHIC_ONLY" layoutX="14.0" layoutY="146.0" maxHeight="58.0" maxWidth="78.0" onAction="#back" prefHeight="58.0" prefWidth="78.0">
+         <graphic>
+            <ImageView id="back-img" fx:id="back" fitHeight="24.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true" />
+         </graphic>
+      </JFXButton>
+      <JFXTextField id="title" fx:id="title" layoutX="76.0" layoutY="46.0" prefHeight="58.0" prefWidth="600.0" promptText="Title" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <TextArea id="content" fx:id="content" layoutX="100.0" layoutY="138.0" prefHeight="325.0" prefWidth="600.0" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+   </children>
+</fx:root>

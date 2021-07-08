@@ -1,7 +1,6 @@
 package com.github.koolskateguy89.mobileos.app.system.notes;
 
 import java.io.IOException;
-import java.nio.file.Path;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,15 +13,23 @@ import com.jfoenix.controls.JFXTextField;
 // TODO: everything (including FXML file)
 class NoteEditor extends AnchorPane {
 
-	private final Note note;
-
-	private final Path file;
+	final Note note;
 
 	private final NotesController controller;
 
-	NoteEditor(Note note, Path file, NotesController controller) {
+	static NoteEditor of(Note note, NotesController controller) {
+		NoteEditor editor = note.getEditor();
+
+		if (editor == null) {
+			editor = new NoteEditor(note, controller);
+			note.setEditor(editor);
+		}
+
+		return editor;
+	}
+
+	private NoteEditor(Note note, NotesController controller) {
 		this.note = note;
-		this.file = file;
 		this.controller = controller;
 
 		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/notes/NoteEditor"));
@@ -50,14 +57,11 @@ class NoteEditor extends AnchorPane {
 		title.fontProperty().bind(controller.fontProperty);
 		content.fontProperty().bind(controller.fontProperty);
 
+		title.setText(note.getTitle());
+		content.setText(note.getContent());
+
 		note.titleProperty().bind(title.textProperty());
 		note.contentProperty().bind(content.textProperty());
-	}
-
-	void close() throws IOException {
-		note.titleProperty().unbind();
-		note.contentProperty().unbind();
-		note.saveToFile(file);
 	}
 
 	@FXML

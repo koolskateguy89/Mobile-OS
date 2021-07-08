@@ -1,0 +1,35 @@
+* {
+	text-color: white;
+	background-color: black;
+	transparent: rgba(0, 0, 0, 0);
+}
+
+#root {
+	-fx-background-color: black;
+}
+
+#back {
+	-fx-background-color: white;
+
+	/* Rounded button: https://stackoverflow.com/a/26851888 */
+    -fx-background-radius: 5em;
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+    -fx-max-width: 30px;
+    -fx-max-height: 30px;
+}
+#back-img {
+	-fx-image: url("https://img.icons8.com/ios-glyphs/50/000000/long-arrow-left.png");
+}
+
+#title {
+	-fx-text-fill: text-color;
+	-fx-background-color: background-color;
+}
+
+#content {
+	-fx-text-fill: text-color;
+}
+#content .content {
+	-fx-background-color: background-color;
+}
