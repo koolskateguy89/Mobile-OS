@@ -10,36 +10,34 @@ import javafx.scene.layout.AnchorPane;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.jfoenix.controls.JFXTextField;
 
+import lombok.SneakyThrows;
+
 // TODO: everything (including FXML file)
 class NoteEditor extends AnchorPane {
 
+	static final NotesController controller = NotesController.instance;
+
 	final Note note;
 
-	private final NotesController controller;
-
-	static NoteEditor of(Note note, NotesController controller) {
+	static NoteEditor of(Note note) {
 		NoteEditor editor = note.getEditor();
 
 		if (editor == null) {
-			editor = new NoteEditor(note, controller);
+			editor = new NoteEditor(note);
 			note.setEditor(editor);
 		}
 
 		return editor;
 	}
 
-	private NoteEditor(Note note, NotesController controller) {
+	@SneakyThrows(IOException.class)
+	private NoteEditor(Note note) {
 		this.note = note;
-		this.controller = controller;
 
 		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/notes/NoteEditor"));
 		loader.setRoot(this);
 		loader.setController(this);
-		try {
-			loader.load();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		loader.load();
 	}
 
 	@FXML

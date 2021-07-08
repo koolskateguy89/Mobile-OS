@@ -85,7 +85,7 @@ public class NotesController {
 	void openNote(Note note) {
 		currentNote.set(note);
 		System.out.println("Open: " + note.getTitle());
-		NoteEditor editor = NoteEditor.of(note, this);
+		NoteEditor editor = NoteEditor.of(note);
 		openEditor(editor);
 	}
 
