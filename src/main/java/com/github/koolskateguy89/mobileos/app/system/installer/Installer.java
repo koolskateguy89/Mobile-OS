@@ -3,7 +3,6 @@ package com.github.koolskateguy89.mobileos.app.system.installer;
 import java.io.IOException;
 import java.util.Properties;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -46,18 +45,4 @@ public final class Installer extends App {
 	// Icon made by Freepik (www.freepik.com) from www.flaticon.com
 	private final Image icon = new Image("https://image.flaticon.com/icons/png/512/4230/4230756.png");
 
-	@Override
-	public void onOpen() {
-		// no-op
-	}
-
-	@Override
-	public void goBack(ActionEvent event) {
-		// no-op
-	}
-
-	@Override
-	public void onClose() {
-		// no-op
-	}
 }

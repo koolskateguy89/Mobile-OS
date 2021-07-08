@@ -182,6 +182,7 @@ public class Utils {
 		};
 	}
 
+
 	// String contains ignore case: https://stackoverflow.com/a/25379180
 	public static boolean containsIgnoreCase(String src, String what) {
 		final int length = what.length();

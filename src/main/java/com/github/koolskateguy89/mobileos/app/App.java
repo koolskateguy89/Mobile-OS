@@ -64,7 +64,7 @@ public abstract class App {
 	// Stage title will be [name][detailProperty.get()], adding a space is up to you
 	protected final StringProperty detailProperty = new SimpleStringProperty("");
 
-	// TODO: implement better way of app icon basically
+	// TODO: implement better way of app icon basically (like replicate iOS or smthn)
 
 	// trying to replicate Javascript IIFE lmao
 	@Getter(lazy = true) @EqualsAndHashCode.Exclude
@@ -147,7 +147,7 @@ public abstract class App {
 	 *
 	 * For example if app's icon is '{@code ./resources/Icon.png}' relative to the directory, you could use
 	 * <pre>{@code
-	 *   @lombok.Getter(lazy = true)
+	 *   @lombok.Getter
 	 *   private final Image icon = super.getImageFromDirectory("resources/Icon.png");
 	 * }</pre>
 	 *
@@ -155,7 +155,7 @@ public abstract class App {
 	 *
 	 * @return the {@code Image}
 	 */
-	public final Image getImageFromDirectory(String path) {
+	public Image getImageFromDirectory(String path) {
 		return new Image("file:" + directory.resolve(path));
 	}
 
@@ -171,12 +171,15 @@ public abstract class App {
 
 	// Called when application is opened, this should basically be opposite/inverse to onClose()
 	// Called just after getPane()
-	public abstract void onOpen();
+	public void onOpen() {
+	}
 
 	// Called when another application is opened
-	public abstract void onClose();
+	public void onClose() {
+	}
 
 	// Called when Back button is pressed
-	public abstract void goBack(ActionEvent event);
+	public void goBack(ActionEvent event) {
+	}
 
 }

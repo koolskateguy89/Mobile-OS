@@ -35,11 +35,9 @@ import lombok.Getter;
 
 public class Main extends Application {
 
-	public static final String VERSION = "1.0";
-
 	private static final String DEFAULT_TITLE = "Mobile OS";
 
-	// TODO: {maybe} splash screen (reading data in from applications (name, image, etc.))
+	public static final String VERSION = "1.0";
 
 	// Get all classes from package: https://stackoverflow.com/a/520339
 	// Get all classes from current runtime: https://stackoverflow.com/a/7865124
@@ -145,6 +143,7 @@ public class Main extends Application {
 			if (failed)
 				failedApps.add(appDir.getFileName());
 		}
+		ds.close();
 
 		// sort apps in case-insensitive name order
 		apps.sort(Comparator.comparing(App::getName, String.CASE_INSENSITIVE_ORDER));
