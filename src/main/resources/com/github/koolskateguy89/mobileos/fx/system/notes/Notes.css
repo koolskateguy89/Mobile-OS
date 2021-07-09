@@ -39,6 +39,14 @@
 	-fx-background-color: #FEFEFE;
 }
 
+/* TODO: customize Vertical scroll bar ? */
+#scroll-pane > .viewport {
+	-fx-background-color: transparent;
+}
+#scroll-pane {
+   -fx-background-color: transparent;
+}
+
 #note-list {
 	-fx-background-color: secondary-color;
 	-fx-background-radius: 5px; /* Rounded corners */

@@ -40,6 +40,7 @@ import com.jfoenix.controls.JFXButton;
 import lombok.SneakyThrows;
 
 // TODO: Settings: Font,
+// TODO: sort by Title/Content/DateCreated/DateModified
 public class NotesController {
 
 	static NotesController instance;
