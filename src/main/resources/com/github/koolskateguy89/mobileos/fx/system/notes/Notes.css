@@ -18,17 +18,25 @@
 	-fx-prompt-text-fill: #A8A8A8;
 }
 
-#new-note {
-	-jfx-button-type: RAISED;
-	-fx-text-fill: black;
-	-fx-background-color: #FEFEFE;
-
-	/* Rounded button: https://stackoverflow.com/a/26851888 */
+/* Rounded button: https://stackoverflow.com/a/26851888 */
+.rounded-button {
 	-fx-background-radius: 5em;
 	-fx-min-width: 30px;
 	-fx-min-height: 30px;
 	-fx-max-width: 30px;
 	-fx-max-height: 30px;
+}
+
+#reset {
+	-jfx-button-type: RAISED;
+    -fx-text-fill: black;
+    -fx-background-color: #FEFEFE;
+}
+
+#new-note {
+	-jfx-button-type: RAISED;
+	-fx-text-fill: black;
+	-fx-background-color: #FEFEFE;
 }
 
 #note-list {

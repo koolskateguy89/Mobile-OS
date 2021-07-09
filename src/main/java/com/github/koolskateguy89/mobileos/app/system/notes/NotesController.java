@@ -8,7 +8,9 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -27,11 +29,13 @@ import javafx.scene.text.Font;
 
 import org.controlsfx.control.textfield.CustomTextField;
 
+import com.github.koolskateguy89.mobileos.app.system.notes.Note.NotePreview;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.jfoenix.controls.JFXButton;
 
 import lombok.SneakyThrows;
 
@@ -84,14 +88,17 @@ public class NotesController {
 
 	void openNote(Note note) {
 		currentNote.set(note);
-		System.out.println("Open: " + note.getTitle());
-		NoteEditor editor = NoteEditor.of(note);
-		openEditor(editor);
+		openEditor(NoteEditor.of(note));
 	}
 
 	@FXML
 	private AnchorPane root;
 	private List<Node> usualContent;
+
+	@FXML
+	private JFXButton resetSearch;
+	private final BooleanProperty isSearch = new SimpleBooleanProperty(false);
+	private List<Node> previousChildren;
 
 	@FXML
 	private CustomTextField searchBar;
@@ -101,14 +108,42 @@ public class NotesController {
 
 	@FXML
 	private void initialize() {
-		// not sure this works how I want it to
 		usualContent = List.copyOf(root.getChildren());
 
+		ObservableList<Node> vboxChildren = vbox.getChildren();
 		notes.addListener((ListChangeListener<Note>) change -> {
 			change.next();
-			if (change.wasAdded())
-				change.getAddedSubList().forEach(note -> vbox.getChildren().add(note.getPreview()));
+			if (change.wasAdded()) {
+				change.getAddedSubList().forEach(note -> {
+					// add lines between NotePreviews, imitating iOS Notes
+					if (!vboxChildren.isEmpty()) {
+						Line line = new Line(0, 0, vbox.getPrefWidth(), 0);
+						line.setStroke(Color.WHITE);
+						vboxChildren.add(line);
+					}
+					vboxChildren.add(note.getPreview());
+				});
+			} else if (change.wasRemoved()) {
+				// remove the preview & the relevant line
+				change.getRemoved().forEach(note -> {
+					int idx = vboxChildren.indexOf(note.getPreview());
+					vboxChildren.remove(idx);
+					int size = vboxChildren.size();
+					if (size != 0) {
+						if (idx == 0) {
+							// remove the line that was 'in front'
+							if (size != 1)
+								vboxChildren.remove(0);
+						} else {
+							// remove the line that was 'behind'
+							vboxChildren.remove(idx - 1);
+						}
+					}
+				});
+			}
 		});
+
+		resetSearch.visibleProperty().bind(isSearch);
 
 		Utils.makeClearable(searchBar);
 
@@ -116,29 +151,19 @@ public class NotesController {
 			JsonArray notesJson = JsonParser.parseString(Files.readString(notesPath)).getAsJsonArray();
 			for (JsonElement elem : notesJson) {
 				Note note = Note.fromJson(elem.getAsJsonObject());
-				setupNote(note);
+				setupNotePreviewContextMenu(note);
 				notes.add(note);
 			}
 		} catch (Exception ignored) {
 		}
 	}
 
-	void setupNote(Note note) {
+	void setupNotePreviewContextMenu(Note note) {
 		// TODO: notePreview contextMenu
 		ContextMenu cm = new ContextMenu();
 
 		MenuItem delete = new MenuItem("Delete");
-		delete.setOnAction((ActionEvent event) -> {
-			notes.remove(note);
-			// TODO: remove this if this is moved to notes changeListener
-			int idx = vbox.getChildren().indexOf(note.getPreview());
-			vbox.getChildren().remove(idx);
-			// remove the line that would've been added
-			int size = vbox.getChildren().size();
-			if (size != 0) {
-				vbox.getChildren().remove(idx);
-			}
-		});
+		delete.setOnAction((ActionEvent event) -> notes.remove(note));
 		cm.getItems().add(delete);
 
 		note.getPreview().addEventFilter(MouseEvent.ANY, (MouseEvent event) -> {
@@ -160,33 +185,33 @@ public class NotesController {
 	@FXML
 	void search() {
 		// TODO: SearchBar chrome bookmark
-		String query = searchBar.getText();
 
-		List<Note> result = notes.stream().filter(note -> {
+		isSearch.set(true);
+
+		final String query = searchBar.getText();
+
+		previousChildren = List.copyOf(vbox.getChildren());
+
+		List<NotePreview> result = notes.stream().filter(note -> {
 			String title = note.getTitle();
 			String content = note.getContent();
 			return Utils.containsIgnoreCase(title, query) || Utils.containsIgnoreCase(content, query);
-		}).collect(Collectors.toList());
-		System.out.println(result);
+		}).map(Note::getPreview).collect(Collectors.toList());
 
-		// TODO: display only search results
+		vbox.getChildren().setAll(result);
+	}
+
+	@FXML
+	void resetSearch() {
+		isSearch.set(false);
+		vbox.getChildren().setAll(previousChildren);
 	}
 
 	@FXML
 	void newNote() {
 		Note note = new Note();
-
-		setupNote(note);
-
-		// add lines between NotePreviews, imitating iOS Notes
-		if (!vbox.getChildren().isEmpty()) {
-			Line line = new Line(0, 0, vbox.getPrefWidth(), 0);
-			line.setStroke(Color.WHITE);
-			vbox.getChildren().add(line);
-		}
-
+		setupNotePreviewContextMenu(note);
 		notes.add(note);
-
 		openNote(note);
 	}
 

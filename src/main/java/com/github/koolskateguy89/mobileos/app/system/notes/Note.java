@@ -115,7 +115,7 @@ class Note {
 
 	@Override
 	public String toString() {
-		return "Note[title=" + title + ", content=" + content + "]";
+		return "Note[title=" + getTitle() + ", content=" + getContent() + "]";
 	}
 
 	public JsonObject toJson() {
