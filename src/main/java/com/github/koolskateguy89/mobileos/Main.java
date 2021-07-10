@@ -25,6 +25,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import com.google.common.base.Throwables;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
@@ -149,7 +150,7 @@ public class Main extends Application {
 				e = ite;
 			}
 
-			//System.out.println(Throwables.getStackTraceAsString(e));
+			//if (e != null) System.out.println(Throwables.getStackTraceAsString(e));
 			if (failed) {
 				Path name = appDir.getFileName();
 				// absolute genius: https://stackoverflow.com/a/37166489
