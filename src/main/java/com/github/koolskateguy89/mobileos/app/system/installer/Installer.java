@@ -27,13 +27,13 @@ public final class Installer extends App {
 		super(null, props);
 	}
 
-	private final Controller controller = new Controller();
+	private final InstallerController ic = new InstallerController();
 
 	@Getter(lazy = true) @LombokOverride
 	private final Node pane = new Pane() {{
 		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/installer/Installer"));
 		loader.setRoot(this);
-		loader.setController(controller);
+		loader.setController(ic);
 		try {
 			loader.load();
 		} catch (IOException io) {

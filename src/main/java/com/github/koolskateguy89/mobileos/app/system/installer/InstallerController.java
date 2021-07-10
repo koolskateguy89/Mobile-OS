@@ -40,7 +40,7 @@ import lombok.Getter;
 /**
  * If re-installing(/updating) apps, this basically merges the new & old folder
  */
-class Controller {
+class InstallerController {
 
 	static final FileChooser fc = new FileChooser();
 	static final DirectoryChooser dc = new DirectoryChooser();

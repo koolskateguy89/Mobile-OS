@@ -36,6 +36,8 @@ import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebHistory.Entry;
 import javafx.scene.web.WebView;
 
+import com.github.koolskateguy89.mobileos.Main;
+import com.github.koolskateguy89.mobileos.fx.utils.ExceptionDialog;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXProgressBar;
@@ -287,32 +289,17 @@ public class WebBrowser extends VBox {
 			progressBar.pseudoClassStateChanged(LOADING_PS, isRunning);
 		});
 
-
-
-		// TODO: basically handle address error
-		loadWorker.stateProperty().addListener((obs, oldState, newState) -> {
-			if (newState == Worker.State.FAILED) {
-				// TODO
-				// maybe still be null (no known exception despite fail)
-				Throwable e = loadWorker.getException();
-				if (e != null) {
-					// TODO
-				}
-			}
-		});
-
 		// invalid url & dat
-		loadWorker.exceptionProperty().addListener((obs, oldVal, newVal) -> {
-			if (newVal == null)
+		loadWorker.exceptionProperty().addListener((obs, oldException, newException) -> {
+			if (newException == null)
 				return;
 
-			String reason = newVal.getMessage();
 			/**
-			 * TODO: switch case on reason according to {@link WebEngine.LoadWorker#describeError}
+			 * {@link WebEngine.LoadWorker#describeError}
 			 */
-			switch (reason) {
-
-			}
+			ExceptionDialog ed = new ExceptionDialog(newException, "WebBrowser error");
+			ed.initOwner(Main.getStage());
+			ed.showAndWait();
 		});
 	}
 
