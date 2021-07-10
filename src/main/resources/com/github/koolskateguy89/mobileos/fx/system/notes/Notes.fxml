@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXComboBox?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
@@ -21,7 +20,6 @@
       <JFXButton id="reset" fx:id="resetSearch" layoutX="353.0" layoutY="12.0" maxHeight="40.0" maxWidth="43.0" onAction="#resetSearch" prefHeight="40.0" prefWidth="43.0" styleClass="rounded-button" text="X" textAlignment="CENTER" />
 		<JFXButton id="new-note" layoutX="393.0" layoutY="12.0" onAction="#newNote" styleClass="rounded-button" text="+" textAlignment="CENTER" />
 		<CustomTextField id="search-bar" fx:id="searchBar" layoutX="25.0" layoutY="51.0" maxWidth="-Infinity" onAction="#search" prefHeight="25.0" prefWidth="400.0" promptText="Search" />
-      <JFXComboBox layoutX="111.0" layoutY="331.0" prefWidth="62.0" />
       <ChoiceBox layoutX="125.0" layoutY="29.0" prefWidth="150.0" />
       <ScrollPane id="scroll-pane" fitToWidth="true" hbarPolicy="NEVER" layoutX="25.0" layoutY="96.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="419.0" prefWidth="400.0">
          <content>

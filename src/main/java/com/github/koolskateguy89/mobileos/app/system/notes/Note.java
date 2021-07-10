@@ -185,7 +185,6 @@ class Note {
 	}
 
 
-	// TODO: finish context menu
 	class NotePreview extends AnchorPane {
 
 		@Getter

@@ -35,6 +35,7 @@ import com.jfoenix.controls.JFXButton;
 
 // TODO: Settings: Font,
 // TODO: sort by Title/Content/DateCreated/DateModified
+// TODO: lock/password feature (?)
 public class NotesController {
 
 	static NotesController instance;
@@ -103,6 +104,7 @@ public class NotesController {
 		usualContent = List.copyOf(root.getChildren());
 
 		ObservableList<Node> vboxChildren = vbox.getChildren();
+		// TODO: what if creating new note while searching
 		notes.addListener((ListChangeListener<Note>) change -> {
 			change.next();
 			if (change.wasAdded()) {
@@ -146,8 +148,8 @@ public class NotesController {
 		}
 	}
 
+	// TODO: finish context menu
 	void setupNotePreviewContextMenu(Note note) {
-		// TODO: notePreview contextMenu
 		ContextMenu cm = new ContextMenu();
 
 		MenuItem delete = new MenuItem("Delete");
@@ -173,7 +175,6 @@ public class NotesController {
 	@FXML
 	void search() {
 		// TODO: SearchBar chrome bookmark
-
 		isSearch.set(true);
 
 		final String query = searchBar.getText();
