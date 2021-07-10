@@ -1,6 +1,5 @@
 package com.github.koolskateguy89.mobileos.app.system.notes;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -31,13 +30,8 @@ import org.controlsfx.control.textfield.CustomTextField;
 
 import com.github.koolskateguy89.mobileos.app.system.notes.Note.NotePreview;
 import com.github.koolskateguy89.mobileos.utils.Utils;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.jfoenix.controls.JFXButton;
-
-import lombok.SneakyThrows;
 
 // TODO: Settings: Font,
 // TODO: sort by Title/Content/DateCreated/DateModified
@@ -75,15 +69,12 @@ public class NotesController {
 		writeNotesToFile();
 	}
 
-	@SneakyThrows(IOException.class)
 	private void writeNotesToFile() {
-		JsonArray notesJson = new JsonArray();
-		for (Note note : notes) {
-			notesJson.add(note.toJson());
-		}
-
-		try (BufferedWriter bw = Files.newBufferedWriter(notesPath)) {
-			new GsonBuilder().setPrettyPrinting().create().toJson(notesJson, bw);
+		String json = Note.GSON.toJson(notes, List.class);
+		try {
+			Files.writeString(notesPath, json);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -149,13 +140,9 @@ public class NotesController {
 		Utils.makeClearable(searchBar);
 
 		try {
-			JsonArray notesJson = JsonParser.parseString(Files.readString(notesPath)).getAsJsonArray();
-			for (JsonElement elem : notesJson) {
-				Note note = Note.fromJson(elem.getAsJsonObject());
-				setupNotePreviewContextMenu(note);
-				notes.add(note);
-			}
-		} catch (Exception ignored) {
+			Note[] notes = Note.GSON.fromJson(Files.readString(notesPath), Note[].class);
+			this.notes.addAll(notes);
+		} catch (IOException | JsonSyntaxException ignored) {
 		}
 	}
 

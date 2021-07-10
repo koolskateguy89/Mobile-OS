@@ -1,10 +1,11 @@
 package com.github.koolskateguy89.mobileos.app.system.notes;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
@@ -24,25 +25,36 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 
 import com.github.koolskateguy89.mobileos.utils.Utils;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.annotations.JsonAdapter;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-@EqualsAndHashCode
+// TODO: I'm still debating whether to use some sort of ID for each note
+@JsonAdapter(Note.Serializer.class)
 class Note {
 
 	// pattern of Date.toString()
 	static final DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
 
+	static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
 	@Getter
 	private final Date dateCreated;
 
-	private final ObjectProperty<Date> dateModified;
+	private final ObjectProperty<Date> dateModified = new SimpleObjectProperty<>();
 
-	private final StringProperty title;
-	private final StringProperty content;
+	private final StringProperty title = new SimpleStringProperty();
+	private final StringProperty content = new SimpleStringProperty();
 
 	@Getter(lazy = true)
 	private final NotePreview preview = new NotePreview();
@@ -55,24 +67,23 @@ class Note {
 	}
 
 	Note(String title, String content) {
-		this.title = new SimpleStringProperty(title);
+		setTitle(title);
 		this.title.addListener((obs) -> update());
-		this.content = new SimpleStringProperty(content);
+		setContent(content);
 		this.content.addListener((obs) -> update());
 
 		dateCreated = new Date();
-		dateModified = new SimpleObjectProperty<>((Date) dateCreated.clone());
-
+		this.dateModified.set((Date) dateCreated.clone());
 	}
 
 	private Note(String title, String content, Date dateCreated, Date dateModified) {
-		this.title = new SimpleStringProperty(title);
+		setTitle(title);
 		this.title.addListener((obs) -> update());
-		this.content = new SimpleStringProperty(content);
+		setContent(content);
 		this.content.addListener((obs) -> update());
 
 		this.dateCreated = dateCreated;
-		this.dateModified = new SimpleObjectProperty<>(dateModified);
+		this.dateModified.set(dateModified);
 	}
 
 	private void update() {
@@ -115,32 +126,66 @@ class Note {
 
 	@Override
 	public String toString() {
-		return "Note[title=" + getTitle() + ", content=" + getContent() + "]";
+		return "Note{title=" + getTitle() +
+					", content=" + getContent() +
+					", dateCreated=\"" + getDateCreated() + '"' +
+					", dateModified=\"" + getDateModified() + '"' +
+				"}";
 	}
 
-	public JsonObject toJson() {
-		JsonObject obj = new JsonObject();
-		obj.addProperty("title", getTitle());
-		obj.addProperty("content", getContent());
-		obj.addProperty("dateCreated", getDateCreated().toString());
-		obj.addProperty("dateModified", getDateModified().toString());
-		return obj;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+
+		if (o instanceof Note) {
+			Note note = (Note) o;
+			return this.getTitle().equals(note.getTitle()) &&
+					this.getContent().equals(note.getContent()) &&
+					this.getDateCreated().equals(note.getDateCreated());
+		}
+
+		return false;
 	}
 
-	public static Note fromJson(JsonObject obj) throws ParseException {
-		Date dateCreated = df.parse(obj.get("dateCreated").getAsString());
-
-		Date dateModified = df.parse(obj.get("dateModified").getAsString());
-
-		String title = obj.get("title").getAsString();
-
-		String content = obj.get("content").getAsString();
-
-		return new Note(title, content, dateCreated, dateModified);
+	@Override
+	public int hashCode() {
+		return Objects.hash(getTitle(), getContent(), getDateCreated());
 	}
 
 
-	// TODO: context menu
+	static class Serializer implements JsonSerializer<Note>, JsonDeserializer<Note> {
+
+		@Override
+		public JsonElement serialize(Note src, Type typeOfSrc, JsonSerializationContext context) {
+			JsonObject obj = new JsonObject();
+			obj.addProperty("title", src.getTitle());
+			obj.addProperty("content", src.getContent());
+			obj.addProperty("dateCreated", src.getDateCreated().toString());
+			obj.addProperty("dateModified", src.getDateModified().toString());
+			return obj;
+		}
+
+		@Override
+		public Note deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+			try {
+				JsonObject obj = json.getAsJsonObject();
+
+				String title = obj.get("title").getAsString();
+				String content = obj.get("content").getAsString();
+
+				Date dateCreated = df.parse(obj.get("dateCreated").getAsString());
+				Date dateModified = df.parse(obj.get("dateModified").getAsString());
+
+				return new Note(title, content, dateCreated, dateModified);
+			} catch (Exception e) {
+				throw new JsonParseException(e);
+			}
+		}
+	}
+
+
+	// TODO: finish context menu
 	class NotePreview extends AnchorPane {
 
 		@Getter
