@@ -45,6 +45,8 @@ public class CookieUtils {
 	 *
 	 */
 
+	static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
 	public static void store(CookieManager cm, @NonNull Path path) throws IOException {
 		// com.sun.webkit.network.CookieStore (package private)
 		Object cookieStore = ReflectionHelper.getFieldContent(cm, "store");
@@ -52,14 +54,13 @@ public class CookieUtils {
 		// both ? are com.sun.webkit.network.Cookie (package private)
 		Map<String, Map<?,?>> buckets = ReflectionHelper.getFieldContent(cookieStore, "buckets");
 
-		Map<String, Collection> cookiesToSave = new LinkedHashMap<>();
+		Map<String, Collection<?>> cookiesToSave = new LinkedHashMap<>();
 
 		buckets.forEach((domain, bucket) -> {
 			cookiesToSave.put(domain, bucket.values());
 		});
 
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String json = gson.toJson(cookiesToSave);
+		String json = GSON.toJson(cookiesToSave);
 
 		Files.writeString(path, json);
 	}
@@ -67,10 +68,9 @@ public class CookieUtils {
 	public static void load(CookieManager cm, @NonNull Path path) throws IOException {
 		String json = Files.readString(path);
 
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		Type type = new TypeToken<Map<String, Collection<CookieJson>>>() {}.getType();
 
-		Map<String, Collection<CookieJson>> cookiesToLoad = gson.fromJson(json, type);
+		Map<String, Collection<CookieJson>> cookiesToLoad = GSON.fromJson(json, type);
 
 		cookiesToLoad.forEach((domain, cookies) -> {
 			Map<String, List<String>> map = new LinkedHashMap<>();
