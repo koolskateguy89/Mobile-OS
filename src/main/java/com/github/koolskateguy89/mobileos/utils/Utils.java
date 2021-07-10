@@ -42,6 +42,11 @@ public class Utils {
 	}
 
 	// DON'T USE THIS EXTERNALLY
+	public static URL getInternalUrl(String url) {
+		return getUrl("com/github/koolskateguy89/mobileos/%s".formatted(url));
+	}
+
+	// DON'T USE THIS EXTERNALLY
 	public static URL getFxmlUrl(String name) {
 		return getUrl("com/github/koolskateguy89/mobileos/fx/%s.fxml".formatted(name));
 	}
@@ -203,6 +208,10 @@ public class Utils {
 		}
 
 		return false;
+	}
+
+	public static <T> T nonNullElse(T obj, T defaultObj) {
+		return obj != null ? obj : defaultObj;
 	}
 
 }

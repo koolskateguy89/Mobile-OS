@@ -26,10 +26,8 @@ public class Apps {
 			Preferences.class,
 	};
 
-	// lmao I wanna change this to just throws `Exception` but who doesn't like seeing this clusterfrick
-	public static App fromPath(Path dir) throws IOException, ClassNotFoundException,
-			NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException
-	{
+	public static App fromPath(Path dir) throws IOException, ClassNotFoundException, ExceptionInInitializerError,
+			NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
 
 		Properties props = new Properties();
 		try (InputStream is = Files.newInputStream(dir.resolve(App.AppConstants.PROPERTIES))) {
@@ -45,19 +43,19 @@ public class Apps {
 		Path jar = dir.resolve(jarPath);
 
 		// Loading a jar during runtime: https://stackoverflow.com/a/60775
-		// Next 2 declarations basically load the app jar into the runtime
+		// Next 2 declarations basically load the app jar into the JVM
 		URLClassLoader child = new URLClassLoader(
 				new URL[] {jar.toUri().toURL()}, App.class.getClassLoader()
 		);
 
-		Class<App> appClass = (Class<App>) Class.forName(mainClassName, true, child);
+		Class<? extends App> appClass = (Class<? extends App>) Class.forName(mainClassName, true, child);
 
 		return instantiate(appClass, dir, props, appPrefs);
 	}
 
 	public static App instantiate(Class<? extends App> appClass, Path dir, Properties props, Preferences appPrefs)
-			throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException
-	{
+			throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+
 		Constructor<? extends App> constructor;
 		Object[] initargs;
 		try {

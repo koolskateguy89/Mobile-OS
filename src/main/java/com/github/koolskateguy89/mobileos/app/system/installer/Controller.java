@@ -69,7 +69,7 @@ class Controller {
 	}
 
 	private Path getAppDir(Path name) throws IOException {
-		Path appDir = Prefs.getAppDirPath().resolve(name);
+		Path appDir = Prefs.getAppsDir().resolve(name);
 		if (!Files.isDirectory(appDir))
 			Files.createDirectory(appDir);
 		return appDir;
@@ -112,7 +112,7 @@ class Controller {
 			try (zip) {
 				for (ZipEntry entry : entries) {
 					// entry name includes folder name
-					Path path = Prefs.getAppDirPath().resolve(entry.getName());
+					Path path = Prefs.getAppsDir().resolve(entry.getName());
 					if (entry.isDirectory()) {
 						try {
 							if (!Files.isDirectory(path))

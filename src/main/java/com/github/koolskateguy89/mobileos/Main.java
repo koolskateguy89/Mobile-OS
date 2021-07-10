@@ -7,7 +7,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.prefs.Preferences;
 
@@ -17,6 +19,8 @@ import javafx.beans.binding.StringExpression;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -27,6 +31,7 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 import com.github.koolskateguy89.mobileos.app.App;
+import com.github.koolskateguy89.mobileos.fx.FailedAppsDialog;
 import com.github.koolskateguy89.mobileos.fx.MainController;
 import com.github.koolskateguy89.mobileos.fx.home.HomeController;
 import com.github.koolskateguy89.mobileos.utils.Utils;
@@ -54,7 +59,7 @@ public class Main extends Application {
 	private void loadSystemApps() throws Exception {
 		Set<Class<? extends App>> clazzes = findSystemApps();
 
-		Path sysAppsPrefs = Prefs.getSysAppDirPath();
+		Path sysAppsPrefs = Prefs.getSysAppsDir();
 
 		List<App> sysApps = new ArrayList<>(clazzes.size());
 		for (Class<? extends App> clazz : clazzes) {
@@ -103,45 +108,53 @@ public class Main extends Application {
 		return constructor.newInstance(initargs);
 	}
 
-	private List<Path> loadApps() throws Exception {
-		Path appsDir = Prefs.getAppDirPath();
+	private Map<String, List<Path>> loadApps() throws Exception {
+		Path appsDir = Prefs.getAppsDir();
 
 		List<App> apps = new ArrayList<>();
-		List<Path> failedApps = new ArrayList<>();
+		//  reason, paths
+		Map<String, List<Path>> failedApps = new HashMap<>();
 
 		var ds = Files.newDirectoryStream(appsDir);
 		for (Path appDir : ds) {
-			// TODO: handle different exceptions properly (maybe have a notification which when clicked on will show more detail)
-			// TODO: remove all printStackTrace calls
 			boolean failed = true;
+			String reason = null;
+			Throwable e = null;
 			try {
 				apps.add(Apps.fromPath(appDir));
 				failed = false;
 			} catch (NullPointerException npe) {
-				// TODO: usually caused by a property not being set
-				npe.printStackTrace();
+				reason = "Properties is null";
+				e = npe;
 			} catch (IOException io) {
-				// TODO: properties file not present
-				io.printStackTrace();
+				reason = "Properties file not present/accessible";
+				e = io;
 			} catch (ClassNotFoundException cnfe) {
-				// TODO:
-				cnfe.printStackTrace();
+				reason = "Main app class not found";
+				e = cnfe;
+			} catch (ExceptionInInitializerError eiie) {
+				reason = "Static initialization threw exception";
+				e = eiie;
 			} catch (IllegalAccessException iae) {
-				// TODO: class/constructor not public
-				iae.printStackTrace();
+				reason = "App class/constructor is not public";
+				e = iae;
 			} catch (NoSuchMethodException nsme) {
-				// TODO: no valid constructor
-				nsme.printStackTrace();
+				reason = "No constructor with valid parameters";
+				e = nsme;
 			} catch (InstantiationException ie) {
-				// TODO: abstract class
-				ie.printStackTrace();
+				reason = "Abstract app class";
+				e = ie;
 			} catch (InvocationTargetException ite) {
-				// TODO: constructor threw exception
-				ite.printStackTrace();
+				reason = "Constructor threw exception";
+				e = ite;
 			}
 
-			if (failed)
-				failedApps.add(appDir.getFileName());
+			//System.out.println(Throwables.getStackTraceAsString(e));
+			if (failed) {
+				Path name = appDir.getFileName();
+				// absolute genius: https://stackoverflow.com/a/37166489
+				failedApps.computeIfAbsent(reason, $ -> new ArrayList<>()).add(name);
+			}
 		}
 		ds.close();
 
@@ -179,7 +192,7 @@ public class Main extends Application {
 		Main.stage = primaryStage;
 		Main.instance = this;
 
-		// I like UTILITY but I want to be able to minimize :/
+		// TODO: I like UTILITY but I want to be able to minimize :/
 		//stage.initStyle(StageStyle.UTILITY);
 
 		stage.setOnCloseRequest(event -> {
@@ -199,7 +212,7 @@ public class Main extends Application {
 		home = loader.load();
 		hc = loader.getController();
 
-		Path appsDir = Prefs.getAppDirPath();
+		Path appsDir = Prefs.getAppsDir();
 		if (Prefs.IS_FIRST_RUN || !Files.isDirectory(appsDir)) {
 			Pane init = FXMLLoader.load(Utils.getFxmlUrl("Init"));
 			scene = new Scene(init);
@@ -216,19 +229,22 @@ public class Main extends Application {
 	public void begin() throws Exception {
 		scene.setRoot(main);
 		loadSystemApps();
-		List<Path> failed = loadApps();
+		var failed = loadApps();
 		goHome();
 
 		if (!failed.isEmpty()) {
-			// TODO: make this an alert of some kind (probably snackbar)
-			System.out.println("Apps failed: " + failed);
+			//System.out.println("Apps failed: " + failed);
+			stage.setOnShown($ -> {
+				Dialog<ButtonType> d = new FailedAppsDialog(failed);
+				d.initOwner(stage);
+				d.showAndWait();
+			});
 		}
 	}
 
 	public void back(ActionEvent event) {
 		if (currentApp != null)
 			currentApp.goBack(event);
-		// home screen 'doesnt' go back - well i cba
 	}
 
 	public boolean isAtHome() {

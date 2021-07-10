@@ -26,7 +26,7 @@ public class InitController {
 	@FXML
 	private void initialize() {
 		// Disable the doneBtn when the current folder is null
-		doneBtn.disableProperty().bind(folderProp.isEqualTo(new SimpleObjectProperty<>(null)));
+		doneBtn.disableProperty().bind(folderProp.isEqualTo((Object) null));
 	}
 
 	@FXML
@@ -60,7 +60,7 @@ public class InitController {
 
 	@FXML
 	void done() throws Exception {
-		Prefs.setRootDir(this.folderProp.get().getAbsolutePath());
+		Prefs.initiallySetRootDir(this.folderProp.get().getAbsolutePath());
 		Main.getInstance().begin();
 	}
 

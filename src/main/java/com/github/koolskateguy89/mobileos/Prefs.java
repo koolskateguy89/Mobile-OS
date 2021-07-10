@@ -5,6 +5,7 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import com.github.koolskateguy89.mobileos.utils.Constants;
+import com.github.koolskateguy89.mobileos.utils.Utils;
 
 import lombok.Getter;
 
@@ -13,10 +14,10 @@ public final class Prefs {
 
 	private Prefs() {}
 
-	private static final Preferences prefs = Preferences.userNodeForPackage(Prefs.class);
+	private static final Preferences parent = Preferences.userNodeForPackage(Prefs.class);
 
-	private static final Preferences appPrefsParent = prefs.node("apps");
-	private static final Preferences sysAppPrefsParent = prefs.node("sys_apps");
+	private static final Preferences appPrefsParent = parent.node("apps");
+	private static final Preferences sysAppPrefsParent = parent.node("sys_apps");
 
 	static Preferences forApp(String name) {
 		return appPrefsParent.node(name);
@@ -25,23 +26,28 @@ public final class Prefs {
 		return sysAppPrefsParent.node(name);
 	}
 
-	public static final boolean IS_FIRST_RUN = prefs.getBoolean("first_run", true);
+	public static final boolean IS_FIRST_RUN = parent.getBoolean("first_run", true);
 
 	@Getter
-	private static String rootDir = prefs.get("root_dir", "./mobileos_root");
-	static void setRootDir(String s) {
-		// FIXME: this will almost definitely cause issues if I allow changing root_dir in Settings
+	private static String rootDir = parent.get("root_dir", "./mobileos_root");
+	@Getter
+	private static Path rootDirPath = Path.of(rootDir);
+
+	static void initiallySetRootDir(String s) {
 		rootDir = s;
 		rootDirPath = Path.of(rootDir);
 	}
-	@Getter
-	static Path rootDirPath = Path.of(rootDir);
 
-	public static Path getAppDirPath() {
-		return rootDirPath.resolve(Constants.APPS_DIR);
+	// TODO be used by Settings
+	private static String nextRootDir;
+	static void changeRootDir(String s) {
+		nextRootDir = s;
 	}
 
-	public static Path getSysAppDirPath() {
+	public static Path getAppsDir() {
+		return rootDirPath.resolve(Constants.APPS_DIR);
+	}
+	public static Path getSysAppsDir() {
 		return rootDirPath.resolve(Constants.SYS_APPS_DIR);
 	}
 
@@ -49,12 +55,12 @@ public final class Prefs {
 		// Save preferences upon JVM shutdown
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			if (IS_FIRST_RUN)
-				prefs.putBoolean("first_run", false);
-			prefs.put("root_dir", rootDir);
+				parent.putBoolean("first_run", false);
+			parent.put("root_dir", Utils.nonNullElse(nextRootDir, rootDir));
 
 			// saves preferences & descendants to a permanent store
 			try {
-				prefs.flush();
+				parent.flush();
 			} catch (BackingStoreException e) {
 				e.printStackTrace();
 			}
@@ -68,23 +74,23 @@ public final class Prefs {
 	// settings (later)
 
 	public static String[] keys() throws BackingStoreException {
-		return prefs.keys();
+		return parent.keys();
 	}
 
 	public static String get(String key, String def) {
-		return prefs.get(key, def);
+		return parent.get(key, def);
 	}
 
 	public static int getInt(String key, int def) {
-		return prefs.getInt(key, def);
+		return parent.getInt(key, def);
 	}
 
 	public static double getDouble(String key, double def) {
-		return prefs.getDouble(key, def);
+		return parent.getDouble(key, def);
 	}
 
 	public static boolean getBoolean(String key, boolean def) {
-		return prefs.getBoolean(key, def);
+		return parent.getBoolean(key, def);
 	}
 
 }
