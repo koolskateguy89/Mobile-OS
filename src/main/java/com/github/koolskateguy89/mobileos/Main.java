@@ -124,6 +124,7 @@ public class Main extends Application {
 				apps.add(Apps.fromPath(appDir));
 				failed = false;
 			} catch (NullPointerException npe) {
+				// not sure about this tbh
 				reason = "Properties is null";
 				e = npe;
 			} catch (IOException io) {
