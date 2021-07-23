@@ -24,7 +24,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 
-import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -191,7 +190,7 @@ class Note {
 		final Note note = Note.this;
 
 		NotePreview() {
-			FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/notes/NotePreview"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("NotePreview.fxml"));
 			loader.setRoot(this);
 			loader.setController(this);
 			try {

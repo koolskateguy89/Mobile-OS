@@ -7,7 +7,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 
-import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.jfoenix.controls.JFXTextField;
 
 import lombok.SneakyThrows;
@@ -34,7 +33,7 @@ class NoteEditor extends AnchorPane {
 	private NoteEditor(Note note) {
 		this.note = note;
 
-		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/notes/NoteEditor"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("NoteEditor.fxml"));
 		loader.setRoot(this);
 		loader.setController(this);
 		loader.load();

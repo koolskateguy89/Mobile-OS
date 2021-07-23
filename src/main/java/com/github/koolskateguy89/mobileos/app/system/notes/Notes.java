@@ -16,7 +16,6 @@ import javafx.scene.layout.AnchorPane;
 import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.app.App;
 import com.github.koolskateguy89.mobileos.utils.LombokOverride;
-import com.github.koolskateguy89.mobileos.utils.Utils;
 
 import lombok.Getter;
 
@@ -41,7 +40,7 @@ public class Notes extends App {
 
 	@Getter(lazy = true) @LombokOverride
 	private final Node pane = new AnchorPane() {{
-		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/notes/Notes"));
+		FXMLLoader loader = new FXMLLoader(Notes.this.getClass().getResource("Notes.fxml"));
 		loader.setRoot(this);
 		try {
 			loader.load();
