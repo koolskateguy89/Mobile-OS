@@ -38,7 +38,6 @@ import javafx.scene.web.WebView;
 
 import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.fx.utils.ExceptionDialog;
-import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXTextField;
@@ -60,7 +59,7 @@ public class WebBrowser extends VBox {
 	public WebBrowser(String defaultUrl) {
 		this.defaultUrl = defaultUrl;
 
-		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/browser/WebBrowser"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("WebBrowser.fxml"));
 		loader.setRoot(this);
 		loader.setController(this);
 		loader.load();

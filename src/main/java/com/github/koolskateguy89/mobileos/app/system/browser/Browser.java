@@ -13,7 +13,6 @@ import javafx.scene.image.Image;
 import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.app.App;
 import com.github.koolskateguy89.mobileos.utils.LombokOverride;
-import com.github.koolskateguy89.mobileos.utils.Utils;
 
 import lombok.Getter;
 
@@ -32,7 +31,7 @@ public class Browser extends App {
 
 	@Getter(lazy = true) @LombokOverride
 	private final Node pane = new TabPane() {{
-		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/browser/Browser"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("Browser.fxml"));
 		loader.setRoot(this);
 		try {
 			loader.load();
