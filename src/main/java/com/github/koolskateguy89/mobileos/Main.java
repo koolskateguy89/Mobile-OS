@@ -35,6 +35,7 @@ import com.github.koolskateguy89.mobileos.fx.FailedAppsDialog;
 import com.github.koolskateguy89.mobileos.fx.MainController;
 import com.github.koolskateguy89.mobileos.fx.home.HomeController;
 import com.github.koolskateguy89.mobileos.utils.Utils;
+import com.google.common.base.Throwables;
 
 import lombok.Getter;
 
@@ -150,7 +151,7 @@ public class Main extends Application {
 				e = ite;
 			}
 
-			//if (e != null) System.out.println(Throwables.getStackTraceAsString(e));
+			if (e != null) System.out.println(Throwables.getStackTraceAsString(e));
 			if (failed) {
 				Path name = appDir.getFileName();
 				// absolute genius: https://stackoverflow.com/a/37166489
@@ -236,6 +237,7 @@ public class Main extends Application {
 		if (!failed.isEmpty()) {
 			//System.out.println("Apps failed: " + failed);
 			stage.setOnShown($ -> {
+				// TODO: settings if show failed apps
 				Dialog<ButtonType> d = new FailedAppsDialog(failed);
 				d.initOwner(stage);
 				d.showAndWait();

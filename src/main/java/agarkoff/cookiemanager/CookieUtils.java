@@ -105,7 +105,7 @@ public class CookieUtils {
 
 		// Check arguments
 		if (name == null || name.length() == 0)
-			throw new IllegalArgumentException("Bad cookie name");
+			throw new IllegalArgumentException("Bad cookie name (null/empty)");
 
 		// Name is checked for legality by servlet spec, but can also be passed directly so check again for quoting
 		// Per RFC6265, Cookie.name follows RFC2616 Section 2.2 token rules
@@ -115,7 +115,6 @@ public class CookieUtils {
 
 		// Format value and params
 		StringBuilder buf = new StringBuilder();
-		buf.setLength(0);
 		buf.append(name).append('=').append(value == null ? "" : value);
 
 		// Append path
