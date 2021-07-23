@@ -12,7 +12,6 @@ import javafx.scene.layout.Pane;
 import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.app.App;
 import com.github.koolskateguy89.mobileos.utils.LombokOverride;
-import com.github.koolskateguy89.mobileos.utils.Utils;
 
 import lombok.Getter;
 
@@ -31,7 +30,7 @@ public final class Explorer extends App {
 
 	@Getter(lazy = true) @LombokOverride
 	private final Node pane = new Pane() {{
-		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/explorer/Explorer"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("Explorer.fxml"));
 		loader.setRoot(this);
 		try {
 			loader.load();
