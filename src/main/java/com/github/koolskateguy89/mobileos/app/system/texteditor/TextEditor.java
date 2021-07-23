@@ -18,7 +18,6 @@ import javafx.scene.layout.VBox;
 import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.app.App;
 import com.github.koolskateguy89.mobileos.utils.LombokOverride;
-import com.github.koolskateguy89.mobileos.utils.Utils;
 
 import lombok.Getter;
 
@@ -37,7 +36,7 @@ public final class TextEditor extends App {
 
 	@Getter(lazy = true) @LombokOverride
 	private final Node pane = new VBox() {{
-		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/texteditor/Editor"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("Editor.fxml"));
 		loader.setRoot(this);
 		try {
 			loader.load();
