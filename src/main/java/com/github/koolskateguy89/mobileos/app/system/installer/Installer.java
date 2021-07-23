@@ -11,7 +11,6 @@ import javafx.scene.layout.Pane;
 import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.app.App;
 import com.github.koolskateguy89.mobileos.utils.LombokOverride;
-import com.github.koolskateguy89.mobileos.utils.Utils;
 
 import lombok.Getter;
 
@@ -31,7 +30,7 @@ public final class Installer extends App {
 
 	@Getter(lazy = true) @LombokOverride
 	private final Node pane = new Pane() {{
-		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("system/installer/Installer"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("Installer.fxml"));
 		loader.setRoot(this);
 		loader.setController(ic);
 		try {
