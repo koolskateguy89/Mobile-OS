@@ -104,7 +104,7 @@ public abstract class App {
 
 		Label label = new Label(App.this.getName());
 		label.setTextFill(Color.WHITE);
-		label.setFont(Constants.BOLD);
+		label.setFont(Constants.SYSTEM_BOLD);
 
 		getChildren().addAll(button, label);
 		setAlignment(Pos.CENTER);

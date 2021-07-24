@@ -34,7 +34,6 @@ import com.github.koolskateguy89.mobileos.app.App;
 import com.github.koolskateguy89.mobileos.fx.FailedAppsDialog;
 import com.github.koolskateguy89.mobileos.fx.MainController;
 import com.github.koolskateguy89.mobileos.fx.home.HomeController;
-import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.google.common.base.Throwables;
 
 import lombok.Getter;
@@ -206,17 +205,17 @@ public class Main extends Application {
 		stage.setResizable(false);
 		stage.centerOnScreen();
 
-		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("Main"));
+		FXMLLoader loader = new FXMLLoader(Main.class.getResource("fx/Main.fxml"));
 		main = loader.load();
 		mc = loader.getController();
 
-		loader = new FXMLLoader(Utils.getFxmlUrl("home/Home"));
+		loader = new FXMLLoader(HomeController.class.getResource("Home.fxml"));
 		home = loader.load();
 		hc = loader.getController();
 
 		Path appsDir = Prefs.getAppsDir();
 		if (Prefs.IS_FIRST_RUN || !Files.isDirectory(appsDir)) {
-			Pane init = FXMLLoader.load(Utils.getFxmlUrl("Init"));
+			Pane init = FXMLLoader.load(Main.class.getResource("fx/Init.fxml"));
 			scene = new Scene(init);
 		} else {
 			scene = new Scene(main);

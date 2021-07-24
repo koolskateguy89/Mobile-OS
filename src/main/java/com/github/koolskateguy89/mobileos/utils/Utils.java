@@ -2,7 +2,6 @@ package com.github.koolskateguy89.mobileos.utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.CopyOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -34,23 +33,6 @@ import com.google.common.base.Strings;
 public class Utils {
 
 	private Utils() {}
-
-	static final ClassLoader CLASS_LOADER = Utils.class.getClassLoader();
-
-	public static URL getUrl(String url) {
-		return CLASS_LOADER.getResource(url);
-	}
-
-	// DON'T USE THIS EXTERNALLY
-	public static URL getInternalUrl(String url) {
-		return getUrl("com/github/koolskateguy89/mobileos/%s".formatted(url));
-	}
-
-	// DON'T USE THIS EXTERNALLY
-	public static URL getFxmlUrl(String name) {
-		return getUrl("com/github/koolskateguy89/mobileos/fx/%s.fxml".formatted(name));
-	}
-
 
 	public static void initRootDir(File file) throws IOException {
 		Path root = file.toPath();

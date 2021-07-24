@@ -66,7 +66,7 @@ public class FindText extends Stage {
 			});
 		}
 
-		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("utils/Find"));
+		FXMLLoader loader = new FXMLLoader(FindText.class.getResource("Find.fxml"));
 		loader.setRoot(this);
 		loader.setController(this);
 

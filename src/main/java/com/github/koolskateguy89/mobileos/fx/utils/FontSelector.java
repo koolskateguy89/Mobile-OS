@@ -20,7 +20,6 @@ import javafx.stage.Window;
 
 import org.controlsfx.control.SearchableComboBox;
 
-import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSlider;
@@ -33,7 +32,7 @@ public class FontSelector extends Stage {
 		initStyle(StageStyle.UTILITY);
 		initOwner(owner);
 
-		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("utils/FontSelector"));
+		FXMLLoader loader = new FXMLLoader(FontSelector.class.getResource("FontSelector.fxml"));
 		loader.setRoot(this);
 		loader.setController(this);
 

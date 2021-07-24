@@ -26,6 +26,10 @@ public class ReflectionUtils {
 		return getMethod(clazz, methodName, paramTypes).invoke(object, params);
 	}
 
+	public static Object invokeStatic(@NonNull Class<?> clazz, @NonNull String methodName, Object... params) {
+		return invoke(clazz, null, methodName, params);
+	}
+
 	@SneakyThrows
 	public static Method getMethod(@NonNull Class<?> clazz, @NonNull String methodName, Class<?>... paramTypes) {
 		Method method = clazz.getDeclaredMethod(methodName, paramTypes);

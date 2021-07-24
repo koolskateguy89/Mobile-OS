@@ -15,7 +15,7 @@ public class Constants {
 	// Url to the image for the default background
 	public static final String DEFAULT_BACKGROUND = "com/github/koolskateguy89/mobileos/images/backgrounds/Default.jpg";
 
-	public static final Font BOLD = Font.font("System", FontWeight.BOLD, 12);
+	public static final Font SYSTEM_BOLD = Font.font("System", FontWeight.BOLD, 12);
 
 	// App info.properties
 

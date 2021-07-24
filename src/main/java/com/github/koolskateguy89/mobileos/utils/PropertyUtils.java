@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 
 import com.google.common.base.Strings;
 
+// TODO: remove this?
 public class PropertyUtils {
 
 	private PropertyUtils() {}

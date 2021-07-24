@@ -1,7 +1,6 @@
 package com.github.koolskateguy89.mobileos.fx.home;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +19,6 @@ import javafx.scene.layout.StackPane;
 
 import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.app.App;
-import com.github.koolskateguy89.mobileos.utils.Utils;
 
 import lombok.SneakyThrows;
 
@@ -28,7 +26,7 @@ import lombok.SneakyThrows;
 class HomePane extends AnchorPane {
 
 	HomePane() {
-		FXMLLoader loader = new FXMLLoader(Utils.getFxmlUrl("home/HomePane"));
+		FXMLLoader loader = new FXMLLoader(HomePane.class.getResource("HomePane.fxml"));
 		loader.setRoot(this);
 		loader.setController(this);
 		try {
@@ -49,10 +47,9 @@ class HomePane extends AnchorPane {
 	private void initialize() {
 	}
 
-	private static final URL grid = Utils.getFxmlUrl("home/HomeGrid");
 	@SneakyThrows(IOException.class)
 	private static GridPane newGrid() {
-		return FXMLLoader.load(grid);
+		return FXMLLoader.load(HomePane.class.getResource("HomeGrid.fxml"));
 	}
 
 	private Button newBottomButton(GridPane grid, int pos) {
