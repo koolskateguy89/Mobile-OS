@@ -17,7 +17,7 @@ public class ReflectionUtils {
 	private ReflectionUtils() {}
 
 	public static Object invoke(@NonNull Object object, String methodName, Object... params) {
-		return invoke(object.getClass(), methodName, params);
+		return invoke(object.getClass(), object, methodName, params);
 	}
 
 	@SneakyThrows
