@@ -68,7 +68,6 @@ public final class Prefs {
 	}
 
 
-	// fave apps (bottom 4)
 	// data directory
 
 	// settings (later)

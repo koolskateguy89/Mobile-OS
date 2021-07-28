@@ -3,8 +3,6 @@ package com.github.koolskateguy89.mobileos.fx.home;
 import java.util.List;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
@@ -14,6 +12,8 @@ import com.github.koolskateguy89.mobileos.utils.Constants;
 
 public class HomeController {
 
+	// TODO: resize to accommodate no longer having faves
+
 	@FXML
 	private StackPane homePaneWrapper;
 	private HomePane homePane;
@@ -22,23 +22,7 @@ public class HomeController {
 	private VBox root;
 
 	@FXML
-	private HBox faveBox;
-
-	// TODO: 'faves'
-	@FXML
-	private StackPane fav0;
-
-	@FXML
-	private StackPane fav1;
-
-	@FXML
-	private StackPane fav2;
-
-	@FXML
-	private StackPane fav3;
-
-	@FXML
-	public void initialize() {
+	private void initialize() {
 		homePane = new HomePane();
 		homePaneWrapper.getChildren().add(homePane);
 
@@ -60,16 +44,6 @@ public class HomeController {
 
 	public void addApp(App app) {
 		homePane.addApp(app);
-	}
-
-	public void initFaves(List<App> faves) {
-		for (int i = 0; i < faves.size(); i++) {
-			App app = faves.get(i);
-			Button button = app.getButton();
-
-			StackPane pane = (StackPane) faveBox.getChildren().get(i);
-			pane.getChildren().setAll(button);
-		}
 	}
 
 }

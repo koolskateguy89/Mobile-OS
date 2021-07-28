@@ -163,7 +163,6 @@ public class Main extends Application {
 		apps.sort(Comparator.comparing(App::getName, String.CASE_INSENSITIVE_ORDER));
 
 		hc.initApps(apps);
-		// TODO: initFaves
 
 		return failedApps;
 	}
