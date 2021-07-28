@@ -9,6 +9,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.javafx.webkit.theme.ContextMenuImpl;
+
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -41,13 +43,18 @@ import javafx.stage.Window;
 
 import org.reflections.ReflectionUtils;
 
+import com.github.koolskateguy89.mobileos.Main;
 import com.jfoenix.adapters.ReflectionHelper;
 import com.sun.javafx.scene.control.ContextMenuContent;
 import com.sun.javafx.scene.control.ContextMenuContent.MenuItemContainer;
+import com.sun.webkit.ContextMenuItem;
 import com.sun.webkit.WebPage;
 import com.sun.webkit.network.CookieManager;
 
+import lombok.SneakyThrows;
+
 import agarkoff.cookiemanager.CookieUtils;
+import org.reflections.Reflections;
 
 // TODO: add settings (default search engine - whether to search for invalid URLs); clear cookies;
 public class BrowserController {
@@ -103,16 +110,6 @@ public class BrowserController {
 		// this is in order to keep the newTab tab at the end
 		tabs = tabPane.getTabs().subList(0, 0);
 
-		// Once all tabs have been closed, close the app (?)
-		ListChangeListener<Tab> lcl = change -> {
-			change.next();
-			if (change.getList().size() == 1) {
-				// TODO:
-				//Main.getInstance().goHome();
-			}
-		};
-		tabPane.getTabs().addListener(lcl);
-
 		newTab.setOnSelectionChanged(this::newTabSelected);
 
 		Platform.runLater(this::configureTabHeaders);
@@ -139,16 +136,20 @@ public class BrowserController {
 
 		ListChangeListener<Node> lcl = change -> {
 			if (change.next() && change.wasAdded())
-				change.getAddedSubList().forEach(BrowserController::configureTabHeaderSkin);
+				change.getAddedSubList().forEach(this::configureTabHeaderSkin);
 		};
 		headersRegion.getChildren().addListener(lcl);
 	}
 
-	private static void configureTabHeaderSkin(Node tabHeaderSkin) {
+	private void configureTabHeaderSkin(Node tabHeaderSkin) {
 		Tab tab = ReflectionHelper.getFieldContent(TAB_HEADER_SKIN, tabHeaderSkin, "tab");
 		Label label = ReflectionHelper.getFieldContent(TAB_HEADER_SKIN, tabHeaderSkin, "label");
+		StackPane closeBtn = ReflectionHelper.getFieldContent(TAB_HEADER_SKIN, tabHeaderSkin, "closeBtn");
 
 		label.getStyleClass().add("normal-tab-label");
+
+		// oh my ScenicView is so good
+		closeBtn.setOnMousePressed(mouseEvent -> tabs.remove(tab));
 
 		WebBrowser browser = (WebBrowser) tab.getContent();
 
@@ -157,11 +158,16 @@ public class BrowserController {
 		label.setTooltip(tooltip);
 	}
 
-	// this is very iffy
+	// this is quite iffy ?
 	private void newTabSelected(Event event) {
-		// only make a new tab is newTab was selected
-		if (newTab.isSelected())
+		// for some reason tabs.isEmpty causes a concurrent mod exc >:(
+		if (tabPane.getTabs().size() == 1) {
+			// Once all tabs have been closed, close the app
+			Main.getInstance().goHome();
+		} else if (newTab.isSelected()) {
+			// only make a new tab is newTab was selected
 			newTab();
+		}
 	}
 
 	void onOpen() {
@@ -190,6 +196,12 @@ public class BrowserController {
 		Tab currentTab = tabPane.getSelectionModel().getSelectedItem();
 		WebBrowser browser = (WebBrowser) currentTab.getContent();
 		browser.back();
+	}
+
+	@SneakyThrows
+	void clearCookies() {
+		// TODO: clear cookiemanager
+		Files.deleteIfExists(cookiesPath);
 	}
 
 	private void newTab() {
@@ -232,6 +244,26 @@ public class BrowserController {
 		iv.imageProperty().bind(favIcon);
 		tab.setGraphic(iv);
 
+		/**
+		 * The ContextMenu is implemented by {@link ContextMenuImpl#show(com.sun.webkit.ContextMenu.ShowContext, int, int)},
+		 *   which uses {@link ContextMenuImpl#fillMenu()} to fill the ContextMenu with items according to
+		 *   {@link ContextMenuImpl#items}, which creates either a {@link ContextMenuImpl.MenuItemImpl} or
+		 *   {@link ContextMenuImpl.CheckMenuItemImpl}.
+		 *
+		 * Each implemented MenuItem has a {@link ContextMenuItem} as an "itemPeer", which has an
+		 *   '[int] action' {@link ContextMenuItem#action}. This action is passed to
+		 *   {@link com.sun.webkit.ContextMenu.ShowContext#notifyItemSelected(int)} which uses
+		 *   {@link com.sun.webkit.ContextMenu#twkHandleItemSelected(long, int)} which is native so yeah.
+		 *
+		 * Actions: (may be more)
+		 *  1 = Open Link in New Window
+		 *  3 = Copy Link to Clipboard
+		 *  9 = Go Back
+		 *  10 = Go Forward
+		 *  11 = Stop loading
+		 *  12 = Reload page
+		 *  33 = Open Link
+		 */
 		// How to alter WebView context menu: https://stackoverflow.com/a/27047819
 		browser.getWebView().setOnContextMenuRequested(contextMenuEvent -> {
 			for (Window window : Window.getWindows()) {
@@ -258,17 +290,14 @@ public class BrowserController {
 
 				VBox itemsContainer = cmc.getItemsContainer();
 
+				if (itemsContainer.getChildren().size() < 2)
+					continue;
+
 				MenuItemContainer inNewWindow = (MenuItemContainer) itemsContainer.getChildren().get(1);
 				MenuItem mi = inNewWindow.getItem();
 				if (mi.getText().equals("Open Link in New Window")) {
-					mi.setText("Open Link in New Tab");
-					/*
-					TODO:
-					mi.setOnAction(e -> {
-						// ahhh how do I get the link ffssss
-						// maybe I let it start loading then use the location from the loading?
-					});
-					*/
+					itemsContainer.getChildren().remove(1);
+					//mi.setText("Open Link in New Tab");
 				}
 			}
 		});

@@ -72,6 +72,9 @@ public class CookieUtils {
 
 		Map<String, Collection<CookieJson>> cookiesToLoad = GSON.fromJson(json, type);
 
+		if (cookiesToLoad == null)
+			return;
+
 		cookiesToLoad.forEach((domain, cookies) -> {
 			Map<String, List<String>> map = new LinkedHashMap<>();
 			List<String> list = new ArrayList<>();
