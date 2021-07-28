@@ -11,7 +11,7 @@ import com.jfoenix.controls.JFXTextField;
 
 import lombok.SneakyThrows;
 
-// TODO: everything (including FXML file)
+// TODO: finish FXML file
 class NoteEditor extends AnchorPane {
 
 	static final NotesController controller = NotesController.instance;

@@ -38,7 +38,6 @@ import com.google.gson.annotations.JsonAdapter;
 import lombok.Getter;
 import lombok.Setter;
 
-// TODO: I'm still debating whether to use some sort of ID for each note
 @JsonAdapter(Note.Serializer.class)
 class Note {
 

@@ -34,7 +34,7 @@ import com.google.gson.JsonSyntaxException;
 import com.jfoenix.controls.JFXButton;
 
 // TODO: Settings: Font,
-// TODO: sort by Title/Content/DateCreated/DateModified
+// TODO: sort by Title/Content/DateCreated/DateModified (combo box/choice box)
 // TODO: lock/password feature (?)
 public class NotesController {
 
