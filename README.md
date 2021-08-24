@@ -1,6 +1,8 @@
 # Mobile-OS
 
-This is basically replicating a mobile OS, think of it as a homeless man's Android, but on desktop and doesn't have many features
+This is basically replicating a mobile OS, think of it as a homeless man's Android, but on desktop and doesn't have many features.
+
+This has been made for my own learning, and some of these apps are useful for me.
 
 ## Applications
 
@@ -65,6 +67,8 @@ TODO: this
 - [AppInstaller](src/main/java/com/github/koolskateguy89/mobileos/app/system/installer/Installer.java)
 - [Notes](src/main/java/com/github/koolskateguy89/mobileos/app/system/notes/Notes.java)  
 
+- [Counter](src/main/java/com/github/koolskateguy89/mobileos/app/system/counter/Counter.java)
+  
 - [Settings](src/main/java/com/github/koolskateguy89/mobileos/app/system/settings/SettingsApp.java)
 - [Explorer](src/main/java/com/github/koolskateguy89/mobileos/app/system/explorer/Explorer.java)
 - TODO
@@ -74,7 +78,9 @@ TODO: this
 - Browser icon made by [Freepik] from [www.flaticon.com]
 - Text Editor icon made by [Smashicons](https://www.flaticon.com/authors/smashicons) from [www.flaticon.com]
 - AppInstaller icon made by [Freepik] from [www.flaticon.com]
-- Notes icon made be [Freepik] from [www.flaticon.com]
+- Notes icon made by [Freepik] from [www.flaticon.com]
+- Counter icon made by [Pixel perfect](https://www.flaticon.com/authors/pixel-perfect) from [www.flaticon.com]
+  
 - Settings icon made by [srip](https://www.flaticon.com/authors/srip) from [www.flaticon.com]
 - Explorer icon made by [DinosoftLabs](https://www.flaticon.com/authors/dinosoftlabs) from [www.flaticon.com]
 

@@ -9,8 +9,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.javafx.webkit.theme.ContextMenuImpl;
-
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -47,6 +45,7 @@ import com.github.koolskateguy89.mobileos.Main;
 import com.jfoenix.adapters.ReflectionHelper;
 import com.sun.javafx.scene.control.ContextMenuContent;
 import com.sun.javafx.scene.control.ContextMenuContent.MenuItemContainer;
+import com.sun.javafx.webkit.theme.ContextMenuImpl;
 import com.sun.webkit.ContextMenuItem;
 import com.sun.webkit.WebPage;
 import com.sun.webkit.network.CookieManager;
@@ -54,7 +53,6 @@ import com.sun.webkit.network.CookieManager;
 import lombok.SneakyThrows;
 
 import agarkoff.cookiemanager.CookieUtils;
-import org.reflections.Reflections;
 
 // TODO: add settings (default search engine - whether to search for invalid URLs); clear cookies;
 public class BrowserController {
