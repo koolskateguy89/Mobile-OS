@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXSlider?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="95.0" prefWidth="274.0" stylesheets="@Count.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox alignment="CENTER" layoutX="21.0" layoutY="6.0" prefHeight="82.0" prefWidth="232.0">
+         <children>
+            <Label fx:id="titleLabel" text="Title" />
+            <HBox alignment="CENTER">
+               <children>
+                  <JFXButton id="minus" onAction="#minus" text="-" />
+                  <JFXSlider id="slider" fx:id="slider" />
+                  <JFXButton id="plus" onAction="#plus" text="+" />
+               </children>
+            </HBox>
+            <Label fx:id="label" text="Label" />
+         </children>
+      </VBox>
+   </children>
+</Pane>
