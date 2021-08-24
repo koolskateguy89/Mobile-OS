@@ -1,10 +1,9 @@
 package com.github.koolskateguy89.mobileos.app.system.counter;
 
-import javax.xml.crypto.Data;
-
 import org.sqlite.SQLiteDataSource;
 
-public class Database {
+// WIP (decide JSON vs database)
+class Database {
 
 	private static final SQLiteDataSource ds = new SQLiteDataSource() {{
 		setUrl("jdbc:sqlite::resource:" + Database.class.getPackageName().replace('.', '/') + "/animeDB.db");

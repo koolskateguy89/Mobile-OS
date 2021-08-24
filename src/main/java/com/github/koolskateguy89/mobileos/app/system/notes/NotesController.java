@@ -143,7 +143,8 @@ public class NotesController {
 
 		try {
 			Note[] notes = Note.GSON.fromJson(Files.readString(notesPath), Note[].class);
-			this.notes.addAll(notes);
+			if (notes != null)
+				this.notes.addAll(notes);
 		} catch (IOException | JsonSyntaxException ignored) {
 		}
 	}

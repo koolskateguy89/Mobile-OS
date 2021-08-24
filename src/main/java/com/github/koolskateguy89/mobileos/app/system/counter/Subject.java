@@ -22,18 +22,18 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.JsonAdapter;
 
-@JsonAdapter(CountGroup.Serializer.class)
-class CountGroup extends TitledPane {
+@JsonAdapter(Subject.Serializer.class)
+class Subject extends TitledPane {
 
 	final StringProperty titleProperty = new SimpleStringProperty();
 
 	final ObservableList<Count> counts = FXCollections.observableArrayList();
 
-	CountGroup(String title) {
+	Subject(String title) {
 		this(title, List.of());
 	}
 
-	private CountGroup(String title, List<Count> counts) {
+	private Subject(String title, List<Count> counts) {
 		titleProperty.set(title);
 		this.counts.addAll(counts);
 		Bindings.bindContent(getChildren(), this.counts);
@@ -56,20 +56,25 @@ class CountGroup extends TitledPane {
 	}
 
 
-	static class Serializer implements JsonSerializer<CountGroup>, JsonDeserializer<CountGroup> {
+	static class Serializer implements JsonSerializer<Subject>, JsonDeserializer<Subject> {
 
 		@Override
-		public JsonElement serialize(CountGroup src, Type typeOfSrc, JsonSerializationContext context) {
+		public JsonElement serialize(Subject src, Type typeOfSrc, JsonSerializationContext context) {
 			JsonObject obj = new JsonObject();
 			obj.addProperty("title", src.getTitle());
+
 			// TODO: 'counts'
-			JsonArray a = new JsonArray();
-			obj.add("counts", a);
+			JsonArray counts = new JsonArray();
+			for (Count count : src.counts) {
+				counts.add(Counter.gson.toJsonTree(count, Count.class));
+			}
+			obj.add("counts", counts);
+
 			return obj;
 		}
 
 		@Override
-		public CountGroup deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+		public Subject deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			JsonObject obj = json.getAsJsonObject();
 
 
@@ -78,7 +83,7 @@ class CountGroup extends TitledPane {
 
 			Count[] arr = new Gson().fromJson(obj.getAsJsonArray("counts"), Count[].class);
 
-			CountGroup countGroup = new CountGroup(obj.get("title").getAsString(), List.of(arr));
+			Subject countGroup = new Subject(obj.get("title").getAsString(), List.of(arr));
 			// TODO: 'counts'
 			return countGroup;
 		}

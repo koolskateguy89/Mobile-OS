@@ -33,7 +33,7 @@
 					</HBox>
 				</content>
 			</ScrollPane>
-         <JFXButton id="new-overhead-section" layoutX="422.0" layoutY="23.0" onAction="#newOverheadSection" text="+" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         <JFXButton id="new-section" layoutX="422.0" layoutY="23.0" onAction="#newSection" text="+" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
 		</AnchorPane>
       <ScrollPane hbarPolicy="NEVER">
          <content>

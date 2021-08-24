@@ -17,6 +17,8 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -194,6 +196,25 @@ public class Utils {
 
 	public static <T> T nonNullElse(T obj, T defaultObj) {
 		return obj != null ? obj : defaultObj;
+	}
+
+
+	public static String ask(String question) {
+		Alert a = new Alert(Alert.AlertType.INFORMATION);
+
+		a.setTitle(question);
+		a.setHeaderText("");
+		a.getButtonTypes().setAll(ButtonType.OK);
+
+		CustomTextField tf = new CustomTextField();
+		makeClearable(tf);
+
+		a.getDialogPane().setContent(tf);
+
+		a.setOnShown(dialogEvent -> tf.requestFocus());
+		a.showAndWait();
+
+		return tf.getText();
 	}
 
 }

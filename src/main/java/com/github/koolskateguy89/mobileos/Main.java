@@ -16,6 +16,8 @@ import java.util.prefs.Preferences;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -117,11 +119,13 @@ public class Main extends Application {
 
 		var ds = Files.newDirectoryStream(appsDir);
 		for (Path appDir : ds) {
+			App app = null;
 			boolean failed = true;
 			String reason = null;
 			Throwable e = null;
 			try {
-				apps.add(Apps.fromPath(appDir));
+				app = Apps.fromPath(appDir);
+				apps.add(app);
 				failed = false;
 			} catch (NullPointerException npe) {
 				// not sure about this tbh
@@ -155,6 +159,8 @@ public class Main extends Application {
 				Path name = appDir.getFileName();
 				// absolute genius: https://stackoverflow.com/a/37166489
 				failedApps.computeIfAbsent(reason, $ -> new ArrayList<>()).add(name);
+			} else {
+				this.apps.put(app.getName(), app);
 			}
 		}
 		ds.close();
@@ -168,8 +174,11 @@ public class Main extends Application {
 	}
 
 	public void addApp(App app) {
+		apps.put(app.getName(), app);
 		hc.addApp(app);
 	}
+
+	private final ObservableMap<String, App> apps = FXCollections.observableHashMap();
 
 	@Getter
 	private static Main instance;
@@ -273,6 +282,16 @@ public class Main extends Application {
 
 		StringExpression titleBinding = Bindings.concat(app.getName(), app.getDetailProperty());
 		stage.titleProperty().bind(titleBinding);
+	}
+
+	public boolean openApp(String name) {
+		App app = apps.get(name);
+		if (app != null) {
+			openApp(app);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }
