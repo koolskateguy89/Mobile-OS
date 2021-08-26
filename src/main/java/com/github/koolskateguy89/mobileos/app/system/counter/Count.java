@@ -3,6 +3,7 @@ package com.github.koolskateguy89.mobileos.app.system.counter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -66,6 +67,9 @@ class Count extends Pane {
 		label.textProperty().bind(slider.valueProperty().asString("%.0f"));   // ints
 		slider.minProperty().bind(min);
 		slider.maxProperty().bind(max);
+		slider.setValue(progress.get());
+
+		progress.bind(Bindings.createIntegerBinding(() -> (int)slider.getValue(), slider.valueProperty()));
 	}
 
 	@FXML

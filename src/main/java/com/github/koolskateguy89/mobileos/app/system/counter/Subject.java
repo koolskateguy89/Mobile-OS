@@ -13,7 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TitledPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.google.gson.Gson;
@@ -50,8 +50,15 @@ class Subject extends TitledPane {
 		loader.setRoot(this);
 		loader.setController(this);
 		loader.load();
+	}
 
-		Bindings.bindContent(((Pane)getContent()).getChildren(), this.counts);
+	@FXML
+	private VBox countWrapper;
+
+	@FXML
+	private void initialize() {
+		Bindings.bindContent(countWrapper.getChildren(), this.counts);
+		System.out.println(countWrapper.getChildren().size());
 	}
 
 	@FXML
@@ -62,6 +69,8 @@ class Subject extends TitledPane {
 			setTitle(newTitle);
 	}
 
+	// FIXME: for some reason, it doesn't show more than 2 counts (the pane doesn't extend)
+	// TODO: set this as not expanded in FXML once fixed
 	@FXML
 	void newCount() {
 		// TODO: custom dialog/alert asking for title, min & max
@@ -71,6 +80,7 @@ class Subject extends TitledPane {
 
 		Count count = new Count(title, min, max);
 		counts.add(count);
+		System.out.println(countWrapper.getChildren().size());
 	}
 
 
@@ -95,7 +105,6 @@ class Subject extends TitledPane {
 			JsonObject obj = new JsonObject();
 			obj.addProperty("title", src.getTitle());
 
-			// TODO: 'counts'
 			JsonArray counts = new JsonArray();
 			for (Count count : src.counts) {
 				counts.add(Counter.gson.toJsonTree(count, Count.class));
