@@ -5,6 +5,7 @@ import java.lang.reflect.Type;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -64,30 +65,38 @@ class Count extends Pane {
 	@FXML
 	private void initialize() {
 		titleLabel.textProperty().bind(title);
-		label.textProperty().bind(slider.valueProperty().asString("%.0f"));   // ints
+		label.textProperty().bind(slider.valueProperty().asString("%.0f")); // int
 		slider.minProperty().bind(min);
 		slider.maxProperty().bind(max);
-		slider.setValue(min.get() + progress.get());
+		slider.setValue(getMin() + getProgress());
 
-		progress.bind(Bindings.createIntegerBinding(() -> (int)slider.getValue() - min.get(), slider.valueProperty()));
+		progress.bind(Bindings.createIntegerBinding(() -> getValue() - getMin(), slider.valueProperty()));
 	}
 
-	// TODO: edit & ask to remove (need to do FXML)
+	// TODO: edit [title, min, max, value(progress+min, i.e. slider value)] & ask to remove (need to do FXML)
 	@FXML
 	void edit() {
 	}
 
 	@FXML
 	void minus() {
-
+		setProgress(getProgress() - 1);
 	}
 
 	@FXML
 	void plus() {
-
+		setProgress(getProgress() + 1);
 	}
 
 	//<editor-fold desc="Getters & Setters">
+	public int getValue() {
+		return (int) slider.getValue();
+	}
+
+	public void setValue(int value) {
+		slider.setValue(value);
+	}
+
 	public StringProperty titleProperty() {
 		return title;
 	}
@@ -124,12 +133,16 @@ class Count extends Pane {
 		this.max.set(max);
 	}
 
-	public IntegerProperty progressProperty() {
+	public ReadOnlyIntegerProperty progressProperty() {
 		return progress;
 	}
 
 	public int getProgress() {
 		return progress.get();
+	}
+
+	public void setProgress(int newProgress) {
+		slider.setValue(getMin() + newProgress);
 	}
 	//</editor-fold>
 

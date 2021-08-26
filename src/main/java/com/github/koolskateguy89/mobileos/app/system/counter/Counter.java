@@ -60,11 +60,9 @@ public class Counter extends App {
 	@Override @SneakyThrows
 	public Node getPane() {
 		if (pane == null) {
-			long start = System.currentTimeMillis();
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("Counter.fxml"));
 			loader.setController(this);
 			pane = loader.load();
-			System.out.printf("ms: %s%n", System.currentTimeMillis() - start);
 		}
 
 		return pane;
