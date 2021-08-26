@@ -3,7 +3,6 @@ package com.github.koolskateguy89.mobileos.app.system.counter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -16,7 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 import com.github.koolskateguy89.mobileos.utils.ResourceBundleImpl;
@@ -36,7 +35,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 
 @JsonAdapter(Section.Serializer.class)
-class Section extends Pane implements Initializable {
+class Section extends AnchorPane implements Initializable {
 
 	private final SimpleStringProperty titleProperty;
 
@@ -68,7 +67,7 @@ class Section extends Pane implements Initializable {
 
 	@FXML
 	public void initialize(URL location, ResourceBundle rb) {
-		subjects.getChildren().addAll((Collection<? extends Node>) rb.getObject("subjects"));
+		subjects.getChildren().addAll((List<Subject>) rb.getObject("subjects"));
 	}
 
 	@FXML

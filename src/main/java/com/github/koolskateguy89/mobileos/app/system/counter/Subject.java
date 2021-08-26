@@ -29,7 +29,6 @@ import com.google.gson.annotations.JsonAdapter;
 import lombok.SneakyThrows;
 
 @JsonAdapter(Subject.Serializer.class)
-// TODO: showing counts right?
 class Subject extends TitledPane {
 
 	final StringProperty titleProperty = new SimpleStringProperty();
@@ -58,7 +57,6 @@ class Subject extends TitledPane {
 	@FXML
 	private void initialize() {
 		Bindings.bindContent(countWrapper.getChildren(), this.counts);
-		System.out.println(countWrapper.getChildren().size());
 	}
 
 	@FXML
@@ -69,8 +67,6 @@ class Subject extends TitledPane {
 			setTitle(newTitle);
 	}
 
-	// FIXME: for some reason, it doesn't show more than 2 counts (the pane doesn't extend)
-	// TODO: set this as not expanded in FXML once fixed
 	@FXML
 	void newCount() {
 		// TODO: custom dialog/alert asking for title, min & max
@@ -80,7 +76,6 @@ class Subject extends TitledPane {
 
 		Count count = new Count(title, min, max);
 		counts.add(count);
-		System.out.println(countWrapper.getChildren().size());
 	}
 
 

@@ -67,9 +67,14 @@ class Count extends Pane {
 		label.textProperty().bind(slider.valueProperty().asString("%.0f"));   // ints
 		slider.minProperty().bind(min);
 		slider.maxProperty().bind(max);
-		slider.setValue(progress.get());
+		slider.setValue(min.get() + progress.get());
 
-		progress.bind(Bindings.createIntegerBinding(() -> (int)slider.getValue(), slider.valueProperty()));
+		progress.bind(Bindings.createIntegerBinding(() -> (int)slider.getValue() - min.get(), slider.valueProperty()));
+	}
+
+	// TODO: edit & ask to remove (need to do FXML)
+	@FXML
+	void edit() {
 	}
 
 	@FXML
@@ -125,10 +130,6 @@ class Count extends Pane {
 
 	public int getProgress() {
 		return progress.get();
-	}
-
-	public void setProgress(int progress) {
-		this.progress.set(progress);
 	}
 	//</editor-fold>
 

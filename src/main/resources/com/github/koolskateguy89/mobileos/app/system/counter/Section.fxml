@@ -2,17 +2,16 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<fx:root stylesheets="@Section.css" type="Pane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefHeight="452.0" prefWidth="448.0" stylesheets="@Section.css" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox fx:id="subjects" layoutY="45.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="283.0" prefWidth="451.0" spacing="20.0">
+      <JFXButton id="new-subject" layoutX="407.0" layoutY="2.0" onAction="#newSubject" text="+" />
+      <VBox fx:id="subjects" layoutY="94.0" maxHeight="1.7976931348623157E308" spacing="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="40.0">
          <padding>
             <Insets left="10.0" right="10.0" top="10.0" />
          </padding>
       </VBox>
-      <JFXButton id="new-subject" layoutX="425.0" layoutY="2.0" onAction="#newSubject" text="+" />
    </children>
 </fx:root>

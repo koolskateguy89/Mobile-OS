@@ -18,6 +18,6 @@
 			</ScrollPane>
          <JFXButton id="new-section" layoutX="422.0" layoutY="23.0" onAction="#newSection" text="+" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
 		</AnchorPane>
-      <ScrollPane fx:id="sectionWrapper" hbarPolicy="NEVER" />
+      <ScrollPane fx:id="sectionWrapper" hbarPolicy="NEVER" pannable="true" />
 	</items>
 </SplitPane>
