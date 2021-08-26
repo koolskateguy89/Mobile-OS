@@ -137,7 +137,7 @@ public class Utils {
 		inputField.textProperty().addListener(new InvalidationListener() {
 			@Override public void invalidated(Observable arg0) {
 				String text = inputField.getText();
-				boolean isTextEmpty = text == null || text.isEmpty();
+				boolean isTextEmpty = Strings.isNullOrEmpty(text);
 				boolean isButtonVisible = fader.getNode().getOpacity() > 0;
 
 				if (isTextEmpty && isButtonVisible) {
@@ -215,6 +215,10 @@ public class Utils {
 		a.showAndWait();
 
 		return tf.getText();
+	}
+
+	public static boolean isNullOrBlank(String s) {
+		return s == null || s.isBlank();
 	}
 
 }
