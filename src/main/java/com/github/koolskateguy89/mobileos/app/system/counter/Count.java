@@ -2,7 +2,6 @@ package com.github.koolskateguy89.mobileos.app.system.counter;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.List;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -10,12 +9,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -29,7 +25,7 @@ import com.jfoenix.controls.JFXSlider;
 import lombok.SneakyThrows;
 
 @JsonAdapter(Count.Serializer.class)
-class Count extends Node {
+class Count extends Pane {
 
 	public Count(String title, int min, int max) {
 		this(title, min, max, 0);
@@ -67,7 +63,7 @@ class Count extends Node {
 	@FXML
 	private void initialize() {
 		titleLabel.textProperty().bind(title);
-		label.textProperty().bind(slider.valueProperty().asString("%d"));   // ints
+		label.textProperty().bind(slider.valueProperty().asString("%.0f"));   // ints
 		slider.minProperty().bind(min);
 		slider.maxProperty().bind(max);
 	}

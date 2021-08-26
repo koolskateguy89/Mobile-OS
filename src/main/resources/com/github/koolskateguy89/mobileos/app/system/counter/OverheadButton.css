@@ -1,0 +1,17 @@
+.root {
+	-fx-text-fill: grey;
+}
+.root:active {
+	-fx-text-fill: white;
+}
+
+.root #items {
+	visibility: hidden;
+}
+.root:active #items {
+	visibility: visible;
+}
+
+#edit-img {
+	-fx-image: url('https://image.flaticon.com/icons/png/512/1250/1250615.png');
+}

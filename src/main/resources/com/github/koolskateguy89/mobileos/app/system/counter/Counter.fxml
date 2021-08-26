@@ -17,14 +17,8 @@
 			<prefHeight><Double fx:id="topHeight" fx:value="50.0" /></prefHeight>
 			<ScrollPane hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" pannable="true" prefHeight="36.0" prefWidth="416.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="28.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="33.0" AnchorPane.topAnchor="0.0">
 				<content>
-					<HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+					<HBox fx:id="overhead" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
 						<children>
-							<Button mnemonicParsing="false" text="Button" />
-							<Button mnemonicParsing="false" text="Button" />
-							<Button mnemonicParsing="false" text="Button" />
-							<Button mnemonicParsing="false" text="Button" />
-							<Button mnemonicParsing="false" text="Button" />
-							<Button mnemonicParsing="false" text="Button" />
 							<Button mnemonicParsing="false" text="Button" />
 							<Button mnemonicParsing="false" text="Button" />
 							<Button mnemonicParsing="false" text="Button" />
@@ -35,7 +29,7 @@
 			</ScrollPane>
          <JFXButton id="new-section" layoutX="422.0" layoutY="23.0" onAction="#newSection" text="+" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
 		</AnchorPane>
-      <ScrollPane hbarPolicy="NEVER">
+      <ScrollPane fx:id="sectionWrapper" hbarPolicy="NEVER">
          <content>
             <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="451.0" spacing="20.0">
                <children>

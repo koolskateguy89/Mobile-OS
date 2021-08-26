@@ -1,6 +1,8 @@
 package com.github.koolskateguy89.mobileos.app.system.counter;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.List;
 
 import javafx.beans.binding.Bindings;
@@ -8,21 +10,26 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.Pane;
 
-import com.google.common.reflect.TypeToken;
+import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.JsonAdapter;
 
+import lombok.SneakyThrows;
+
 @JsonAdapter(Subject.Serializer.class)
+// TODO: showing counts right?
 class Subject extends TitledPane {
 
 	final StringProperty titleProperty = new SimpleStringProperty();
@@ -30,19 +37,44 @@ class Subject extends TitledPane {
 	final ObservableList<Count> counts = FXCollections.observableArrayList();
 
 	Subject(String title) {
-		this(title, List.of());
+		this(title, Collections.emptyList());
 	}
 
+	@SneakyThrows(IOException.class)
 	private Subject(String title, List<Count> counts) {
 		titleProperty.set(title);
+		this.textProperty().bind(titleProperty);
 		this.counts.addAll(counts);
-		Bindings.bindContent(getChildren(), this.counts);
+
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("Subject.fxml"));
+		loader.setRoot(this);
+		loader.setController(this);
+		loader.load();
+
+		Bindings.bindContent(((Pane)getContent()).getChildren(), this.counts);
+	}
+
+	@FXML
+	void edit() {
+		// TODO: ask if want to remove
+		String newTitle = Utils.ask("New title:");
+		if (!Utils.isNullOrBlank(newTitle))
+			setTitle(newTitle);
+	}
+
+	@FXML
+	void newCount() {
+		// TODO: custom dialog/alert asking for title, min & max
+		String title = Utils.ask("Count title");
+		int min = Integer.parseInt(Utils.ask("Count min"));
+		int max = Integer.parseInt(Utils.ask("Count max"));
+
+		Count count = new Count(title, min, max);
+		counts.add(count);
 	}
 
 
-
-
-
+	//<editor-fold desc="Getters & Setters">
 	StringProperty titleProperty() {
 		return titleProperty;
 	}
@@ -54,7 +86,7 @@ class Subject extends TitledPane {
 	void setTitle(String title) {
 		titleProperty().set(title);
 	}
-
+	//</editor-fold>
 
 	static class Serializer implements JsonSerializer<Subject>, JsonDeserializer<Subject> {
 
@@ -74,18 +106,14 @@ class Subject extends TitledPane {
 		}
 
 		@Override
-		public Subject deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+		public Subject deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
 			JsonObject obj = json.getAsJsonObject();
 
-
-			Type listType = new TypeToken<List<Count>>() {}.getType();
-			//List<Count> list = new Gson().fromJson(obj.getAsJsonArray("counts"), listType);
-
+			String title = obj.get("title").getAsString();
 			Count[] arr = new Gson().fromJson(obj.getAsJsonArray("counts"), Count[].class);
+			List<Count> list = arr == null ? Collections.emptyList() : List.of(arr);
 
-			Subject countGroup = new Subject(obj.get("title").getAsString(), List.of(arr));
-			// TODO: 'counts'
-			return countGroup;
+			return new Subject(title, list);
 		}
 	}
 
