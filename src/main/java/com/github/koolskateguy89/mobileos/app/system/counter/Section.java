@@ -125,12 +125,7 @@ class Section extends AnchorPane implements Initializable {
 	}
 
 
-	static final PseudoClass active = new PseudoClass() {
-		@Override
-		public String getPseudoClassName() {
-			return "active";
-		}
-	};
+	static final PseudoClass active = PseudoClass.getPseudoClass("active");
 
 	class OverheadButton extends JFXButton {
 
