@@ -3,11 +3,12 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import javafx.scene.image.ImageView?>
 
-<fx:root contentDisplay="RIGHT" stylesheets="@OverheadButton.css" type="JFXButton" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root contentDisplay="RIGHT" styleClass="root" stylesheets="@OverheadButton.css" type="JFXButton" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <graphic>
       <JFXButton id="edit" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#edit" prefHeight="14.0" prefWidth="31.0">
          <graphic>
             <ImageView id="edit-img" fitHeight="19.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
-         </graphic></JFXButton>
+         </graphic>
+      </JFXButton>
    </graphic>
 </fx:root>

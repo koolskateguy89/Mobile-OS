@@ -125,8 +125,9 @@ class Section extends AnchorPane implements Initializable {
 	}
 
 
-	static final PseudoClass active = PseudoClass.getPseudoClass("active");
+	private static final PseudoClass active = PseudoClass.getPseudoClass("active");
 
+	// FIXME: CSS just doesn't work anymore ffs
 	class OverheadButton extends JFXButton {
 
 		@SneakyThrows(IOException.class)

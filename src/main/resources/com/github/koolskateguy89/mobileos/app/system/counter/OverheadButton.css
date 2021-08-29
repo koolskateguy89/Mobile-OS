@@ -1,14 +1,18 @@
+/* FIXME: just doesn't work anymore ffs */
 .root {
 	-fx-text-fill: grey;
 }
 .root:active {
-	-fx-text-fill: white;
+	-fx-text-fill: red;
+	/* Black border on bottom */
+	-fx-border-color: black;
+	-fx-border-width: 0 0 3 0;
 }
 
-.root #items {
+.root #edit {
 	visibility: hidden;
 }
-.root:active #items {
+.root:active #edit {
 	visibility: visible;
 }
 

@@ -49,7 +49,7 @@ public class Counter extends App {
 			put("version", Main.VERSION);
 			put("backgroundColor", "transparent");
 		}});
-		jsonPath = dir.resolve("counter.json");
+		jsonPath = dir.resolve(getName() + ".json");
 	}
 
 	@Getter @LombokOverride // Icon made by Pixel perfect from www.flaticon.com
@@ -139,9 +139,7 @@ public class Counter extends App {
 	}
 
 	private void deActivateAll() {
-		overhead.getChildren().forEach(node -> {
-			node.pseudoClassStateChanged(Section.active, false);
-		});
+		overhead.getChildren().forEach(n -> ((Section.OverheadButton)n).deactivate());
 	}
 
 	private void showSection(Section section) {
