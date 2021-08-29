@@ -12,7 +12,6 @@ import java.util.TreeMap;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -249,15 +248,6 @@ public class TextEditorController {
 		// edit
 		undo.disableProperty().bind(textArea.undoableProperty().not());
 		redo.disableProperty().bind(textArea.redoableProperty().not());
-		//
-		BooleanBinding selectedIsEmpty = textArea.selectedTextProperty().isEmpty();
-		cut.disableProperty().bind(selectedIsEmpty);
-		copy.disableProperty().bind(selectedIsEmpty);
-		//
-		BooleanBinding isEmpty = textArea.textProperty().isEmpty();
-		find.disableProperty().bind(isEmpty);
-		replace.disableProperty().bind(isEmpty);
-		goTo.disableProperty().bind(isEmpty);
 	}
 
 	// file
