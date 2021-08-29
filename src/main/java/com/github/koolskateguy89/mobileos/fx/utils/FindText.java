@@ -153,7 +153,6 @@ public class FindText extends Stage {
 		findParent.disableProperty().bind(isEmpty);
 
 		replaceTf.visibleProperty().bind(replace);
-		replaceLbl.visibleProperty().bind(replaceTf.visibleProperty());
 
 		replaceBox.visibleProperty().bind(replace);
 		replaceBox.disableProperty().bind(isEmpty);

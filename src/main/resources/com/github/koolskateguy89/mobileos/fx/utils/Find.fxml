@@ -32,7 +32,7 @@
 						<Label contentDisplay="RIGHT" maxWidth="1.7976931348623157E308" text="Find" />
 						<CustomTextField fx:id="tf" prefColumnCount="10" style="-fx-border-radius: 0 0 0 0;" GridPane.columnIndex="1" />
 						<CustomTextField fx:id="replaceTf" prefColumnCount="10" prefHeight="25.0" prefWidth="124.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-						<Label fx:id="replaceLbl" contentDisplay="RIGHT" text="Replace With" GridPane.rowIndex="1" />
+						<Label fx:id="replaceLbl" contentDisplay="RIGHT" text="Replace With" GridPane.rowIndex="1" visible="${replaceTf.visible}" />
 					</children>
 				</GridPane>
 				<VBox layoutX="275.0" layoutY="27.0" styleClass="vbox">
