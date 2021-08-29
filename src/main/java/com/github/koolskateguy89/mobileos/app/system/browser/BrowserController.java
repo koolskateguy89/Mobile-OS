@@ -36,7 +36,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
-import javafx.scene.web.WebHistory.Entry;
 import javafx.stage.Window;
 
 import org.reflections.ReflectionUtils;
@@ -47,7 +46,6 @@ import com.sun.javafx.scene.control.ContextMenuContent;
 import com.sun.javafx.scene.control.ContextMenuContent.MenuItemContainer;
 import com.sun.javafx.webkit.theme.ContextMenuImpl;
 import com.sun.webkit.ContextMenuItem;
-import com.sun.webkit.WebPage;
 import com.sun.webkit.network.CookieManager;
 
 import lombok.SneakyThrows;
@@ -325,40 +323,6 @@ public class BrowserController {
 		// Ctrl+R
 		reload.setAccelerator(new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN));
 		items.add(reload);
-
-		MenuItem duplicate = new MenuItem("Duplicate");
-		duplicate.setOnAction(event -> {
-			Tab dupe = getNewTab();
-			dupe.setContextMenu(makeContextMenu(dupe));
-			WebBrowser dupeBrowser = (WebBrowser) dupe.getContent();
-			WebEngine dupeEngine = dupeBrowser.getWebEngine();
-
-			WebHistory dupeHistory = dupeBrowser.getWebHistory();
-			// FIXME: entries is unmodifiable
-			// I could load every entry but that's not very efficient is it, I've tried and it doesn't work as I don't
-			// wait for them to load ffs
-
-			/* I've tried:
-			 *  - using reflection to get the modifiable list in dupeHistory then adding to it. 'Operational' but doesn't
-			 *      work as it seems the 'actual' impl. is through the BackForwardList, which I have no idea how to add
-			 *      to.
-			 *  - using reflection to get the BackForwardList, but I couldn't find a way to add to it even using private
-			 *      methods.
-			 */
-
-			// I'm pretty sure it uses native code to do web stuff sooooo
-
-			// this doesn't even work ffs
-			WebPage page = ReflectionHelper.getFieldContent(dupeEngine, "page");
-			for (Entry entry : history.getEntries()) {
-				page.open(page.getMainFrame(), entry.getUrl());
-			}
-
-			//dupeBrowser.getWebEngine().load(engine.getLocation());
-
-			tabs.add(dupe);
-		});
-		items.add(duplicate);
 
 		items.add(new SeparatorMenuItem());
 
