@@ -4,10 +4,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 
-
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="450.0" stylesheets="@HomePane.css" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="450.0" stylesheets="@HomePane.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.koolskateguy89.mobileos.fx.home.HomePaneController">
 	<children>
 		<StackPane fx:id="gridWrapper" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="400.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
 		<HBox fx:id="bottom" alignment="CENTER" layoutX="40.0" layoutY="400.0" prefHeight="50.0" prefWidth="361.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" />
 	</children>
-</fx:root>
+</AnchorPane>

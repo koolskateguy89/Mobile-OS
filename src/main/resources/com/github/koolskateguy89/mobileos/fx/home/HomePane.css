@@ -8,3 +8,7 @@
 	-fx-max-width: 17px;
 	-fx-max-height: 17px;
 }
+
+.button:highlighted {
+	-fx-background-color: white;
+}

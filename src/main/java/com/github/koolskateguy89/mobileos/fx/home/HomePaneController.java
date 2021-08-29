@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Platform;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -12,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCharacterCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -22,19 +22,10 @@ import com.github.koolskateguy89.mobileos.app.App;
 
 import lombok.SneakyThrows;
 
-// This is basically meant to be a more tailored TabPane
-class HomePane extends AnchorPane {
+// It's basically meant to be a more tailored TabPane
+public class HomePaneController {
 
-	HomePane() {
-		FXMLLoader loader = new FXMLLoader(HomePane.class.getResource("HomePane.fxml"));
-		loader.setRoot(this);
-		loader.setController(this);
-		try {
-			loader.load();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	private static final PseudoClass highlighted = PseudoClass.getPseudoClass("highlighted");
 
 	@FXML
 	private StackPane gridWrapper;
@@ -49,7 +40,7 @@ class HomePane extends AnchorPane {
 
 	@SneakyThrows(IOException.class)
 	private static GridPane newGrid() {
-		return FXMLLoader.load(HomePane.class.getResource("HomeGrid.fxml"));
+		return FXMLLoader.load(HomePaneController.class.getResource("HomeGrid.fxml"));
 	}
 
 	private Button newBottomButton(GridPane grid, int pos) {
@@ -165,10 +156,10 @@ class HomePane extends AnchorPane {
 		gridWrapper.getChildren().setAll(grid);
 
 		// unhighlight other buttons
-		bottom.getChildren().forEach(n -> n.setStyle(""));
+		bottom.getChildren().forEach(n -> n.pseudoClassStateChanged(highlighted, false));
 
 		// highlight this button
-		button.setStyle("-fx-background-color: white");
+		button.pseudoClassStateChanged(highlighted, true);
 	}
 
 }

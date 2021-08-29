@@ -3,7 +3,7 @@ package com.github.koolskateguy89.mobileos.fx.home;
 import java.util.List;
 
 import javafx.fxml.FXML;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 import com.github.koolskateguy89.mobileos.Settings;
@@ -15,17 +15,15 @@ public class HomeController {
 	// TODO: resize to accommodate no longer having faves
 
 	@FXML
-	private StackPane homePaneWrapper;
-	private HomePane homePane;
+	private AnchorPane homePane;
+	@FXML
+	private HomePaneController homePaneController;
 
 	@FXML
 	private VBox root;
 
 	@FXML
 	private void initialize() {
-		homePane = new HomePane();
-		homePaneWrapper.getChildren().add(homePane);
-
 		root.backgroundProperty().bind(Settings.BACKGROUND_PROPERTY);
 
 		// TODO: choosing background image (in/from Settings)
@@ -34,16 +32,16 @@ public class HomeController {
 
 	// The first tab is for system applications
 	public void initSystemApps(List<App> systemApps) {
-		homePane.initSystemApps(systemApps);
+		homePaneController.initSystemApps(systemApps);
 	}
 
 	// Installed apps start from second tab
 	public void initApps(List<App> apps) {
-		homePane.initApps(apps);
+		homePaneController.initApps(apps);
 	}
 
 	public void addApp(App app) {
-		homePane.addApp(app);
+		homePaneController.addApp(app);
 	}
 
 }
