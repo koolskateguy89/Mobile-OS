@@ -167,9 +167,6 @@ public class TextEditorController {
 
 	@FXML
 	private void initialize() throws BackingStoreException {
-		// lines
-		lineThingy.fontProperty().bind(textArea.fontProperty());
-
 		// lineThingy.scrollTopProperty() can't be bound because it gets set after initialize
 		textArea.scrollTopProperty().addListener((obs, oldVal, newVal) -> {
 			lineThingy.setScrollTop(newVal.doubleValue());
@@ -261,9 +258,6 @@ public class TextEditorController {
 		find.disableProperty().bind(isEmpty);
 		replace.disableProperty().bind(isEmpty);
 		goTo.disableProperty().bind(isEmpty);
-
-		// format
-		textArea.wrapTextProperty().bind(wrapText.selectedProperty());
 	}
 
 	// file

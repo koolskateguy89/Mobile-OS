@@ -45,7 +45,7 @@
 				<MenuItem onAction="#quit" text="_Quit" />
 			</Menu>
 			<Menu text="_Edit">
-				<MenuItem fx:id="undo" mnemonicParsing="false" onAction="#undo" text="_Undo">
+				<MenuItem fx:id="undo" onAction="#undo" text="_Undo" >
 					<accelerator>
 						<KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 					</accelerator>
@@ -106,8 +106,8 @@
 		</MenuBar>
 		<AnchorPane VBox.vgrow="ALWAYS">
 			<HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-				<TextArea id="line-numbers" fx:id="lineThingy" editable="false" maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefWidth="25.0" text="1" />
-				<TextArea fx:id="textArea" maxWidth="1.7976931348623157E308" promptText="Open a file!" HBox.hgrow="ALWAYS" />
+				<TextArea id="line-numbers" fx:id="lineThingy" editable="false" maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefWidth="25.0" text="1" font="${textArea.font}" />
+				<TextArea fx:id="textArea" maxWidth="1.7976931348623157E308" promptText="Open a file!" HBox.hgrow="ALWAYS" wrapText="${wrapText.selected}"/>
 			</HBox>
 		</AnchorPane>
 	</children>
