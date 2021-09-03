@@ -23,6 +23,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -72,6 +73,7 @@ public class Main extends Application {
 
 			App app = initSysApp(clazz, sysAppDir, appPrefs);
 			sysApps.add(app);
+			this.systemApps.put(app.getName(), app);
 		}
 
 		// sort apps in case-insensitive name order
@@ -178,6 +180,8 @@ public class Main extends Application {
 		hc.addApp(app);
 	}
 
+	private final ObservableMap<String, App> systemApps = FXCollections.observableHashMap();
+
 	private final ObservableMap<String, App> apps = FXCollections.observableHashMap();
 
 	@Getter
@@ -191,7 +195,7 @@ public class Main extends Application {
 	private Scene scene;
 
 	private VBox main;
-	private VBox home;
+	private AnchorPane home;
 
 	private MainController mc;
 	private HomeController hc;
@@ -286,6 +290,16 @@ public class Main extends Application {
 
 	public boolean openApp(String name) {
 		App app = apps.get(name);
+		if (app != null) {
+			openApp(app);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean openSystemApp(String name) {
+		App app = systemApps.get(name);
 		if (app != null) {
 			openApp(app);
 			return true;
