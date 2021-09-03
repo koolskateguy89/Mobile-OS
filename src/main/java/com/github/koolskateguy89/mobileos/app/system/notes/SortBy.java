@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.Getter;
 
 // TODO: SortBy
-public enum SortBy {
+public enum SortBy implements Comparator<Note> {
 
 	TITLE(Comparator.comparing(Note::getTitle)),
 
@@ -30,6 +30,11 @@ public enum SortBy {
 
 	public void sort(List<Note> notes) {
 		notes.sort(comparator);
+	}
+
+	@Override
+	public int compare(Note n1, Note n2) {
+		return comparator.compare(n1, n2);
 	}
 
 	public static SortBy getDefault() {

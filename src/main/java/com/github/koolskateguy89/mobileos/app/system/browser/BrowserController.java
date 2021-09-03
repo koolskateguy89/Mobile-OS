@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -196,8 +197,11 @@ public class BrowserController {
 
 	@SneakyThrows
 	void clearCookies() {
-		// TODO: clear cookiemanager
 		Files.deleteIfExists(cookiesPath);
+
+		Object cookieStore = ReflectionHelper.getFieldContent(cm, "store");
+		Map<String, Map<?,?>> buckets = ReflectionHelper.getFieldContent(cookieStore, "buckets");
+		buckets.clear();
 	}
 
 	private void newTab() {
