@@ -3,6 +3,7 @@ package com.github.koolskateguy89.mobileos;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.prefs.Preferences;
 
 import javafx.application.Application;
@@ -56,7 +58,9 @@ public class Main extends Application {
 						.setUrls(ClasspathHelper.forJavaClassPath())
 						.setScanners(new SubTypesScanner(true))
 		);
-		return reflections.getSubTypesOf(App.class);
+		Set<Class<? extends App>> clazzes = reflections.getSubTypesOf(App.class);
+		clazzes.removeIf(clazz -> !Modifier.isPublic(clazz.getModifiers()));
+		return clazzes;
 	}
 
 	private void loadSystemApps() throws Exception {
