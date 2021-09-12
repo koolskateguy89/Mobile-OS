@@ -16,7 +16,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>15</maven.compiler.source>
 		<maven.compiler.target>15</maven.compiler.target>
-		<javafx.version>16</javafx.version>
+		<javafx.version>15.0.1</javafx.version>
 		<mainClass>com.github.koolskateguy89.mobileos.Launcher</mainClass>
 	</properties>
 
