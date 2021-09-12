@@ -1,8 +1,10 @@
 package com.github.koolskateguy89.mobileos.app.system.browser;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.net.CookieHandler;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -125,6 +127,7 @@ public class BrowserController {
 	private void configureTabHeaders() {
 		Node tabHeaderArea = tabPane.lookup(".tab-header-area");
 
+		// FIXME: this is null, causing NPE
 		StackPane headersRegion = ReflectionHelper.getFieldContent(TAB_HEADER_AREA, tabHeaderArea, "headersRegion");
 
 		// configure the initial TabHeaderSkin as the tab has already been added once this is called
@@ -303,6 +306,17 @@ public class BrowserController {
 		});
 
 		return tab;
+	}
+
+	// TODO: try open link in browser
+	private static boolean canOpenLinkInBrowser() {
+		return Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE);
+	}
+
+	@SneakyThrows(IOException.class)
+	private static void openLinkInBrowser(String url) {
+		if (canOpenLinkInBrowser())
+			Desktop.getDesktop().browse(URI.create(url));
 	}
 
 	private ContextMenu makeContextMenu(Tab tab) {

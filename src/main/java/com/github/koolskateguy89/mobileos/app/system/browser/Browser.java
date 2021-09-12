@@ -16,7 +16,7 @@ import com.github.koolskateguy89.mobileos.utils.LombokOverride;
 
 import lombok.Getter;
 
-public class Browser extends App {
+/*public*/ class Browser extends App {
 
 	private static final Properties props = new Properties() {{
 		put("name", "Browser");
