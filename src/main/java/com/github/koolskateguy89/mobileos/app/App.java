@@ -120,7 +120,11 @@ public abstract class App {
 		this.directory = directory;
 
 		name = props.getProperty("name");
-		version = props.getProperty("version");
+
+		String v = props.getProperty("version", "Main.version");
+		if (v.equals("Main.version"))
+			v = Main.VERSION;
+		version = v;
 
 		backgroundColor = (String) props.getOrDefault("backgroundColor", "white");
 	}
