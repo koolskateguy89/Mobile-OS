@@ -1,0 +1,8 @@
+.root {
+}
+
+#run-btn {
+	-jfx-button-type: RAISED;
+	-fx-background-color: blue;
+	-fx-text-fill: white;
+}
