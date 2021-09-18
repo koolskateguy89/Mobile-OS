@@ -12,9 +12,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.VBox;
 
+import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -71,8 +73,28 @@ class Subject extends TitledPane {
 	void newCount() {
 		// TODO: custom dialog/alert asking for title, min & max
 		String title = Utils.ask("Count title");
-		int min = Integer.parseInt(Utils.ask("Count min"));
-		int max = Integer.parseInt(Utils.ask("Count max"));
+
+		Runnable invalid = () -> {
+			Alert a = new Alert(Alert.AlertType.ERROR, "Not a valid number");
+			a.initOwner(Main.getStage());
+			a.showAndWait();
+		};
+
+		int min;
+		try {
+			min = Integer.parseInt(Utils.ask("Count min"));
+		} catch (NumberFormatException nfe) {
+			invalid.run();
+			return;
+		}
+
+		int max;
+		try {
+			max = Integer.parseInt(Utils.ask("Count max"));
+		} catch (NumberFormatException nfe) {
+			invalid.run();
+			return;
+		}
 
 		Count count = new Count(title, min, max);
 		counts.add(count);

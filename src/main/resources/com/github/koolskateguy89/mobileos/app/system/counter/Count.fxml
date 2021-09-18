@@ -13,10 +13,13 @@
          <children>
             <Label fx:id="titleLabel" text="Title" />
             <HBox alignment="CENTER">
-               <children>
-                  <JFXButton id="minus" onAction="#minus" text="-" />
+               <fx:define>
                   <JFXSlider id="slider" fx:id="slider" />
-                  <JFXButton id="plus" onAction="#plus" text="+" />
+               </fx:define>
+               <children>
+                  <JFXButton id="minus" onAction="#minus" text="-" disable="${slider.min>=slider.value}" />
+                  <fx:reference source="slider" />
+                  <JFXButton id="plus" onAction="#plus" text="+" disable="${slider.value>=slider.max}" />
                </children>
             </HBox>
             <Label fx:id="label" text="Label" />

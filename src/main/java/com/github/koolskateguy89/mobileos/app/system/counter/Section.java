@@ -2,10 +2,8 @@ package com.github.koolskateguy89.mobileos.app.system.counter;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.net.URL;
 import java.util.Collections;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -13,12 +11,10 @@ import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
-import com.github.koolskateguy89.mobileos.utils.ResourceBundleImpl;
 import com.github.koolskateguy89.mobileos.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -35,7 +31,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 
 @JsonAdapter(Section.Serializer.class)
-class Section extends AnchorPane implements Initializable {
+class Section extends AnchorPane {
 
 	private final SimpleStringProperty titleProperty;
 
@@ -52,13 +48,11 @@ class Section extends AnchorPane implements Initializable {
 		overheadButton = new OverheadButton();
 		overheadButton.textProperty().bind(titleProperty);
 
-		ResourceBundleImpl rb = new ResourceBundleImpl();
-		rb.put("subjects", subjects);
+		this.getProperties().put("subjects", subjects);
 
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Section.fxml"));
 		loader.setRoot(this);
 		loader.setController(this);
-		loader.setResources(rb);
 		loader.load();
 	}
 
@@ -66,8 +60,8 @@ class Section extends AnchorPane implements Initializable {
 	private VBox subjects;
 
 	@FXML
-	public void initialize(URL location, ResourceBundle rb) {
-		subjects.getChildren().addAll((List<Subject>) rb.getObject("subjects"));
+	private void initialize() {
+		subjects.getChildren().addAll((List<Subject>) getProperties().remove("subjects"));
 	}
 
 	@FXML

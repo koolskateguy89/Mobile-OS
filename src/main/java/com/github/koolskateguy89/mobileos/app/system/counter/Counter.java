@@ -52,7 +52,8 @@ public class Counter extends App {
 		jsonPath = dir.resolve(getName() + ".json");
 	}
 
-	@Getter @LombokOverride // Icon made by Pixel perfect from www.flaticon.com
+	@Getter @LombokOverride
+	// Icon made by Pixel perfect from www.flaticon.com
 	private final Image icon = new Image("https://image.flaticon.com/icons/png/512/3424/3424716.png");
 
 	private Node pane;
