@@ -14,6 +14,7 @@ import com.github.koolskateguy89.mobileos.utils.LombokOverride;
 
 import lombok.Getter;
 
+// TODO: Rename to smthn like AppUtils idk
 public final class Installer extends App {
 
 	private static final Properties props = new Properties() {{

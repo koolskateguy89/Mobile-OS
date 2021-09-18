@@ -34,9 +34,6 @@ import com.google.common.io.ByteStreams;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXProgressBar;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-
 /**
  * If re-installing(/updating) apps, this basically merges the new & old folder
  */
@@ -190,9 +187,11 @@ class InstallerController {
 		});
 	}
 
-	@Getter(value = AccessLevel.PRIVATE, lazy = true)
+	// TODO: uninstalling apps
+
+
+
 	private final Stage progressStage = new Stage() {{
-		setTitle("Copying...");
 		initOwner(Main.getStage());
 		initStyle(StageStyle.UTILITY);
 
@@ -201,5 +200,14 @@ class InstallerController {
 
 		setScene(new Scene(root, 100, 50));
 	}};
+
+	private Stage getProgressStage() {
+		return getProgressStage("Copying...");
+	}
+
+	private Stage getProgressStage(String title) {
+		progressStage.setTitle(title);
+		return progressStage;
+	}
 
 }
