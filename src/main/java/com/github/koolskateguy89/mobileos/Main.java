@@ -52,6 +52,7 @@ public final class Main extends Application {
 		return instance.version;
 	}
 
+	// using static init doesn't work as it doesn't find the properties file
 	private final String version;
 	{
 		Properties properties = new Properties();
