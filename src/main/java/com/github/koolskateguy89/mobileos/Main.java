@@ -1,6 +1,7 @@
 package com.github.koolskateguy89.mobileos;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
@@ -11,8 +12,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.prefs.Preferences;
 
 import javafx.application.Application;
@@ -43,11 +44,24 @@ import com.google.common.base.Throwables;
 
 import lombok.Getter;
 
-public class Main extends Application {
+public final class Main extends Application {
 
 	private static final String DEFAULT_TITLE = "Mobile OS";
 
-	public static final String VERSION = "1.0";
+	public static String getVersion() {
+		return instance.version;
+	}
+
+	private final String version;
+	{
+		Properties properties = new Properties();
+		try (InputStream is = Main.class.getResourceAsStream("main.properties")) {
+			properties.load(is);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		version = properties.getProperty("version", "1.0");
+	}
 
 	// Get all classes from package: https://stackoverflow.com/a/520339
 	// Get all classes from current runtime: https://stackoverflow.com/a/7865124

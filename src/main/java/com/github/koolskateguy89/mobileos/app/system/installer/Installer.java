@@ -19,7 +19,7 @@ public final class Installer extends App {
 
 	private static final Properties props = new Properties() {{
 		put("name", "AppInstaller");
-		put("version", Main.VERSION);
+		put("version", Main.getVersion());
 		put("backgroundColor", "red");
 	}};
 

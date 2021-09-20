@@ -123,7 +123,7 @@ public abstract class App {
 
 		String v = props.getProperty("version", "Main.version");
 		if (v.equals("Main.version"))
-			v = Main.VERSION;
+			v = Main.getVersion();
 		version = v;
 
 		backgroundColor = (String) props.getOrDefault("backgroundColor", "white");

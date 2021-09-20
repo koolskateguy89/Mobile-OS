@@ -46,7 +46,7 @@ public class Counter extends App {
 	public Counter(Path dir) {
 		super(dir, new Properties() {{
 			put("name", "Counter");
-			put("version", Main.VERSION);
+			put("version", Main.getVersion());
 			put("backgroundColor", "transparent");
 		}});
 		jsonPath = dir.resolve(getName() + ".json");

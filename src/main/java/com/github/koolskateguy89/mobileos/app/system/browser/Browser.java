@@ -20,7 +20,7 @@ import lombok.Getter;
 
 	private static final Properties props = new Properties() {{
 		put("name", "Browser");
-		put("version", Main.VERSION);
+		put("version", Main.getVersion());
 		put("backgroundColor", "white");
 	}};
 

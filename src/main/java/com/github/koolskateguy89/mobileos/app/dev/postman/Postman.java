@@ -26,7 +26,7 @@ public class Postman extends App {
 	public Postman() {
 		super(null, new Properties() {{
 			put("name", "Postman");
-			put("version", Main.VERSION);
+			put("version", Main.getVersion());
 			put("backgroundColor", "transparent");
 		}});
 	}

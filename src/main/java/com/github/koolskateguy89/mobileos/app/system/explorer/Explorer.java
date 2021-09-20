@@ -20,7 +20,7 @@ public final class Explorer extends App {
 
 	private static final Properties props = new Properties() {{
 		put("name", "Explorer");
-		put("version", Main.VERSION);
+		put("version", Main.getVersion());
 		put("backgroundColor", "lightblue");
 	}};
 

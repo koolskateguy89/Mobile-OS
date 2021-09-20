@@ -23,7 +23,7 @@ public class Notes extends App {
 
 	private static final Properties props = new Properties() {{
 		put("name", "Notes");
-		put("version", Main.VERSION);
+		put("version", Main.getVersion());
 		put("backgroundColor", "white");
 	}};
 

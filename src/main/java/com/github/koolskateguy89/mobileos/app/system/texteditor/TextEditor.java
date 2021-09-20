@@ -25,7 +25,7 @@ public final class TextEditor extends App {
 
 	private static final Properties props = new Properties() {{
 		put("name", "Text Editor");
-		put("version", Main.VERSION);
+		put("version", Main.getVersion());
 		put("backgroundColor", "white");
 	}};
 

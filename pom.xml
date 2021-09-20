@@ -111,6 +111,13 @@
 	<build>
 		<finalName> ${project.name} </finalName>
 
+		<resources>
+			<resource>
+				<directory>src/main/resources-filtered</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
 		<plugins>
 			<!-- Require minimum Maven v3.1.0 to build -->
 			<plugin>

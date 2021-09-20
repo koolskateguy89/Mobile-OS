@@ -19,7 +19,7 @@ public final class SettingsApp extends App {
 
 	private static final Properties props = new Properties() {{
 		put("name", "Settings");
-		put("version", Main.VERSION);
+		put("version", Main.getVersion());
 		put("backgroundColor", "#50C878");  // emerald green
 	}};
 
