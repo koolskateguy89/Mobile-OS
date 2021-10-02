@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -127,6 +128,16 @@ public class Counter extends App {
 			firstSection.getOverheadButton().activate();
 			showSection(firstSection);
 		}
+
+		StringProperty detailProperty = super.detailProperty;
+		sectionWrapper.contentProperty().addListener((obs, oldSection, newSection) -> {
+			if (newSection != null) {
+				Section s = (Section)newSection;
+				detailProperty.set(" - " + s.getTitle());
+			} else {
+				detailProperty.set("");
+			}
+		});
 	}
 
 	@FXML

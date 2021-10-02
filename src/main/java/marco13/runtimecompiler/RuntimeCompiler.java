@@ -21,7 +21,6 @@ import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
-// TODO: add to Postman in apps
 // https://stackoverflow.com/a/30038318
 /**
  * Utility class for compiling classes whose source code is given as

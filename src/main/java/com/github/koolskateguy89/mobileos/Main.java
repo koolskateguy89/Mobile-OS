@@ -52,15 +52,13 @@ public final class Main extends Application {
 		return instance.version;
 	}
 
-	// using static init doesn't work as it doesn't find the properties file
+	// using static init doesn't work: it doesn't find the properties file
 	private final String version;
 	{
 		Properties properties = new Properties();
-		try (InputStream is = Main.class.getResourceAsStream("main.properties")) {
+		try (InputStream is = Main.class.getResourceAsStream("application.properties")) {
 			properties.load(is);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} catch (Exception ignored) { }
 		version = properties.getProperty("version", "1.0");
 	}
 

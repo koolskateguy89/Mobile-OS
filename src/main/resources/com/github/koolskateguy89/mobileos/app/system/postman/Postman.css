@@ -1,0 +1,9 @@
+.root {
+
+}
+
+#send-btn {
+	-jfx-button-type: RAISED;
+	-fx-background-color: deepskyblue;
+	-fx-text-fill: white;
+}

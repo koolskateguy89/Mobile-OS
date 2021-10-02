@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import org.controlsfx.control.textfield.CustomTextField?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="524.0" prefWidth="450.0" stylesheets="@Postman.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.koolskateguy89.mobileos.app.system.postman.Postman">
+   <children>
+      <CustomTextField fx:id="url" layoutX="38.0" layoutY="128.0" />
+      <ChoiceBox fx:id="methodChoiceBox" layoutX="225.0" layoutY="128.0" prefWidth="150.0" />
+      <JFXButton id="send-btn" layoutX="188.0" layoutY="302.0" onAction="#send" text="Send" />
+   </children>
+</AnchorPane>

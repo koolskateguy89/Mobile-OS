@@ -4,12 +4,15 @@ import javafx.util.Callback;
 
 import lombok.SneakyThrows;
 
-public class SelfControllerFactory implements Callback<Class<?>, Object> {
+public class SingleControllerFactory implements Callback<Class<?>, Object> {
 
 	final Object obj;
 	final Class<?> clazz;
 
-	public SelfControllerFactory(Object obj) {
+	public SingleControllerFactory(Object obj) {
+		if (obj == null)
+			throw new IllegalArgumentException("obj is null");
+
 		this.obj = obj;
 		this.clazz = obj.getClass();
 	}
