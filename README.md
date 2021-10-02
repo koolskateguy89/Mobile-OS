@@ -68,6 +68,7 @@ TODO: this
 - [Notes](src/main/java/com/github/koolskateguy89/mobileos/app/system/notes/Notes.java)  
 
 - [Counter](src/main/java/com/github/koolskateguy89/mobileos/app/system/counter/Counter.java)
+- [Postman](src/main/java/com/github/koolskateguy89/mobileos/app/system/postman/Postman.java)
   
 - [Settings](src/main/java/com/github/koolskateguy89/mobileos/app/system/settings/SettingsApp.java)
 - [Explorer](src/main/java/com/github/koolskateguy89/mobileos/app/system/explorer/Explorer.java)
@@ -80,6 +81,7 @@ TODO: this
 - AppInstaller icon made by [Freepik] from [www.flaticon.com]
 - Notes icon made by [Freepik] from [www.flaticon.com]
 - Counter icon made by [Pixel perfect](https://www.flaticon.com/authors/pixel-perfect) from [www.flaticon.com]
+- Postman icon made by [Freepik] from [www.flaticon.com]
   
 - Settings icon made by [srip](https://www.flaticon.com/authors/srip) from [www.flaticon.com]
 - Explorer icon made by [DinosoftLabs](https://www.flaticon.com/authors/dinosoftlabs) from [www.flaticon.com]
