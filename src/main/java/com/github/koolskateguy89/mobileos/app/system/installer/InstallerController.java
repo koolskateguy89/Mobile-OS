@@ -4,10 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -18,6 +23,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -56,9 +62,13 @@ class InstallerController {
 	@FXML
 	private JFXButton folderButton;
 
+	@FXML
+	private JFXButton uninstallButton;
+
 	private void setDisable(boolean disable) {
 		zipButton.setDisable(disable);
 		folderButton.setDisable(disable);
+		uninstallButton.setDisable(disable);
 	}
 
 	private Path getAppDir(String name) throws IOException {
@@ -188,6 +198,71 @@ class InstallerController {
 	}
 
 	// TODO: uninstalling apps
+
+	@FXML
+	void uninstall() throws IOException {
+		App app = chooseApp();
+		if (app == null)
+			return;
+
+		Path dir = app.getDirectory();
+		if (dir == null)
+			return;
+
+		setDisable(true);
+
+		Stage progressStage = getProgressStage("Uninstalling...");
+		progressStage.show();
+
+		Thread t = new Thread(() -> {
+			try {
+				Properties p = new Properties();
+				try (InputStream is = Files.newInputStream(dir.resolve(App.AppConstants.PROPERTIES))) {
+					p.load(is);
+				}
+
+				String jarPath = p.getProperty(App.AppConstants.JAR_PATH);
+				Path jar = dir.resolve(jarPath);
+				// FIXME: The jar is being used :/, delete jar upon exit?
+
+				FileVisitor<Path> fileVisitor = new Utils.FileDeleter() {
+					@Override
+					public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+						return jar.equals(file) ? FileVisitResult.CONTINUE : super.visitFile(file, attrs);
+					}
+				};
+				Files.walkFileTree(dir, fileVisitor);
+				//Files.delete(dir);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			Platform.runLater(progressStage::close);
+			setDisable(false);
+		});
+		t.setName("Uninstalling app: " + app.getName());
+		t.setDaemon(true);
+		t.start();
+	}
+
+	private static App chooseApp() {
+		Map<String, App> apps = Main.getInstance().getApps();
+
+		ComboBox<String> cb = new ComboBox<>();
+		cb.getItems().addAll(apps.keySet());
+
+		Alert a = new Alert(AlertType.CONFIRMATION);
+		a.setHeaderText("Select an app");
+		a.getDialogPane().setContent(cb);
+
+		String appName;
+		do {
+			if (a.showAndWait().orElse(null) != ButtonType.OK)
+				return null;
+			appName = cb.getSelectionModel().getSelectedItem();
+		} while (appName == null);
+
+		return apps.get(appName);
+	}
 
 
 

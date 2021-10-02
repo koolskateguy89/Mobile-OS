@@ -325,4 +325,12 @@ public final class Main extends Application {
 		}
 	}
 
+	public ObservableMap<String, App> getApps() {
+		return FXCollections.unmodifiableObservableMap(apps);
+	}
+
+	public ObservableMap<String, App> getSystemApps() {
+		return FXCollections.unmodifiableObservableMap(systemApps);
+	}
+
 }

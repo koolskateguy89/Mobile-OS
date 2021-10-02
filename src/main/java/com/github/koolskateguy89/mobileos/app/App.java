@@ -113,10 +113,10 @@ public abstract class App {
 
 	// including Preferences in child constructor is optional
 	/**
-	 * @param directory yo my slime
+	 * @param directory the directory this app represents
 	 * @param props the properties object holding information about this app
 	 */
-	protected App(@Nullable Path directory, @Nonnull Properties props) {
+	protected App(Path directory, @Nonnull Properties props) {
 		this.directory = directory;
 
 		name = props.getProperty("name");

@@ -40,4 +40,8 @@ public final class Settings {
 		BACKGROUND_PROPERTY.set(new Background(bgFill));
 	}
 
+	public static void setBackground(Background bg) {
+		BACKGROUND_PROPERTY.set(bg);
+	}
+
 }

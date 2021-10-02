@@ -20,7 +20,6 @@ import org.controlsfx.control.textfield.CustomTextField;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
-// TODO: put into apps/Postman once done
 public class Postman extends App {
 
 	public Postman() {

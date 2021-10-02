@@ -44,10 +44,10 @@ public final class TextEditor extends App {
 			io.printStackTrace();
 		}
 
-		nc = loader.getController();
+		tec = loader.getController();
 
-		ObjectProperty<File> fileProp = nc.fileProperty;
-		BooleanProperty changedProp = nc.changed;
+		ObjectProperty<File> fileProp = tec.fileProperty;
+		BooleanProperty changedProp = tec.changed;
 
 		StringBinding nameBinding = Bindings.createStringBinding(() -> {
 			File file = fileProp.get();
@@ -70,7 +70,7 @@ public final class TextEditor extends App {
 		TextEditor.super.detailProperty.bind(nameBinding.concat(changedBinding));
 	}};
 
-	private TextEditorController nc;
+	private TextEditorController tec;
 
 	@Getter @LombokOverride
 	// Icon made by Smashicons (www.flaticon.com/authors/smashicons) from www.flaticon.com
@@ -78,16 +78,16 @@ public final class TextEditor extends App {
 
 	@Override
 	public void onOpen() {
-		nc.init();
+		tec.init();
 	}
 
 	@Override
 	public void goBack(ActionEvent event) {
-		nc.undo();
+		tec.undo();
 	}
 
 	@Override
 	public void onClose() {
-		nc.quit();
+		tec.quit();
 	}
 }

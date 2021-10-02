@@ -27,6 +27,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
+import javassist.Loader;
 import org.controlsfx.control.textfield.CustomPasswordField;
 import org.controlsfx.control.textfield.CustomTextField;
 
@@ -46,8 +47,6 @@ public class Utils {
 		Path sysApps = root.resolve(Constants.SYS_APPS_DIR);
 		if (!Files.isDirectory(sysApps))
 			Files.createDirectories(sysApps);
-
-		// TODO: init other dirs [if any - so far none]
 	}
 
 
@@ -75,18 +74,20 @@ public class Utils {
 	}
 
 	public static void clearDirectory(Path directory) throws IOException {
-		Files.walkFileTree(directory, new SimpleFileVisitor<>() {
-			@Override
-			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				Files.delete(file);
-				return FileVisitResult.CONTINUE;
-			}
+		Files.walkFileTree(directory, new FileDeleter());
+	}
 
-			@Override
-			public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-				return FileVisitResult.CONTINUE;
-			}
-		});
+	public static class FileDeleter extends SimpleFileVisitor<Path> {
+		@Override
+		public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+			Files.delete(file);
+			return FileVisitResult.CONTINUE;
+		}
+
+		@Override
+		public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+			return FileVisitResult.CONTINUE;
+		}
 	}
 
 

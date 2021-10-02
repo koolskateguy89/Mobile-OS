@@ -57,7 +57,6 @@ public class TextEditorController {
 								ITALICS_KEY = "font_italics",
 								SIZE_KEY    = "font_size";
 
-	// TODO: change this to a Snackbar
 	private static void handleException(Throwable e, String alertText) {
 		ExceptionDialog ed = new ExceptionDialog(e, alertText);
 		ed.showAndWaitCopy();

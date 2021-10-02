@@ -3,9 +3,10 @@
 <?import javafx.scene.layout.Pane?>
 <?import com.jfoenix.controls.JFXButton?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="524.0" prefWidth="450.0" style="-fx-background-color: #080808;" type="Pane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="524.0" prefWidth="450.0" style="-fx-background-color: #080808;" stylesheets="@Installer.css" type="Pane" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-		<JFXButton fx:id="zipButton" layoutX="63.0" layoutY="199.0" onAction="#zip" style="-fx-background-color: yellow;" text="zip" />
-		<JFXButton fx:id="folderButton" layoutX="254.0" layoutY="193.0" onAction="#folder" style="-fx-background-color: yellow;" text="folder" />
+		<JFXButton id="zip" fx:id="zipButton" layoutX="63.0" layoutY="199.0" onAction="#zip" text="Zip" />
+		<JFXButton id="folder" fx:id="folderButton" layoutX="254.0" layoutY="193.0" onAction="#folder" text="Folder" />
+      <JFXButton id="uninstall" fx:id="uninstallButton" layoutX="166.0" layoutY="301.0" onAction="#uninstall" text="Uninstall" />
 	</children>
 </fx:root>

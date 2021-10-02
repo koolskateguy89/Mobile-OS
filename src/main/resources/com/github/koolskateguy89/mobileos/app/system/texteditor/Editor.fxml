@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root prefHeight="524.0" prefWidth="450.0" stylesheets="@Editor.css" type="VBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.koolskateguy89.mobileos.app.system.texteditor.TextEditorController">
+<fx:root prefHeight="524.0" prefWidth="450.0" stylesheets="@Editor.css" type="VBox" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.koolskateguy89.mobileos.app.system.texteditor.TextEditorController">
 	<children>
 		<MenuBar style="-fx-background-color: #888888;">
 			<Menu text="_File">
@@ -56,12 +56,12 @@
 					</accelerator>
 				</MenuItem>
 				<SeparatorMenuItem mnemonicParsing="false" />
-				<MenuItem fx:id="cut" onAction="#cut" text="Cu_t" disable="${textArea.selectedText.empty}">
+				<MenuItem fx:id="cut" disable="${textArea.selectedText.empty}" onAction="#cut" text="Cu_t">
 					<accelerator>
 						<KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 					</accelerator>
 				</MenuItem>
-				<MenuItem fx:id="copy" onAction="#copy" text="_Copy" disable="${textArea.selectedText.empty}">
+				<MenuItem fx:id="copy" disable="${textArea.selectedText.empty}" onAction="#copy" text="_Copy">
 					<accelerator>
 						<KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 					</accelerator>
@@ -72,17 +72,17 @@
 					</accelerator>
 				</MenuItem>
 				<SeparatorMenuItem mnemonicParsing="false" />
-				<MenuItem fx:id="find" onAction="#find" text="_Find" disable="${textArea.text.empty}">
+				<MenuItem fx:id="find" disable="${textArea.text.empty}" onAction="#find" text="_Find">
 					<accelerator>
 						<KeyCodeCombination alt="UP" code="F" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 					</accelerator>
 				</MenuItem>
-				<MenuItem fx:id="replace" onAction="#replace" text="_Replace" disable="${textArea.text.empty}">
+				<MenuItem fx:id="replace" disable="${textArea.text.empty}" onAction="#replace" text="_Replace">
 					<accelerator>
 						<KeyCodeCombination alt="UP" code="H" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 					</accelerator>
 				</MenuItem>
-				<MenuItem fx:id="goTo" onAction="#goTo" text="_Go To" disable="${textArea.text.empty}">
+				<MenuItem fx:id="goTo" disable="${textArea.text.empty}" onAction="#goTo" text="_Go To">
 					<accelerator>
 						<KeyCodeCombination alt="UP" code="G" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 					</accelerator>
@@ -106,8 +106,8 @@
 		</MenuBar>
 		<AnchorPane VBox.vgrow="ALWAYS">
 			<HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-				<TextArea id="line-numbers" fx:id="lineThingy" editable="false" maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefWidth="25.0" text="1" font="${textArea.font}" />
-				<TextArea fx:id="textArea" maxWidth="1.7976931348623157E308" promptText="Open a file!" HBox.hgrow="ALWAYS" wrapText="${wrapText.selected}"/>
+				<TextArea id="line-numbers" fx:id="lineThingy" editable="false" font="${textArea.font}" maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefWidth="25.0" text="1" />
+				<TextArea fx:id="textArea" maxWidth="1.7976931348623157E308" promptText="Open a file!" wrapText="${wrapText.selected}" HBox.hgrow="ALWAYS" />
 			</HBox>
 		</AnchorPane>
 	</children>
