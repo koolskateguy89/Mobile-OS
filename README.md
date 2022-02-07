@@ -2,6 +2,8 @@
 
 This is basically replicating a mobile OS, think of it as a homeless man's Android, but on desktop and doesn't have many features.
 
+I guess really it's an application portal, I don't really know.
+
 This has been made for my own learning, and some of these apps are useful for me.
 
 ## Applications
