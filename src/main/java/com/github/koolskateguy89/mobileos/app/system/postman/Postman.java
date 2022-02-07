@@ -11,11 +11,12 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
+import org.controlsfx.control.textfield.CustomTextField;
+
 import com.github.koolskateguy89.mobileos.Main;
 import com.github.koolskateguy89.mobileos.app.App;
 import com.github.koolskateguy89.mobileos.utils.LombokOverride;
 import com.github.koolskateguy89.mobileos.utils.SingleControllerFactory;
-import org.controlsfx.control.textfield.CustomTextField;
 
 import lombok.Getter;
 import lombok.SneakyThrows;

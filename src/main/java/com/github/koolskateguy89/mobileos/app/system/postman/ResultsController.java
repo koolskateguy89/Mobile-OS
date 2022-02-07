@@ -48,7 +48,9 @@ class ResultsController {
 		RuntimeCompiler compiler = new RuntimeCompiler();
 		compiler.addClass(className, src);
 
-		compiler.compile();
+		if (!compiler.compile()) {
+			// TODO: compilation failure
+		}
 
 		Class<?> clazz = compiler.getCompiledClass(className);
 		Constructor<?> constructor = clazz.getDeclaredConstructor();

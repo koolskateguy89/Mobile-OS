@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.util.Properties;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

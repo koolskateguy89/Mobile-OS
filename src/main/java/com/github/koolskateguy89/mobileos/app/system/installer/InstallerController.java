@@ -165,11 +165,7 @@ class InstallerController {
 		Stage progressStage = getProgressStage();
 		progressStage.show();
 		Thread t = new Thread(() -> {
-			try {
-				Utils.copyFolder(folder, appDir, StandardCopyOption.REPLACE_EXISTING);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			Utils.copyFolder(folder, appDir, StandardCopyOption.REPLACE_EXISTING);
 			askToLoadApp(progressStage, appDir);
 			setDisable(false);
 		});
