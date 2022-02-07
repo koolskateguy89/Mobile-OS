@@ -218,9 +218,13 @@ public final class Main extends Application {
 	private HomeController hc;
 
 	@Override
+	public void init() throws Exception {
+		Main.instance = this;
+	}
+
+	@Override
 	public void start(Stage primaryStage) throws Exception {
 		Main.stage = primaryStage;
-		Main.instance = this;
 
 		// TODO: I like UTILITY but I want to be able to minimize :/
 		//stage.initStyle(StageStyle.UTILITY);
