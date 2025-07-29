@@ -17,6 +17,7 @@ This has been made for my own learning, and some of these apps are useful for me
 (Use [Maven (min v3.1.0)](https://maven.apache.org/))
 
 Pre-requisites to develop:
+
 1. Run `mvn install` on the mobile-os project
 2. Add `com.github.koolskateguy89.mobileos:mobileos` as a dependency to your application's pom with `provided` scope
 ```xml
@@ -64,17 +65,25 @@ TODO: this
 
 ## Default Applications
 
-- [Browser](src/main/java/com/github/koolskateguy89/mobileos/app/system/browser/Browser.java)
+- [Browser](src/main/java/com/github/koolskateguy89/mobileos/app/system/browser/Browser.java) - in progress?
 - [Text Editor](src/main/java/com/github/koolskateguy89/mobileos/app/system/texteditor/TextEditor.java)
 - [AppInstaller](src/main/java/com/github/koolskateguy89/mobileos/app/system/installer/Installer.java)
-- [Notes](src/main/java/com/github/koolskateguy89/mobileos/app/system/notes/Notes.java)  
+- [Notes](src/main/java/com/github/koolskateguy89/mobileos/app/system/notes/Notes.java) - in progress?
 
 - [Counter](src/main/java/com/github/koolskateguy89/mobileos/app/system/counter/Counter.java)
 - [Postman](src/main/java/com/github/koolskateguy89/mobileos/app/system/postman/Postman.java)
-  
+
 - [Settings](src/main/java/com/github/koolskateguy89/mobileos/app/system/settings/SettingsApp.java)
 - [Explorer](src/main/java/com/github/koolskateguy89/mobileos/app/system/explorer/Explorer.java)
-- TODO
+
+### TODO
+
+- Calculator
+- Text-to-Speech
+- System Monitor
+- File Explorer
+- Settings
+- Calendar
 
 ## Credits/Acknowledgements
 
@@ -84,7 +93,7 @@ TODO: this
 - Notes icon made by [Freepik] from [www.flaticon.com]
 - Counter icon made by [Pixel perfect](https://www.flaticon.com/authors/pixel-perfect) from [www.flaticon.com]
 - Postman icon made by [Freepik] from [www.flaticon.com]
-  
+
 - Settings icon made by [srip](https://www.flaticon.com/authors/srip) from [www.flaticon.com]
 - Explorer icon made by [DinosoftLabs](https://www.flaticon.com/authors/dinosoftlabs) from [www.flaticon.com]
 

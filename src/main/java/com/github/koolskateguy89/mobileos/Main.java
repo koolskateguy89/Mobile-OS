@@ -30,19 +30,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-
+import lombok.Getter;
 import com.github.koolskateguy89.mobileos.app.App;
 import com.github.koolskateguy89.mobileos.fx.FailedAppsDialog;
 import com.github.koolskateguy89.mobileos.fx.MainController;
 import com.github.koolskateguy89.mobileos.fx.home.HomeController;
 import com.google.common.base.Throwables;
-
-import lombok.Getter;
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 
 public final class Main extends Application {
 
